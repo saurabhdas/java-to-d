@@ -1,0 +1,161 @@
+Compiled from "AbstractStringBuilder.java"
+abstract class java.lang.AbstractStringBuilder implements java.lang.Appendable,java.lang.CharSequence {
+  public int length();
+    Signature: ()I
+
+  public int capacity();
+    Signature: ()I
+
+  public void ensureCapacity(int);
+    Signature: (I)V
+
+  public void trimToSize();
+    Signature: ()V
+
+  public void setLength(int);
+    Signature: (I)V
+
+  public char charAt(int);
+    Signature: (I)C
+
+  public int codePointAt(int);
+    Signature: (I)I
+
+  public int codePointBefore(int);
+    Signature: (I)I
+
+  public int codePointCount(int, int);
+    Signature: (II)I
+
+  public int offsetByCodePoints(int, int);
+    Signature: (II)I
+
+  public void getChars(int, int, char[], int);
+    Signature: (II[CI)V
+
+  public void setCharAt(int, char);
+    Signature: (IC)V
+
+  public java.lang.AbstractStringBuilder append(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(java.lang.String);
+    Signature: (Ljava/lang/String;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(java.lang.StringBuffer);
+    Signature: (Ljava/lang/StringBuffer;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(java.lang.CharSequence);
+    Signature: (Ljava/lang/CharSequence;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(java.lang.CharSequence, int, int);
+    Signature: (Ljava/lang/CharSequence;II)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(char[]);
+    Signature: ([C)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(char[], int, int);
+    Signature: ([CII)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(boolean);
+    Signature: (Z)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(char);
+    Signature: (C)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(int);
+    Signature: (I)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(long);
+    Signature: (J)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(float);
+    Signature: (F)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder append(double);
+    Signature: (D)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder delete(int, int);
+    Signature: (II)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder appendCodePoint(int);
+    Signature: (I)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder deleteCharAt(int);
+    Signature: (I)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder replace(int, int, java.lang.String);
+    Signature: (IILjava/lang/String;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.String substring(int);
+    Signature: (I)Ljava/lang/String;
+
+  public java.lang.CharSequence subSequence(int, int);
+    Signature: (II)Ljava/lang/CharSequence;
+
+  public java.lang.String substring(int, int);
+    Signature: (II)Ljava/lang/String;
+
+  public java.lang.AbstractStringBuilder insert(int, char[], int, int);
+    Signature: (I[CII)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, java.lang.Object);
+    Signature: (ILjava/lang/Object;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, java.lang.String);
+    Signature: (ILjava/lang/String;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, char[]);
+    Signature: (I[C)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, java.lang.CharSequence);
+    Signature: (ILjava/lang/CharSequence;)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, java.lang.CharSequence, int, int);
+    Signature: (ILjava/lang/CharSequence;II)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, boolean);
+    Signature: (IZ)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, char);
+    Signature: (IC)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, int);
+    Signature: (II)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, long);
+    Signature: (IJ)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, float);
+    Signature: (IF)Ljava/lang/AbstractStringBuilder;
+
+  public java.lang.AbstractStringBuilder insert(int, double);
+    Signature: (ID)Ljava/lang/AbstractStringBuilder;
+
+  public int indexOf(java.lang.String);
+    Signature: (Ljava/lang/String;)I
+
+  public int indexOf(java.lang.String, int);
+    Signature: (Ljava/lang/String;I)I
+
+  public int lastIndexOf(java.lang.String);
+    Signature: (Ljava/lang/String;)I
+
+  public int lastIndexOf(java.lang.String, int);
+    Signature: (Ljava/lang/String;I)I
+
+  public java.lang.AbstractStringBuilder reverse();
+    Signature: ()Ljava/lang/AbstractStringBuilder;
+
+  public abstract java.lang.String toString();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.Appendable append(char) throws java.io.IOException;
+    Signature: (C)Ljava/lang/Appendable;
+
+  public java.lang.Appendable append(java.lang.CharSequence, int, int) throws java.io.IOException;
+    Signature: (Ljava/lang/CharSequence;II)Ljava/lang/Appendable;
+
+  public java.lang.Appendable append(java.lang.CharSequence) throws java.io.IOException;
+    Signature: (Ljava/lang/CharSequence;)Ljava/lang/Appendable;
+}

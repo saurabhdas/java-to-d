@@ -1,0 +1,23 @@
+Compiled from "Number.java"
+public abstract class java.lang.Number implements java.io.Serializable {
+  public java.lang.Number();
+    Signature: ()V
+
+  public abstract int intValue();
+    Signature: ()I
+
+  public abstract long longValue();
+    Signature: ()J
+
+  public abstract float floatValue();
+    Signature: ()F
+
+  public abstract double doubleValue();
+    Signature: ()D
+
+  public byte byteValue();
+    Signature: ()B
+
+  public short shortValue();
+    Signature: ()S
+}

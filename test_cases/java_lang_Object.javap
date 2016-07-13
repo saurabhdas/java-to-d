@@ -1,0 +1,32 @@
+Compiled from "Object.java"
+public class java.lang.Object {
+  public java.lang.Object();
+    Signature: ()V
+
+  public final native java.lang.Class<?> getClass();
+    Signature: ()Ljava/lang/Class;
+
+  public native int hashCode();
+    Signature: ()I
+
+  public boolean equals(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Z
+
+  public java.lang.String toString();
+    Signature: ()Ljava/lang/String;
+
+  public final native void notify();
+    Signature: ()V
+
+  public final native void notifyAll();
+    Signature: ()V
+
+  public final native void wait(long) throws java.lang.InterruptedException;
+    Signature: (J)V
+
+  public final void wait(long, int) throws java.lang.InterruptedException;
+    Signature: (JI)V
+
+  public final void wait() throws java.lang.InterruptedException;
+    Signature: ()V
+}

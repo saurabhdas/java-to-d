@@ -1,0 +1,32 @@
+Compiled from "InputStream.java"
+public abstract class java.io.InputStream implements java.io.Closeable {
+  public java.io.InputStream();
+    Signature: ()V
+
+  public abstract int read() throws java.io.IOException;
+    Signature: ()I
+
+  public int read(byte[]) throws java.io.IOException;
+    Signature: ([B)I
+
+  public int read(byte[], int, int) throws java.io.IOException;
+    Signature: ([BII)I
+
+  public long skip(long) throws java.io.IOException;
+    Signature: (J)J
+
+  public int available() throws java.io.IOException;
+    Signature: ()I
+
+  public void close() throws java.io.IOException;
+    Signature: ()V
+
+  public synchronized void mark(int);
+    Signature: (I)V
+
+  public synchronized void reset() throws java.io.IOException;
+    Signature: ()V
+
+  public boolean markSupported();
+    Signature: ()Z
+}

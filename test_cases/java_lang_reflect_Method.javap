@@ -1,0 +1,68 @@
+Compiled from "Method.java"
+public final class java.lang.reflect.Method extends java.lang.reflect.AccessibleObject implements java.lang.reflect.GenericDeclaration,java.lang.reflect.Member {
+  public java.lang.Class<?> getDeclaringClass();
+    Signature: ()Ljava/lang/Class;
+
+  public java.lang.String getName();
+    Signature: ()Ljava/lang/String;
+
+  public int getModifiers();
+    Signature: ()I
+
+  public java.lang.reflect.TypeVariable<java.lang.reflect.Method>[] getTypeParameters();
+    Signature: ()[Ljava/lang/reflect/TypeVariable;
+
+  public java.lang.Class<?> getReturnType();
+    Signature: ()Ljava/lang/Class;
+
+  public java.lang.reflect.Type getGenericReturnType();
+    Signature: ()Ljava/lang/reflect/Type;
+
+  public java.lang.Class<?>[] getParameterTypes();
+    Signature: ()[Ljava/lang/Class;
+
+  public java.lang.reflect.Type[] getGenericParameterTypes();
+    Signature: ()[Ljava/lang/reflect/Type;
+
+  public java.lang.Class<?>[] getExceptionTypes();
+    Signature: ()[Ljava/lang/Class;
+
+  public java.lang.reflect.Type[] getGenericExceptionTypes();
+    Signature: ()[Ljava/lang/reflect/Type;
+
+  public boolean equals(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Z
+
+  public int hashCode();
+    Signature: ()I
+
+  public java.lang.String toString();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String toGenericString();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.Object invoke(java.lang.Object, java.lang.Object...) throws java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException;
+    Signature: (Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+
+  public boolean isBridge();
+    Signature: ()Z
+
+  public boolean isVarArgs();
+    Signature: ()Z
+
+  public boolean isSynthetic();
+    Signature: ()Z
+
+  public <T extends java/lang/annotation/Annotation> T getAnnotation(java.lang.Class<T>);
+    Signature: (Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+
+  public java.lang.annotation.Annotation[] getDeclaredAnnotations();
+    Signature: ()[Ljava/lang/annotation/Annotation;
+
+  public java.lang.Object getDefaultValue();
+    Signature: ()Ljava/lang/Object;
+
+  public java.lang.annotation.Annotation[][] getParameterAnnotations();
+    Signature: ()[[Ljava/lang/annotation/Annotation;
+}

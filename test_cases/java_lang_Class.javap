@@ -1,0 +1,173 @@
+Compiled from "Class.java"
+public final class java.lang.Class<T> implements java.io.Serializable, java.lang.reflect.GenericDeclaration, java.lang.reflect.Type, java.lang.reflect.AnnotatedElement {
+  public java.lang.String toString();
+    Signature: ()Ljava/lang/String;
+
+  public static java.lang.Class<?> forName(java.lang.String) throws java.lang.ClassNotFoundException;
+    Signature: (Ljava/lang/String;)Ljava/lang/Class;
+
+  public static java.lang.Class<?> forName(java.lang.String, boolean, java.lang.ClassLoader) throws java.lang.ClassNotFoundException;
+    Signature: (Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;
+
+  public T newInstance() throws java.lang.InstantiationException, java.lang.IllegalAccessException;
+    Signature: ()Ljava/lang/Object;
+
+  public native boolean isInstance(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Z
+
+  public native boolean isAssignableFrom(java.lang.Class<?>);
+    Signature: (Ljava/lang/Class;)Z
+
+  public native boolean isInterface();
+    Signature: ()Z
+
+  public native boolean isArray();
+    Signature: ()Z
+
+  public native boolean isPrimitive();
+    Signature: ()Z
+
+  public boolean isAnnotation();
+    Signature: ()Z
+
+  public boolean isSynthetic();
+    Signature: ()Z
+
+  public java.lang.String getName();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.ClassLoader getClassLoader();
+    Signature: ()Ljava/lang/ClassLoader;
+
+  public java.lang.reflect.TypeVariable<java.lang.Class<T>>[] getTypeParameters();
+    Signature: ()[Ljava/lang/reflect/TypeVariable;
+
+  public native java.lang.Class<? super T> getSuperclass();
+    Signature: ()Ljava/lang/Class;
+
+  public java.lang.reflect.Type getGenericSuperclass();
+    Signature: ()Ljava/lang/reflect/Type;
+
+  public java.lang.Package getPackage();
+    Signature: ()Ljava/lang/Package;
+
+  public native java.lang.Class<?>[] getInterfaces();
+    Signature: ()[Ljava/lang/Class;
+
+  public java.lang.reflect.Type[] getGenericInterfaces();
+    Signature: ()[Ljava/lang/reflect/Type;
+
+  public native java.lang.Class<?> getComponentType();
+    Signature: ()Ljava/lang/Class;
+
+  public native int getModifiers();
+    Signature: ()I
+
+  public native java.lang.Object[] getSigners();
+    Signature: ()[Ljava/lang/Object;
+
+  public java.lang.reflect.Method getEnclosingMethod();
+    Signature: ()Ljava/lang/reflect/Method;
+
+  public java.lang.reflect.Constructor<?> getEnclosingConstructor();
+    Signature: ()Ljava/lang/reflect/Constructor;
+
+  public java.lang.Class<?> getDeclaringClass();
+    Signature: ()Ljava/lang/Class;
+
+  public java.lang.Class<?> getEnclosingClass();
+    Signature: ()Ljava/lang/Class;
+
+  public java.lang.String getSimpleName();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getCanonicalName();
+    Signature: ()Ljava/lang/String;
+
+  public boolean isAnonymousClass();
+    Signature: ()Z
+
+  public boolean isLocalClass();
+    Signature: ()Z
+
+  public boolean isMemberClass();
+    Signature: ()Z
+
+  public java.lang.Class<?>[] getClasses();
+    Signature: ()[Ljava/lang/Class;
+
+  public java.lang.reflect.Field[] getFields() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Field;
+
+  public java.lang.reflect.Method[] getMethods() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Method;
+
+  public java.lang.reflect.Constructor<?>[] getConstructors() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Constructor;
+
+  public java.lang.reflect.Field getField(java.lang.String) throws java.lang.NoSuchFieldException, java.lang.SecurityException;
+    Signature: (Ljava/lang/String;)Ljava/lang/reflect/Field;
+
+  public java.lang.reflect.Method getMethod(java.lang.String, java.lang.Class<?>...) throws java.lang.NoSuchMethodException, java.lang.SecurityException;
+    Signature: (Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+
+  public java.lang.reflect.Constructor<T> getConstructor(java.lang.Class<?>...) throws java.lang.NoSuchMethodException, java.lang.SecurityException;
+    Signature: ([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+
+  public java.lang.Class<?>[] getDeclaredClasses() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/Class;
+
+  public java.lang.reflect.Field[] getDeclaredFields() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Field;
+
+  public java.lang.reflect.Method[] getDeclaredMethods() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Method;
+
+  public java.lang.reflect.Constructor<?>[] getDeclaredConstructors() throws java.lang.SecurityException;
+    Signature: ()[Ljava/lang/reflect/Constructor;
+
+  public java.lang.reflect.Field getDeclaredField(java.lang.String) throws java.lang.NoSuchFieldException, java.lang.SecurityException;
+    Signature: (Ljava/lang/String;)Ljava/lang/reflect/Field;
+
+  public java.lang.reflect.Method getDeclaredMethod(java.lang.String, java.lang.Class<?>...) throws java.lang.NoSuchMethodException, java.lang.SecurityException;
+    Signature: (Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+
+  public java.lang.reflect.Constructor<T> getDeclaredConstructor(java.lang.Class<?>...) throws java.lang.NoSuchMethodException, java.lang.SecurityException;
+    Signature: ([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+
+  public java.io.InputStream getResourceAsStream(java.lang.String);
+    Signature: (Ljava/lang/String;)Ljava/io/InputStream;
+
+  public java.net.URL getResource(java.lang.String);
+    Signature: (Ljava/lang/String;)Ljava/net/URL;
+
+  public java.security.ProtectionDomain getProtectionDomain();
+    Signature: ()Ljava/security/ProtectionDomain;
+
+  public boolean desiredAssertionStatus();
+    Signature: ()Z
+
+  public boolean isEnum();
+    Signature: ()Z
+
+  public T[] getEnumConstants();
+    Signature: ()[Ljava/lang/Object;
+
+  public T cast(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Ljava/lang/Object;
+
+  public <U extends java/lang/Object> java.lang.Class<? extends U> asSubclass(java.lang.Class<U>);
+    Signature: (Ljava/lang/Class;)Ljava/lang/Class;
+
+  public <A extends java/lang/annotation/Annotation> A getAnnotation(java.lang.Class<A>);
+    Signature: (Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+
+  public boolean isAnnotationPresent(java.lang.Class<? extends java.lang.annotation.Annotation>);
+    Signature: (Ljava/lang/Class;)Z
+
+  public java.lang.annotation.Annotation[] getAnnotations();
+    Signature: ()[Ljava/lang/annotation/Annotation;
+
+  public java.lang.annotation.Annotation[] getDeclaredAnnotations();
+    Signature: ()[Ljava/lang/annotation/Annotation;
+}

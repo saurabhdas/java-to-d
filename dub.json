@@ -1,0 +1,20 @@
+{
+	"name": "java-to-d",
+	"authors": [
+		"Saurabh Das"
+	],
+	"description": "Parse Java classes into D modules. Use within D via the JNI",
+	"copyright": "Copyright © 2016, Saurabh Das",
+	"license": "MIT License",
+    "homepage": "https://github.com/saurabhdas/java-to-d",
+    "sourcePaths": [
+        "source"
+    ],
+    "copyFiles": [
+        "source/jni.d"
+    ],
+    "targetType": "executable",
+    "dependencies": {
+        "pegged": "~>0.3.2"
+    }
+}

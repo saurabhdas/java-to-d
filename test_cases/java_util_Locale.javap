@@ -1,0 +1,161 @@
+Compiled from "Locale.java"
+public final class java.util.Locale implements java.lang.Cloneable,java.io.Serializable {
+  public static final java.util.Locale ENGLISH;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale FRENCH;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale GERMAN;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale ITALIAN;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale JAPANESE;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale KOREAN;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale CHINESE;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale SIMPLIFIED_CHINESE;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale TRADITIONAL_CHINESE;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale FRANCE;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale GERMANY;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale ITALY;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale JAPAN;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale KOREA;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale CHINA;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale PRC;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale TAIWAN;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale UK;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale US;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale CANADA;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale CANADA_FRENCH;
+    Signature: Ljava/util/Locale;
+  public static final java.util.Locale ROOT;
+    Signature: Ljava/util/Locale;
+  public static final char PRIVATE_USE_EXTENSION;
+    Signature: C
+  public static final char UNICODE_LOCALE_EXTENSION;
+    Signature: C
+  public java.util.Locale(java.lang.String, java.lang.String, java.lang.String);
+    Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+  public java.util.Locale(java.lang.String, java.lang.String);
+    Signature: (Ljava/lang/String;Ljava/lang/String;)V
+
+  public java.util.Locale(java.lang.String);
+    Signature: (Ljava/lang/String;)V
+
+  public static java.util.Locale getDefault();
+    Signature: ()Ljava/util/Locale;
+
+  public static java.util.Locale getDefault(java.util.Locale$Category);
+    Signature: (Ljava/util/Locale$Category;)Ljava/util/Locale;
+
+  public static synchronized void setDefault(java.util.Locale);
+    Signature: (Ljava/util/Locale;)V
+
+  public static synchronized void setDefault(java.util.Locale$Category, java.util.Locale);
+    Signature: (Ljava/util/Locale$Category;Ljava/util/Locale;)V
+
+  public static java.util.Locale[] getAvailableLocales();
+    Signature: ()[Ljava/util/Locale;
+
+  public static java.lang.String[] getISOCountries();
+    Signature: ()[Ljava/lang/String;
+
+  public static java.lang.String[] getISOLanguages();
+    Signature: ()[Ljava/lang/String;
+
+  public java.lang.String getLanguage();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getScript();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getCountry();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getVariant();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getExtension(char);
+    Signature: (C)Ljava/lang/String;
+
+  public java.util.Set<java.lang.Character> getExtensionKeys();
+    Signature: ()Ljava/util/Set;
+
+  public java.util.Set<java.lang.String> getUnicodeLocaleAttributes();
+    Signature: ()Ljava/util/Set;
+
+  public java.lang.String getUnicodeLocaleType(java.lang.String);
+    Signature: (Ljava/lang/String;)Ljava/lang/String;
+
+  public java.util.Set<java.lang.String> getUnicodeLocaleKeys();
+    Signature: ()Ljava/util/Set;
+
+  public final java.lang.String toString();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String toLanguageTag();
+    Signature: ()Ljava/lang/String;
+
+  public static java.util.Locale forLanguageTag(java.lang.String);
+    Signature: (Ljava/lang/String;)Ljava/util/Locale;
+
+  public java.lang.String getISO3Language() throws java.util.MissingResourceException;
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getISO3Country() throws java.util.MissingResourceException;
+    Signature: ()Ljava/lang/String;
+
+  public final java.lang.String getDisplayLanguage();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getDisplayLanguage(java.util.Locale);
+    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+
+  public java.lang.String getDisplayScript();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getDisplayScript(java.util.Locale);
+    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+
+  public final java.lang.String getDisplayCountry();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getDisplayCountry(java.util.Locale);
+    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+
+  public final java.lang.String getDisplayVariant();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getDisplayVariant(java.util.Locale);
+    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+
+  public final java.lang.String getDisplayName();
+    Signature: ()Ljava/lang/String;
+
+  public java.lang.String getDisplayName(java.util.Locale);
+    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+
+  public java.lang.Object clone();
+    Signature: ()Ljava/lang/Object;
+
+  public int hashCode();
+    Signature: ()I
+
+  public boolean equals(java.lang.Object);
+    Signature: (Ljava/lang/Object;)Z
+}

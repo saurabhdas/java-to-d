@@ -1,2 +1,3 @@
 # java-to-d
-Parse Java classes into D, to be seamlessly used within D via the JNI
+Parse Java classes into D modules. Use within D via the JNI
+
