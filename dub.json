@@ -16,5 +16,6 @@
     "targetType": "executable",
     "dependencies": {
         "pegged": "~>0.3.2"
-    }
+    },
+    "targetPath": "bin"
 }

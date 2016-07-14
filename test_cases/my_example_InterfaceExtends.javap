@@ -1,0 +1,5 @@
+Compiled from "InterfaceExtends.java"
+public interface InterfaceExtends<T extends java.lang.Object> extends java.lang.Comparable<T> {
+    public abstract int[][] bigBadCompareTo(T[]);
+    Signature: ([LLjava/lang/Object;)[I
+}
