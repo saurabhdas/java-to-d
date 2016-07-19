@@ -1,0 +1,12 @@
+Compiled from "Locale.java"
+public final class java.util.Locale$Category extends java.lang.Enum<java.util.Locale$Category> {
+  public static final java.util.Locale$Category DISPLAY;
+    descriptor: Ljava/util/Locale$Category;
+  public static final java.util.Locale$Category FORMAT;
+    descriptor: Ljava/util/Locale$Category;
+  public static java.util.Locale$Category[] values();
+    descriptor: ()[Ljava/util/Locale$Category;
+
+  public static java.util.Locale$Category valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/util/Locale$Category;
+}

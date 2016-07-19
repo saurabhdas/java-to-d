@@ -7,7 +7,7 @@ J:
     Body                    < Heading Declaration "{" Definition* "}"
     Heading                 < "Compiled from \"" Name ".java\""
     Declaration             < (ClassDeclaration / InterfaceDeclaration)
-    Definition              < JavaSignature "Signature:" JniSignature
+    Definition              < JavaSignature ("Signature:"/"descriptor:") JniSignature
 
     InterfaceDeclaration    < Modifier* "interface" ClassName Extends?
     ClassDeclaration        < Modifier* "class" ClassName Extends? Implements?
@@ -22,7 +22,7 @@ J:
     ClassName               < OnlyClassName Template? Array?
     
     Template                < '<' (ClassName / Wildcard) (Extends / Supers)* (',' (ClassName / Wildcard) (Extends / Supers)*)* '>'
-    TemplateRestrict        < '<' ClassName "extends" PathName '>'
+    TemplateRestrict        < '<' ClassName ("extends" PathOrClassName)? (',' ClassName ("extends" PathOrClassName)?)* '>'
     Extends                 < "extends" ClassName (',' ClassName)*
     Implements              < "implements" ClassName (',' ClassName)*
     Supers                  < "super" ClassName (',' ClassName)*
@@ -30,7 +30,8 @@ J:
     
     JniType                 <- '['* ([ZBCSIJFDV] / 'L' PathName ';')
     Modifier                <- "final" / "static" / "abstract" / "native" / "synchronized" / "public"
-    PathName                <- Name ([/$] Name)* ('<' Name '>')?
+    PathName                <- Name ([/$] Name)*
+    PathOrClassName         <- Name ([./$] Name)* Template? #('<' ClassName '>')?
     ArgsList                < "(" (ClassName (',' ClassName)*)? "..."? ")"
     OnlyClassName           < Name ([.$] Name)*
     Wildcard                <- '?'
@@ -46,7 +47,11 @@ unittest
     assert(J.Heading("Compiled from \"Object.java\"").successful);
     assert(J.Heading("Compiled from \"Class.java\"").successful);
     assert(!J.Heading("Compiled from \"abc.Class.java\"").successful);
-    
+
+    assert(J.PathOrClassName("java.lang.Comparable<? super U>").successful);
+    assert(J.TemplateRestrict("<U extends java.lang.Comparable<? super U>>").successful);
+    assert(J.TemplateRestrict("<T, U>").successful);
+
     assert(J.JavaSignature("public static final int MAX_VALUE;").successful);
     assert(J.JavaSignature("public static final java.lang.String mesaString;").successful);
     assert(J.JavaSignature("public static final Map<Key, Value> withGenerics;").successful);
@@ -72,6 +77,8 @@ unittest
     assert(J.JavaSignature("public static final <A extends java/lang/annotation/Annotation> A getAnnotation(java.lang.Class<A>);").successful);
     assert(J.JavaSignature("public static java.util.SortedMap<java.lang.String, java.nio.charset.Charset> availableCharsets();").successful);
     assert(J.JavaSignature("public static java.util.Locale getDefault(java.util.Locale$Category);").successful);
+    assert(J.JavaSignature("public <U extends java.lang.Comparable<? super U>> java.util.Comparator<T> thenComparing(java.util.function.Function<? super T, ? extends U>);").successful);
+    assert(J.JavaSignature("public static <T, U> java.util.Comparator<T> comparing(java.util.function.Function<? super T, ? extends U>, java.util.Comparator<? super U>);").successful);
     
     assert(J.JavaSignature("public static java.util.Map<java.lang.Thread, java.lang.StackTraceElement[]> getAllStackTraces();").successful);
     assert(J.JavaSignature("public static <T extends java/lang/Enum<T>> T valueOf(java.lang.Class<T>, java.lang.String);").successful);
@@ -97,9 +104,11 @@ unittest
     assert(J(readText("test_cases/java_io_InputStream.javap")).successful);
     assert(J(readText("test_cases/java_nio_charset_Chartset.javap")).successful);
     assert(J(readText("test_cases/java_util_Locale.javap")).successful);
+    assert(J(readText("test_cases/java_util_Locale_Category.javap")).successful);
     assert(J(readText("test_cases/java_lang_AbstractStringBuilder.javap")).successful);
     assert(J(readText("test_cases/java_lang_Enum.javap")).successful);
     assert(J(readText("test_cases/java_lang_Thread.javap")).successful);
+    assert(J(readText("test_cases/java_io_Serializable.javap")).successful);
 }
 
 class ParseException : Exception
@@ -123,7 +132,7 @@ auto deepFindAllFirst(PT)(in auto ref PT haystack, in string needle)
         return haystack.children.map!(a => deepFindAllFirst(a, needle)).join.array;
 }
 
-auto shallowFindOnlyOne(PT)(in auto ref PT haystack, in string needle)
+auto shallowFindOnlyOne(PT)(in auto ref PT haystack, in string needle) @trusted
 {
     auto f = haystack.children.filter!(a => a.name == needle).array;
     import std.conv;
@@ -143,13 +152,6 @@ auto shallowFindOneOf(PT)(in auto ref PT haystack, in string[] needles)
     auto rxs = needles
         .map!(a => tuple!("whichMatch", "match")(a, haystack.shallowFindMaxOne(a)))
         .filter!(a => a.match != PT.init).array;
-    if (rxs.length != 1)
-    {
-        import std.stdio;
-        writeln("ERROR");
-        writeln(haystack);
-        writeln(needles);
-    }
     assert(rxs.length == 1);
     return rxs[0];
 }
@@ -158,3 +160,12 @@ auto shallowFindMany(PT)(in auto ref PT haystack, in string needle)
 {
     return haystack.children.filter!(a => a.name == needle).array;
 }
+
+// This one is untested
+//auto shallowFindManyOf(PT)(in auto ref PT haystack, in string[] needles)
+//{
+//    auto rxs = needles
+//        .map!(a => tuple!("whichMatch", "match")(a, haystack.shallowFindMaxOne(a)))
+//            .filter!(a => a.match != PT.init).array;
+//    return rxs;
+//}
