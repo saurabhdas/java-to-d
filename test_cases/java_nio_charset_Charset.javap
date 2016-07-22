@@ -1,0 +1,283 @@
+Compiled from "Charset.java"
+public abstract class java.nio.charset.Charset implements java.lang.Comparable<java.nio.charset.Charset> {
+  public static boolean isSupported(java.lang.String);
+    descriptor: (Ljava/lang/String;)Z
+    Code:
+       0: aload_0
+       1: invokestatic  #40                 // Method lookup:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+       4: ifnull        11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  public static java.nio.charset.Charset forName(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/nio/charset/Charset;
+    Code:
+       0: aload_0
+       1: invokestatic  #40                 // Method lookup:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+       4: astore_1
+       5: aload_1
+       6: ifnull        11
+       9: aload_1
+      10: areturn
+      11: new           #41                 // class java/nio/charset/UnsupportedCharsetException
+      14: dup
+      15: aload_0
+      16: invokespecial #42                 // Method java/nio/charset/UnsupportedCharsetException."<init>":(Ljava/lang/String;)V
+      19: athrow
+
+  public static java.util.SortedMap<java.lang.String, java.nio.charset.Charset> availableCharsets();
+    descriptor: ()Ljava/util/SortedMap;
+    Code:
+       0: new           #48                 // class java/nio/charset/Charset$3
+       3: dup
+       4: invokespecial #49                 // Method java/nio/charset/Charset$3."<init>":()V
+       7: invokestatic  #10                 // Method java/security/AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;
+      10: checkcast     #50                 // class java/util/SortedMap
+      13: areturn
+
+  public static java.nio.charset.Charset defaultCharset();
+    descriptor: ()Ljava/nio/charset/Charset;
+    Code:
+       0: getstatic     #51                 // Field defaultCharset:Ljava/nio/charset/Charset;
+       3: ifnonnull     61
+       6: ldc           #29                 // class java/nio/charset/Charset
+       8: dup
+       9: astore_0
+      10: monitorenter
+      11: new           #6                  // class sun/security/action/GetPropertyAction
+      14: dup
+      15: ldc           #52                 // String file.encoding
+      17: invokespecial #53                 // Method sun/security/action/GetPropertyAction."<init>":(Ljava/lang/String;)V
+      20: invokestatic  #10                 // Method java/security/AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;
+      23: checkcast     #11                 // class java/lang/String
+      26: astore_1
+      27: aload_1
+      28: invokestatic  #40                 // Method lookup:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+      31: astore_2
+      32: aload_2
+      33: ifnull        43
+      36: aload_2
+      37: putstatic     #51                 // Field defaultCharset:Ljava/nio/charset/Charset;
+      40: goto          51
+      43: ldc           #54                 // String UTF-8
+      45: invokestatic  #55                 // Method forName:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+      48: putstatic     #51                 // Field defaultCharset:Ljava/nio/charset/Charset;
+      51: aload_0
+      52: monitorexit
+      53: goto          61
+      56: astore_3
+      57: aload_0
+      58: monitorexit
+      59: aload_3
+      60: athrow
+      61: getstatic     #51                 // Field defaultCharset:Ljava/nio/charset/Charset;
+      64: areturn
+    Exception table:
+       from    to  target type
+          11    53    56   any
+          56    59    56   any
+
+  public final java.lang.String name();
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field name:Ljava/lang/String;
+       4: areturn
+
+  public final java.util.Set<java.lang.String> aliases();
+    descriptor: ()Ljava/util/Set;
+    Code:
+       0: aload_0
+       1: getfield      #57                 // Field aliasSet:Ljava/util/Set;
+       4: ifnull        12
+       7: aload_0
+       8: getfield      #57                 // Field aliasSet:Ljava/util/Set;
+      11: areturn
+      12: aload_0
+      13: getfield      #59                 // Field aliases:[Ljava/lang/String;
+      16: arraylength
+      17: istore_1
+      18: new           #60                 // class java/util/HashSet
+      21: dup
+      22: iload_1
+      23: invokespecial #61                 // Method java/util/HashSet."<init>":(I)V
+      26: astore_2
+      27: iconst_0
+      28: istore_3
+      29: iload_3
+      30: iload_1
+      31: if_icmpge     51
+      34: aload_2
+      35: aload_0
+      36: getfield      #59                 // Field aliases:[Ljava/lang/String;
+      39: iload_3
+      40: aaload
+      41: invokevirtual #62                 // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+      44: pop
+      45: iinc          3, 1
+      48: goto          29
+      51: aload_0
+      52: aload_2
+      53: invokestatic  #63                 // Method java/util/Collections.unmodifiableSet:(Ljava/util/Set;)Ljava/util/Set;
+      56: putfield      #57                 // Field aliasSet:Ljava/util/Set;
+      59: aload_0
+      60: getfield      #57                 // Field aliasSet:Ljava/util/Set;
+      63: areturn
+
+  public java.lang.String displayName();
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field name:Ljava/lang/String;
+       4: areturn
+
+  public final boolean isRegistered();
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field name:Ljava/lang/String;
+       4: ldc           #64                 // String X-
+       6: invokevirtual #65                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+       9: ifne          28
+      12: aload_0
+      13: getfield      #58                 // Field name:Ljava/lang/String;
+      16: ldc           #66                 // String x-
+      18: invokevirtual #65                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      21: ifne          28
+      24: iconst_1
+      25: goto          29
+      28: iconst_0
+      29: ireturn
+
+  public java.lang.String displayName(java.util.Locale);
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field name:Ljava/lang/String;
+       4: areturn
+
+  public abstract boolean contains(java.nio.charset.Charset);
+    descriptor: (Ljava/nio/charset/Charset;)Z
+
+  public abstract java.nio.charset.CharsetDecoder newDecoder();
+    descriptor: ()Ljava/nio/charset/CharsetDecoder;
+
+  public abstract java.nio.charset.CharsetEncoder newEncoder();
+    descriptor: ()Ljava/nio/charset/CharsetEncoder;
+
+  public boolean canEncode();
+    descriptor: ()Z
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public final java.nio.CharBuffer decode(java.nio.ByteBuffer);
+    descriptor: (Ljava/nio/ByteBuffer;)Ljava/nio/CharBuffer;
+    Code:
+       0: aload_0
+       1: invokestatic  #67                 // Method sun/nio/cs/ThreadLocalCoders.decoderFor:(Ljava/lang/Object;)Ljava/nio/charset/CharsetDecoder;
+       4: getstatic     #68                 // Field java/nio/charset/CodingErrorAction.REPLACE:Ljava/nio/charset/CodingErrorAction;
+       7: invokevirtual #69                 // Method java/nio/charset/CharsetDecoder.onMalformedInput:(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetDecoder;
+      10: getstatic     #68                 // Field java/nio/charset/CodingErrorAction.REPLACE:Ljava/nio/charset/CodingErrorAction;
+      13: invokevirtual #70                 // Method java/nio/charset/CharsetDecoder.onUnmappableCharacter:(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetDecoder;
+      16: aload_1
+      17: invokevirtual #71                 // Method java/nio/charset/CharsetDecoder.decode:(Ljava/nio/ByteBuffer;)Ljava/nio/CharBuffer;
+      20: areturn
+      21: astore_2
+      22: new           #73                 // class java/lang/Error
+      25: dup
+      26: aload_2
+      27: invokespecial #74                 // Method java/lang/Error."<init>":(Ljava/lang/Throwable;)V
+      30: athrow
+    Exception table:
+       from    to  target type
+           0    20    21   Class java/nio/charset/CharacterCodingException
+
+  public final java.nio.ByteBuffer encode(java.nio.CharBuffer);
+    descriptor: (Ljava/nio/CharBuffer;)Ljava/nio/ByteBuffer;
+    Code:
+       0: aload_0
+       1: invokestatic  #75                 // Method sun/nio/cs/ThreadLocalCoders.encoderFor:(Ljava/lang/Object;)Ljava/nio/charset/CharsetEncoder;
+       4: getstatic     #68                 // Field java/nio/charset/CodingErrorAction.REPLACE:Ljava/nio/charset/CodingErrorAction;
+       7: invokevirtual #76                 // Method java/nio/charset/CharsetEncoder.onMalformedInput:(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetEncoder;
+      10: getstatic     #68                 // Field java/nio/charset/CodingErrorAction.REPLACE:Ljava/nio/charset/CodingErrorAction;
+      13: invokevirtual #77                 // Method java/nio/charset/CharsetEncoder.onUnmappableCharacter:(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetEncoder;
+      16: aload_1
+      17: invokevirtual #78                 // Method java/nio/charset/CharsetEncoder.encode:(Ljava/nio/CharBuffer;)Ljava/nio/ByteBuffer;
+      20: areturn
+      21: astore_2
+      22: new           #73                 // class java/lang/Error
+      25: dup
+      26: aload_2
+      27: invokespecial #74                 // Method java/lang/Error."<init>":(Ljava/lang/Throwable;)V
+      30: athrow
+    Exception table:
+       from    to  target type
+           0    20    21   Class java/nio/charset/CharacterCodingException
+
+  public final java.nio.ByteBuffer encode(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/nio/ByteBuffer;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #79                 // Method java/nio/CharBuffer.wrap:(Ljava/lang/CharSequence;)Ljava/nio/CharBuffer;
+       5: invokevirtual #80                 // Method encode:(Ljava/nio/CharBuffer;)Ljava/nio/ByteBuffer;
+       8: areturn
+
+  public final int compareTo(java.nio.charset.Charset);
+    descriptor: (Ljava/nio/charset/Charset;)I
+    Code:
+       0: aload_0
+       1: invokevirtual #45                 // Method name:()Ljava/lang/String;
+       4: aload_1
+       5: invokevirtual #45                 // Method name:()Ljava/lang/String;
+       8: invokevirtual #81                 // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+      11: ireturn
+
+  public final int hashCode();
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: invokevirtual #45                 // Method name:()Ljava/lang/String;
+       4: invokevirtual #82                 // Method java/lang/String.hashCode:()I
+       7: ireturn
+
+  public final boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+    Code:
+       0: aload_1
+       1: instanceof    #29                 // class java/nio/charset/Charset
+       4: ifne          9
+       7: iconst_0
+       8: ireturn
+       9: aload_0
+      10: aload_1
+      11: if_acmpne     16
+      14: iconst_1
+      15: ireturn
+      16: aload_0
+      17: getfield      #58                 // Field name:Ljava/lang/String;
+      20: aload_1
+      21: checkcast     #29                 // class java/nio/charset/Charset
+      24: invokevirtual #45                 // Method name:()Ljava/lang/String;
+      27: invokevirtual #12                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      30: ireturn
+
+  public final java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: invokevirtual #45                 // Method name:()Ljava/lang/String;
+       4: areturn
+
+  public int compareTo(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)I
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #29                 // class java/nio/charset/Charset
+       5: invokevirtual #83                 // Method compareTo:(Ljava/nio/charset/Charset;)I
+       8: ireturn
+}

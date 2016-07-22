@@ -10,7 +10,7 @@
     "sourcePaths": [
         "source"
     ],
-    "copyFiles": [
+    "copyFilesCommented": [
         "source/jni.d"
     ],
     "targetType": "executable",

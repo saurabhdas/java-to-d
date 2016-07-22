@@ -1,68 +1,334 @@
 Compiled from "Method.java"
-public final class java.lang.reflect.Method extends java.lang.reflect.AccessibleObject implements java.lang.reflect.GenericDeclaration,java.lang.reflect.Member {
+public final class java.lang.reflect.Method extends java.lang.reflect.Executable {
   public java.lang.Class<?> getDeclaringClass();
-    Signature: ()Ljava/lang/Class;
+    descriptor: ()Ljava/lang/Class;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field clazz:Ljava/lang/Class;
+       4: areturn
 
   public java.lang.String getName();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field name:Ljava/lang/String;
+       4: areturn
 
   public int getModifiers();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field modifiers:I
+       4: ireturn
 
   public java.lang.reflect.TypeVariable<java.lang.reflect.Method>[] getTypeParameters();
-    Signature: ()[Ljava/lang/reflect/TypeVariable;
+    descriptor: ()[Ljava/lang/reflect/TypeVariable;
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method getGenericSignature:()Ljava/lang/String;
+       4: ifnull        18
+       7: aload_0
+       8: invokevirtual #26                 // Method getGenericInfo:()Lsun/reflect/generics/repository/MethodRepository;
+      11: invokevirtual #27                 // Method sun/reflect/generics/repository/MethodRepository.getTypeParameters:()[Ljava/lang/reflect/TypeVariable;
+      14: checkcast     #28                 // class "[Ljava/lang/reflect/TypeVariable;"
+      17: areturn
+      18: iconst_0
+      19: anewarray     #29                 // class java/lang/reflect/TypeVariable
+      22: checkcast     #28                 // class "[Ljava/lang/reflect/TypeVariable;"
+      25: areturn
 
   public java.lang.Class<?> getReturnType();
-    Signature: ()Ljava/lang/Class;
+    descriptor: ()Ljava/lang/Class;
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field returnType:Ljava/lang/Class;
+       4: areturn
 
   public java.lang.reflect.Type getGenericReturnType();
-    Signature: ()Ljava/lang/reflect/Type;
+    descriptor: ()Ljava/lang/reflect/Type;
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method getGenericSignature:()Ljava/lang/String;
+       4: ifnull        15
+       7: aload_0
+       8: invokevirtual #26                 // Method getGenericInfo:()Lsun/reflect/generics/repository/MethodRepository;
+      11: invokevirtual #30                 // Method sun/reflect/generics/repository/MethodRepository.getReturnType:()Ljava/lang/reflect/Type;
+      14: areturn
+      15: aload_0
+      16: invokevirtual #31                 // Method getReturnType:()Ljava/lang/Class;
+      19: areturn
 
   public java.lang.Class<?>[] getParameterTypes();
-    Signature: ()[Ljava/lang/Class;
+    descriptor: ()[Ljava/lang/Class;
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+       4: invokevirtual #32                 // Method "[Ljava/lang/Class;".clone:()Ljava/lang/Object;
+       7: checkcast     #33                 // class "[Ljava/lang/Class;"
+      10: areturn
+
+  public int getParameterCount();
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+       4: arraylength
+       5: ireturn
 
   public java.lang.reflect.Type[] getGenericParameterTypes();
-    Signature: ()[Ljava/lang/reflect/Type;
+    descriptor: ()[Ljava/lang/reflect/Type;
+    Code:
+       0: aload_0
+       1: invokespecial #34                 // Method java/lang/reflect/Executable.getGenericParameterTypes:()[Ljava/lang/reflect/Type;
+       4: areturn
 
   public java.lang.Class<?>[] getExceptionTypes();
-    Signature: ()[Ljava/lang/Class;
+    descriptor: ()[Ljava/lang/Class;
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field exceptionTypes:[Ljava/lang/Class;
+       4: invokevirtual #35                 // Method "[Ljava/lang/Class;".clone:()Ljava/lang/Object;
+       7: checkcast     #33                 // class "[Ljava/lang/Class;"
+      10: areturn
 
   public java.lang.reflect.Type[] getGenericExceptionTypes();
-    Signature: ()[Ljava/lang/reflect/Type;
+    descriptor: ()[Ljava/lang/reflect/Type;
+    Code:
+       0: aload_0
+       1: invokespecial #36                 // Method java/lang/reflect/Executable.getGenericExceptionTypes:()[Ljava/lang/reflect/Type;
+       4: areturn
 
   public boolean equals(java.lang.Object);
-    Signature: (Ljava/lang/Object;)Z
+    descriptor: (Ljava/lang/Object;)Z
+    Code:
+       0: aload_1
+       1: ifnull        67
+       4: aload_1
+       5: instanceof    #23                 // class java/lang/reflect/Method
+       8: ifeq          67
+      11: aload_1
+      12: checkcast     #23                 // class java/lang/reflect/Method
+      15: astore_2
+      16: aload_0
+      17: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+      20: aload_2
+      21: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+      24: if_acmpne     67
+      27: aload_0
+      28: invokevirtual #38                 // Method getName:()Ljava/lang/String;
+      31: aload_2
+      32: invokevirtual #38                 // Method getName:()Ljava/lang/String;
+      35: if_acmpne     67
+      38: aload_0
+      39: getfield      #12                 // Field returnType:Ljava/lang/Class;
+      42: aload_2
+      43: invokevirtual #31                 // Method getReturnType:()Ljava/lang/Class;
+      46: invokevirtual #39                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      49: ifne          54
+      52: iconst_0
+      53: ireturn
+      54: aload_0
+      55: aload_0
+      56: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+      59: aload_2
+      60: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+      63: invokevirtual #40                 // Method equalParamTypes:([Ljava/lang/Class;[Ljava/lang/Class;)Z
+      66: ireturn
+      67: iconst_0
+      68: ireturn
 
   public int hashCode();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+       4: invokevirtual #41                 // Method java/lang/Class.getName:()Ljava/lang/String;
+       7: invokevirtual #42                 // Method java/lang/String.hashCode:()I
+      10: aload_0
+      11: invokevirtual #38                 // Method getName:()Ljava/lang/String;
+      14: invokevirtual #42                 // Method java/lang/String.hashCode:()I
+      17: ixor
+      18: ireturn
 
   public java.lang.String toString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: invokestatic  #43                 // Method java/lang/reflect/Modifier.methodModifiers:()I
+       4: aload_0
+       5: invokevirtual #44                 // Method isDefault:()Z
+       8: aload_0
+       9: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+      12: aload_0
+      13: getfield      #13                 // Field exceptionTypes:[Ljava/lang/Class;
+      16: invokevirtual #45                 // Method sharedToString:(IZ[Ljava/lang/Class;[Ljava/lang/Class;)Ljava/lang/String;
+      19: areturn
 
   public java.lang.String toGenericString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: invokestatic  #43                 // Method java/lang/reflect/Modifier.methodModifiers:()I
+       4: aload_0
+       5: invokevirtual #44                 // Method isDefault:()Z
+       8: invokevirtual #49                 // Method sharedToGenericString:(IZ)Ljava/lang/String;
+      11: areturn
 
   public java.lang.Object invoke(java.lang.Object, java.lang.Object...) throws java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException;
-    Signature: (Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+    descriptor: (Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field override:Z
+       4: ifne          39
+       7: aload_0
+       8: getfield      #9                  // Field clazz:Ljava/lang/Class;
+      11: aload_0
+      12: getfield      #14                 // Field modifiers:I
+      15: invokestatic  #53                 // Method sun/reflect/Reflection.quickCheckMemberAccess:(Ljava/lang/Class;I)Z
+      18: ifne          39
+      21: invokestatic  #54                 // Method sun/reflect/Reflection.getCallerClass:()Ljava/lang/Class;
+      24: astore_3
+      25: aload_0
+      26: aload_3
+      27: aload_0
+      28: getfield      #9                  // Field clazz:Ljava/lang/Class;
+      31: aload_1
+      32: aload_0
+      33: getfield      #14                 // Field modifiers:I
+      36: invokevirtual #55                 // Method checkAccess:(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/Object;I)V
+      39: aload_0
+      40: getfield      #25                 // Field methodAccessor:Lsun/reflect/MethodAccessor;
+      43: astore_3
+      44: aload_3
+      45: ifnonnull     53
+      48: aload_0
+      49: invokespecial #56                 // Method acquireMethodAccessor:()Lsun/reflect/MethodAccessor;
+      52: astore_3
+      53: aload_3
+      54: aload_1
+      55: aload_2
+      56: invokeinterface #57,  3           // InterfaceMethod sun/reflect/MethodAccessor.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+      61: areturn
 
   public boolean isBridge();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: invokevirtual #58                 // Method getModifiers:()I
+       4: bipush        64
+       6: iand
+       7: ifeq          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
 
   public boolean isVarArgs();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: invokespecial #60                 // Method java/lang/reflect/Executable.isVarArgs:()Z
+       4: ireturn
 
   public boolean isSynthetic();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: invokespecial #61                 // Method java/lang/reflect/Executable.isSynthetic:()Z
+       4: ireturn
 
-  public <T extends java/lang/annotation/Annotation> T getAnnotation(java.lang.Class<T>);
-    Signature: (Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
-
-  public java.lang.annotation.Annotation[] getDeclaredAnnotations();
-    Signature: ()[Ljava/lang/annotation/Annotation;
+  public boolean isDefault();
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: invokevirtual #58                 // Method getModifiers:()I
+       4: sipush        1033
+       7: iand
+       8: iconst_1
+       9: if_icmpne     26
+      12: aload_0
+      13: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+      16: invokevirtual #62                 // Method java/lang/Class.isInterface:()Z
+      19: ifeq          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
 
   public java.lang.Object getDefaultValue();
-    Signature: ()Ljava/lang/Object;
+    descriptor: ()Ljava/lang/Object;
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field annotationDefault:[B
+       4: ifnonnull     9
+       7: aconst_null
+       8: areturn
+       9: aload_0
+      10: invokevirtual #31                 // Method getReturnType:()Ljava/lang/Class;
+      13: invokestatic  #67                 // Method sun/reflect/annotation/AnnotationType.invocationHandlerReturnType:(Ljava/lang/Class;)Ljava/lang/Class;
+      16: astore_1
+      17: aload_1
+      18: aload_0
+      19: getfield      #18                 // Field annotationDefault:[B
+      22: invokestatic  #68                 // Method java/nio/ByteBuffer.wrap:([B)Ljava/nio/ByteBuffer;
+      25: invokestatic  #69                 // Method sun/misc/SharedSecrets.getJavaLangAccess:()Lsun/misc/JavaLangAccess;
+      28: aload_0
+      29: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+      32: invokeinterface #70,  2           // InterfaceMethod sun/misc/JavaLangAccess.getConstantPool:(Ljava/lang/Class;)Lsun/reflect/ConstantPool;
+      37: aload_0
+      38: invokevirtual #37                 // Method getDeclaringClass:()Ljava/lang/Class;
+      41: invokestatic  #71                 // Method sun/reflect/annotation/AnnotationParser.parseMemberValue:(Ljava/lang/Class;Ljava/nio/ByteBuffer;Lsun/reflect/ConstantPool;Ljava/lang/Class;)Ljava/lang/Object;
+      44: astore_2
+      45: aload_2
+      46: instanceof    #72                 // class sun/reflect/annotation/ExceptionProxy
+      49: ifeq          79
+      52: new           #73                 // class java/lang/annotation/AnnotationFormatError
+      55: dup
+      56: new           #74                 // class java/lang/StringBuilder
+      59: dup
+      60: invokespecial #75                 // Method java/lang/StringBuilder."<init>":()V
+      63: ldc           #76                 // String Invalid default:
+      65: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: aload_0
+      69: invokevirtual #77                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      72: invokevirtual #78                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      75: invokespecial #79                 // Method java/lang/annotation/AnnotationFormatError."<init>":(Ljava/lang/String;)V
+      78: athrow
+      79: aload_2
+      80: areturn
+
+  public <T extends java.lang.annotation.Annotation> T getAnnotation(java.lang.Class<T>);
+    descriptor: (Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #80                 // Method java/lang/reflect/Executable.getAnnotation:(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+       5: areturn
+
+  public java.lang.annotation.Annotation[] getDeclaredAnnotations();
+    descriptor: ()[Ljava/lang/annotation/Annotation;
+    Code:
+       0: aload_0
+       1: invokespecial #81                 // Method java/lang/reflect/Executable.getDeclaredAnnotations:()[Ljava/lang/annotation/Annotation;
+       4: areturn
 
   public java.lang.annotation.Annotation[][] getParameterAnnotations();
-    Signature: ()[[Ljava/lang/annotation/Annotation;
+    descriptor: ()[[Ljava/lang/annotation/Annotation;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #11                 // Field parameterTypes:[Ljava/lang/Class;
+       5: aload_0
+       6: getfield      #17                 // Field parameterAnnotations:[B
+       9: invokevirtual #82                 // Method sharedGetParameterAnnotations:([Ljava/lang/Class;[B)[[Ljava/lang/annotation/Annotation;
+      12: areturn
+
+  public java.lang.reflect.AnnotatedType getAnnotatedReturnType();
+    descriptor: ()Ljava/lang/reflect/AnnotatedType;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: invokevirtual #50                 // Method getGenericReturnType:()Ljava/lang/reflect/Type;
+       5: invokevirtual #83                 // Method getAnnotatedReturnType0:(Ljava/lang/reflect/Type;)Ljava/lang/reflect/AnnotatedType;
+       8: areturn
 }

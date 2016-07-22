@@ -1,29 +1,133 @@
 Compiled from "Enum.java"
 public abstract class java.lang.Enum<E extends java.lang.Enum<E>> implements java.lang.Comparable<E>, java.io.Serializable {
   public final java.lang.String name();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field name:Ljava/lang/String;
+       4: areturn
 
   public final int ordinal();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field ordinal:I
+       4: ireturn
 
   public java.lang.String toString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field name:Ljava/lang/String;
+       4: areturn
 
   public final boolean equals(java.lang.Object);
-    Signature: (Ljava/lang/Object;)Z
+    descriptor: (Ljava/lang/Object;)Z
+    Code:
+       0: aload_0
+       1: aload_1
+       2: if_acmpne     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ireturn
 
   public final int hashCode();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object.hashCode:()I
+       4: ireturn
 
   public final int compareTo(E);
-    Signature: (Ljava/lang/Enum;)I
+    descriptor: (Ljava/lang/Enum;)I
+    Code:
+       0: aload_1
+       1: astore_2
+       2: aload_0
+       3: astore_3
+       4: aload_3
+       5: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       8: aload_2
+       9: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      12: if_acmpeq     34
+      15: aload_3
+      16: invokevirtual #8                  // Method getDeclaringClass:()Ljava/lang/Class;
+      19: aload_2
+      20: invokevirtual #8                  // Method getDeclaringClass:()Ljava/lang/Class;
+      23: if_acmpeq     34
+      26: new           #9                  // class java/lang/ClassCastException
+      29: dup
+      30: invokespecial #10                 // Method java/lang/ClassCastException."<init>":()V
+      33: athrow
+      34: aload_3
+      35: getfield      #2                  // Field ordinal:I
+      38: aload_2
+      39: getfield      #2                  // Field ordinal:I
+      42: isub
+      43: ireturn
 
   public final java.lang.Class<E> getDeclaringClass();
-    Signature: ()Ljava/lang/Class;
+    descriptor: ()Ljava/lang/Class;
+    Code:
+       0: aload_0
+       1: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       4: astore_1
+       5: aload_1
+       6: invokevirtual #11                 // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+       9: astore_2
+      10: aload_2
+      11: ldc           #12                 // class java/lang/Enum
+      13: if_acmpne     20
+      16: aload_1
+      17: goto          21
+      20: aload_2
+      21: areturn
 
-  public static <T extends java/lang/Enum<T>> T valueOf(java.lang.Class<T>, java.lang.String);
-    Signature: (Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+  public static <T extends java.lang.Enum<T>> T valueOf(java.lang.Class<T>, java.lang.String);
+    descriptor: (Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method java/lang/Class.enumConstantDirectory:()Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #14,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #12                 // class java/lang/Enum
+      13: astore_2
+      14: aload_2
+      15: ifnull        20
+      18: aload_2
+      19: areturn
+      20: aload_1
+      21: ifnonnull     34
+      24: new           #15                 // class java/lang/NullPointerException
+      27: dup
+      28: ldc           #16                 // String Name is null
+      30: invokespecial #17                 // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      33: athrow
+      34: new           #18                 // class java/lang/IllegalArgumentException
+      37: dup
+      38: new           #19                 // class java/lang/StringBuilder
+      41: dup
+      42: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+      45: ldc           #21                 // String No enum constant
+      47: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      50: aload_0
+      51: invokevirtual #23                 // Method java/lang/Class.getCanonicalName:()Ljava/lang/String;
+      54: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: ldc           #24                 // String .
+      59: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: aload_1
+      63: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: invokevirtual #25                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      69: invokespecial #26                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      72: athrow
 
   public int compareTo(java.lang.Object);
-    Signature: (Ljava/lang/Object;)I
+    descriptor: (Ljava/lang/Object;)I
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #12                 // class java/lang/Enum
+       5: invokevirtual #30                 // Method compareTo:(Ljava/lang/Enum;)I
+       8: ireturn
 }

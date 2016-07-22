@@ -1,23 +1,37 @@
 Compiled from "Number.java"
 public abstract class java.lang.Number implements java.io.Serializable {
   public java.lang.Number();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
 
   public abstract int intValue();
-    Signature: ()I
+    descriptor: ()I
 
   public abstract long longValue();
-    Signature: ()J
+    descriptor: ()J
 
   public abstract float floatValue();
-    Signature: ()F
+    descriptor: ()F
 
   public abstract double doubleValue();
-    Signature: ()D
+    descriptor: ()D
 
   public byte byteValue();
-    Signature: ()B
+    descriptor: ()B
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method intValue:()I
+       4: i2b
+       5: ireturn
 
   public short shortValue();
-    Signature: ()S
+    descriptor: ()S
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method intValue:()I
+       4: i2s
+       5: ireturn
 }

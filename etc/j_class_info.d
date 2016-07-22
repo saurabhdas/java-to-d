@@ -24,14 +24,86 @@ struct JClassInfo
     ClassMethod[] classMethods;
 
     JClassInfo[] nestedClasses;
-    
+
+    bool derivesFrom(string name, in JClassInfo*[string] classesByName) const
+    {
+        auto n2 = name.replace("$", ".");
+        assert(!name.canFind('['));
+
+        if (n2 == className.baseName.replace("$", "."))
+            return true;
+
+        if (isClass)
+        {
+            foreach(ref i; classImplements)
+            {
+                auto cx = classesByName.get(i.baseName.replace("$", "."), null);
+                assert(cx !is null);
+                if (cx.derivesFrom(n2, classesByName))
+                    return true;
+            }
+
+            if (className.baseName != "java.lang.Object")
+            {
+                auto cx = classesByName.get(classExtends.baseName.replace("$", "."), null);
+                import std.stdio;
+                writeln(classExtends.baseName.replace("$", "."));
+                assert(cx !is null);
+                if (cx.derivesFrom(n2, classesByName))
+                    return true;
+            }
+        }
+        else
+        {
+            foreach(ref i; interfaceExtends)
+            {
+                auto cx = classesByName.get(i.baseName.replace("$", "."), null);
+                assert(cx !is null);
+                if (cx.derivesFrom(n2, classesByName))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool hasMethodInExtendedChain(ClassMethod m, in JClassInfo*[string] know, bool examineMe = false) const
+    {
+        if (examineMe)
+        {
+            foreach (cm; classMethods)
+            {
+                if (cm.name == m.name)
+                {
+                    if(cm.interpretJniSig2 == m.interpretJniSig2 &&
+                        cm.isStatic == m.isStatic)
+                    {
+                        // It could be that the signatures don't match, but one returns a subclass of the base class
+                        // We should assert that one is a base class of the other
+                        // But since a function call is defined clearly by the caller's signature
+                        // This should be okay
+                        return true;
+                    }
+                }
+            }
+        }
+        if (classExtends != ClassName.init)
+        {
+            auto ce = know.get(classExtends.baseName, null);
+            assert(ce !is null);
+            return ce.hasMethodInExtendedChain(m, know, true);
+        }
+        return false;
+    }
+
     string[] getDependents() const
     {
         import std.range;
         return
             sort(chain(
+                    isNested ? [getBaseModule()] : [],
                     interfaceExtends.map!(a => a.baseName.idup),
-                    isInterface ? [] : [classExtends].map!(a => a.baseName.idup).array,
+                    (isInterface || classExtends == ClassName.init) ? [] : [classExtends].map!(a => a.baseName.idup).array,
                     classImplements.map!(a => a.baseName.idup),
                     classMembers.map!(a => a.getDependents()).joiner,
                     classConstructors.map!(a => a.getDependents()).joiner,
@@ -100,7 +172,7 @@ struct JClassInfo
             }
             else
             {
-                classExtends = ClassName("java.lang.Object");
+                classExtends = (className.baseName != "java.lang.Object") ? ClassName("java.lang.Object") : ClassName.init;
             }
             
             auto pImplements = pInner.match.shallowFindMaxOne("J.Implements");
@@ -138,7 +210,8 @@ struct JClassInfo
             }
             else if (javaSig.whichMatch == "J.Method")
             {
-                classMethods ~= ClassMethod(javaSig.match, jniSig);
+                auto hasCode = (defn.shallowFindMaxOne("J.Code") != typeof(defn).init);
+                classMethods ~= ClassMethod(javaSig.match, jniSig, hasCode);
             }
             else if (javaSig.whichMatch == "J.Member")
             {
@@ -227,6 +300,54 @@ struct ClassMember
     {
         return extractDependentsFromJniSig(jniSig);
     }
+
+    string interpretJniSig() const
+    {
+        string ret;
+        assert(jniSig.length > 0);
+        for (long i=0; i<jniSig.length; ++i)
+        {
+            switch(jniSig[i])
+            {
+                case '[':
+                    ret ~= "[]";
+                    break;
+                case 'Z':
+                    ret = "bool" ~ ret;
+                    break;
+                case 'B':
+                    ret = "ubyte" ~ ret;
+                    break;
+                case 'C':
+                    ret = "char" ~ ret;
+                    break;
+                case 'S':
+                    ret = "short" ~ ret;
+                    break;
+                case 'I':
+                    ret = "int" ~ ret;
+                    break;
+                case 'J':
+                    ret = "long" ~ ret;
+                    break;
+                case 'F':
+                    ret = "float" ~ ret;
+                    break;
+                case 'D':
+                    ret = "double" ~ ret;
+                    break;
+                case 'L':
+                    auto j = indexOf(jniSig, ';', i);
+                    assert(j > i);
+                    ret = jniSig[i+1 .. j].replace("/", ".").replace("$", ".") ~ ret;
+                    i = j;  // +1 will be added in the loop
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+        return ret;
+    }
     
     this(PT)(in auto ref PT p, string sig)
     {
@@ -278,11 +399,75 @@ struct ClassConstructor
         
         jniSig = sig;
     }
+
+    string[] interpretJniSig() const
+    {
+        // Signature will be of the form (XYZ)V
+        assert(jniSig[0] == '(');
+        assert(jniSig[$-2 .. $] == ")V");
+
+        auto ret = appender!(string[]);
+        string curret;
+        assert(jniSig.length > 0);
+        for (long i=1; i<jniSig.indexOf(')'); ++i)
+        {
+            switch(jniSig[i])
+            {
+                case '[':
+                    curret ~= "[]";
+                    break;
+                case 'Z':
+                    ret.put("bool" ~ curret);
+                    curret = "";
+                    break;
+                case 'B':
+                    ret.put("ubyte" ~ curret);
+                    curret = "";
+                    break;
+                case 'C':
+                    ret.put("char" ~ curret);
+                    curret = "";
+                    break;
+                case 'S':
+                    ret ~= "short" ~ curret;
+                    curret = "";
+                    break;
+                case 'I':
+                    ret.put("int" ~ curret);
+                    curret = "";
+                    break;
+                case 'J':
+                    ret.put("long" ~ curret);
+                    curret = "";
+                    break;
+                case 'F':
+                    ret.put("float" ~ curret);
+                    curret = "";
+                    break;
+                case 'D':
+                    ret.put("double" ~ curret);
+                    curret = "";
+                    break;
+                case 'L':
+                    auto j = indexOf(jniSig, ';', i);
+                    assert(j > i);
+                    ret.put(jniSig[i+1 .. j].replace("/", ".").replace("$", ".") ~ curret);
+                    curret = "";
+                    i = j;  // +1 will be added in the loop
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+        return ret.data;
+    }
 }
 
 struct ClassMethod
 {
     bool isFinal, isStatic, isAbstract, isNative, isSynchronized;
+    bool isOverride;
+    bool hasCode;
     
     // Statement is of the form "<A extends B>"
     bool hasTemplateRestrict;
@@ -293,13 +478,128 @@ struct ClassMethod
     ClassName[] args;
     
     string jniSig;
-    
+
     string[] getDependents() const
     {
         return extractDependentsFromJniSig(jniSig);
     }
-    
-    this(PT)(in auto ref PT p, string sig)
+
+    string interpretJniSig1() const
+    {
+        string ret;
+        assert(jniSig.indexOf(')') > 0);
+        for (long i=jniSig.indexOf(')')+1; i<jniSig.length; ++i)
+        {
+            switch(jniSig[i])
+            {
+                case '[':
+                    ret ~= "[]";
+                    break;
+                case 'Z':
+                    ret = "bool" ~ ret;
+                    break;
+                case 'B':
+                    ret = "ubyte" ~ ret;
+                    break;
+                case 'C':
+                    ret = "char" ~ ret;
+                    break;
+                case 'S':
+                    ret = "short" ~ ret;
+                    break;
+                case 'I':
+                    ret = "int" ~ ret;
+                    break;
+                case 'J':
+                    ret = "long" ~ ret;
+                    break;
+                case 'F':
+                    ret = "float" ~ ret;
+                    break;
+                case 'D':
+                    ret = "double" ~ ret;
+                    break;
+                case 'V':
+                    ret = "void" ~ ret;
+                    break;
+                case 'L':
+                    auto j = indexOf(jniSig, ';', i);
+                    assert(j > i);
+                    ret = jniSig[i+1 .. j].replace("/", ".").replace("$", ".") ~ ret;
+                    i = j;  // +1 will be added in the loop
+                    break;
+                default:
+                    import std.stdio;
+                    writeln(jniSig);
+                    writeln(jniSig[i]);
+                    assert(false);
+            }
+        }
+        return ret;
+    }
+
+    string[] interpretJniSig2() const
+    {
+        // Signature will be of the form (XYZ)...
+        assert(jniSig[0] == '(');
+        
+        auto ret = appender!(string[]);
+        string curret;
+        assert(jniSig.length > 0);
+        for (long i=1; i<jniSig.indexOf(')'); ++i)
+        {
+            switch(jniSig[i])
+            {
+                case '[':
+                    curret ~= "[]";
+                    break;
+                case 'Z':
+                    ret.put("bool" ~ curret);
+                    curret = "";
+                    break;
+                case 'B':
+                    ret.put("ubyte" ~ curret);
+                    curret = "";
+                    break;
+                case 'C':
+                    ret.put("char" ~ curret);
+                    curret = "";
+                    break;
+                case 'S':
+                    ret ~= "short" ~ curret;
+                    curret = "";
+                    break;
+                case 'I':
+                    ret.put("int" ~ curret);
+                    curret = "";
+                    break;
+                case 'J':
+                    ret.put("long" ~ curret);
+                    curret = "";
+                    break;
+                case 'F':
+                    ret.put("float" ~ curret);
+                    curret = "";
+                    break;
+                case 'D':
+                    ret.put("double" ~ curret);
+                    curret = "";
+                    break;
+                case 'L':
+                    auto j = indexOf(jniSig, ';', i);
+                    assert(j > i);
+                    ret.put(jniSig[i+1 .. j].replace("/", ".").replace("$", ".") ~ curret);
+                    curret = "";
+                    i = j;  // +1 will be added in the loop
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+        return ret.data;
+    }
+
+    this(PT)(in auto ref PT p, string sig, bool hasCode_)
     {
         foreach (mod; p.shallowFindMany("J.Modifier")) switch (mod.matches.join)
         {
@@ -348,6 +648,7 @@ struct ClassMethod
         args = p.shallowFindOnlyOne("J.ArgsList").shallowFindMany("J.ClassName").map!(a => ClassName(a)).array;
         
         jniSig = sig;
+        hasCode = hasCode_;
     }
 }
 
@@ -434,7 +735,7 @@ unittest
         assert(ret.fromFileName == "Integer");
         assert(ret.isClass);
         assert(ret.className.baseName == "java.lang.Integer");
-        assert(ret.classMembers.length == 4);
+        assert(ret.classMembers.length == 5);
     }
     
     {
@@ -456,7 +757,7 @@ unittest
         JClassInfo(J(readText("test_cases/java_lang_Object.javap")));
         JClassInfo(J(readText("test_cases/java_lang_Thread.javap")));
         JClassInfo(J(readText("test_cases/java_lang_reflect_Method.javap")));
-        JClassInfo(J(readText("test_cases/java_nio_charset_Chartset.javap")));
+        JClassInfo(J(readText("test_cases/java_nio_charset_Charset.javap")));
         JClassInfo(J(readText("test_cases/java_util_Locale.javap")));
         JClassInfo(J(readText("test_cases/java_util_Locale_Category.javap")));
         JClassInfo(J(readText("test_cases/my_example_InterfaceExtends.javap")));

@@ -1,161 +1,1327 @@
 Compiled from "Locale.java"
 public final class java.util.Locale implements java.lang.Cloneable,java.io.Serializable {
   public static final java.util.Locale ENGLISH;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale FRENCH;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale GERMAN;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale ITALIAN;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale JAPANESE;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale KOREAN;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale CHINESE;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale SIMPLIFIED_CHINESE;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale TRADITIONAL_CHINESE;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale FRANCE;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale GERMANY;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale ITALY;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale JAPAN;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale KOREA;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale CHINA;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale PRC;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale TAIWAN;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale UK;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale US;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale CANADA;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale CANADA_FRENCH;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final java.util.Locale ROOT;
-    Signature: Ljava/util/Locale;
+    descriptor: Ljava/util/Locale;
+
   public static final char PRIVATE_USE_EXTENSION;
-    Signature: C
+    descriptor: C
+
   public static final char UNICODE_LOCALE_EXTENSION;
-    Signature: C
+    descriptor: C
+
   public java.util.Locale(java.lang.String, java.lang.String, java.lang.String);
-    Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    descriptor: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #6                  // Field hashCodeValue:I
+       9: aload_1
+      10: ifnull        21
+      13: aload_2
+      14: ifnull        21
+      17: aload_3
+      18: ifnonnull     29
+      21: new           #7                  // class java/lang/NullPointerException
+      24: dup
+      25: invokespecial #8                  // Method java/lang/NullPointerException."<init>":()V
+      28: athrow
+      29: aload_0
+      30: aload_1
+      31: invokestatic  #9                  // Method convertOldISOCodes:(Ljava/lang/String;)Ljava/lang/String;
+      34: ldc           #10                 // String
+      36: aload_2
+      37: aload_3
+      38: invokestatic  #11                 // Method sun/util/locale/BaseLocale.getInstance:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lsun/util/locale/BaseLocale;
+      41: putfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      44: aload_0
+      45: aload_1
+      46: ldc           #10                 // String
+      48: aload_2
+      49: aload_3
+      50: invokestatic  #1                  // Method getCompatibilityExtensions:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lsun/util/locale/LocaleExtensions;
+      53: putfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      56: return
 
   public java.util.Locale(java.lang.String, java.lang.String);
-    Signature: (Ljava/lang/String;Ljava/lang/String;)V
+    descriptor: (Ljava/lang/String;Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: ldc           #10                 // String
+       5: invokespecial #12                 // Method "<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+       8: return
 
   public java.util.Locale(java.lang.String);
-    Signature: (Ljava/lang/String;)V
+    descriptor: (Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #10                 // String
+       4: ldc           #10                 // String
+       6: invokespecial #12                 // Method "<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+       9: return
 
   public static java.util.Locale getDefault();
-    Signature: ()Ljava/util/Locale;
+    descriptor: ()Ljava/util/Locale;
+    Code:
+       0: getstatic     #21                 // Field defaultLocale:Ljava/util/Locale;
+       3: areturn
 
   public static java.util.Locale getDefault(java.util.Locale$Category);
-    Signature: (Ljava/util/Locale$Category;)Ljava/util/Locale;
+    descriptor: (Ljava/util/Locale$Category;)Ljava/util/Locale;
+    Code:
+       0: getstatic     #22                 // Field java/util/Locale$1.$SwitchMap$java$util$Locale$Category:[I
+       3: aload_0
+       4: invokevirtual #23                 // Method java/util/Locale$Category.ordinal:()I
+       7: iaload
+       8: lookupswitch  { // 2
+                     1: 36
+                     2: 74
+               default: 112
+          }
+      36: getstatic     #24                 // Field defaultDisplayLocale:Ljava/util/Locale;
+      39: ifnonnull     70
+      42: ldc           #20                 // class java/util/Locale
+      44: dup
+      45: astore_1
+      46: monitorenter
+      47: getstatic     #24                 // Field defaultDisplayLocale:Ljava/util/Locale;
+      50: ifnonnull     60
+      53: aload_0
+      54: invokestatic  #25                 // Method initDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+      57: putstatic     #24                 // Field defaultDisplayLocale:Ljava/util/Locale;
+      60: aload_1
+      61: monitorexit
+      62: goto          70
+      65: astore_2
+      66: aload_1
+      67: monitorexit
+      68: aload_2
+      69: athrow
+      70: getstatic     #24                 // Field defaultDisplayLocale:Ljava/util/Locale;
+      73: areturn
+      74: getstatic     #26                 // Field defaultFormatLocale:Ljava/util/Locale;
+      77: ifnonnull     108
+      80: ldc           #20                 // class java/util/Locale
+      82: dup
+      83: astore_1
+      84: monitorenter
+      85: getstatic     #26                 // Field defaultFormatLocale:Ljava/util/Locale;
+      88: ifnonnull     98
+      91: aload_0
+      92: invokestatic  #25                 // Method initDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+      95: putstatic     #26                 // Field defaultFormatLocale:Ljava/util/Locale;
+      98: aload_1
+      99: monitorexit
+     100: goto          108
+     103: astore_3
+     104: aload_1
+     105: monitorexit
+     106: aload_3
+     107: athrow
+     108: getstatic     #26                 // Field defaultFormatLocale:Ljava/util/Locale;
+     111: areturn
+     112: getstatic     #27                 // Field $assertionsDisabled:Z
+     115: ifne          128
+     118: new           #28                 // class java/lang/AssertionError
+     121: dup
+     122: ldc           #29                 // String Unknown Category
+     124: invokespecial #30                 // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+     127: athrow
+     128: invokestatic  #31                 // Method getDefault:()Ljava/util/Locale;
+     131: areturn
+    Exception table:
+       from    to  target type
+          47    62    65   any
+          65    68    65   any
+          85   100   103   any
+         103   106   103   any
 
   public static synchronized void setDefault(java.util.Locale);
-    Signature: (Ljava/util/Locale;)V
+    descriptor: (Ljava/util/Locale;)V
+    Code:
+       0: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       3: aload_0
+       4: invokestatic  #55                 // Method setDefault:(Ljava/util/Locale$Category;Ljava/util/Locale;)V
+       7: getstatic     #56                 // Field java/util/Locale$Category.FORMAT:Ljava/util/Locale$Category;
+      10: aload_0
+      11: invokestatic  #55                 // Method setDefault:(Ljava/util/Locale$Category;Ljava/util/Locale;)V
+      14: aload_0
+      15: putstatic     #21                 // Field defaultLocale:Ljava/util/Locale;
+      18: return
 
   public static synchronized void setDefault(java.util.Locale$Category, java.util.Locale);
-    Signature: (Ljava/util/Locale$Category;Ljava/util/Locale;)V
+    descriptor: (Ljava/util/Locale$Category;Ljava/util/Locale;)V
+    Code:
+       0: aload_0
+       1: ifnonnull     14
+       4: new           #7                  // class java/lang/NullPointerException
+       7: dup
+       8: ldc           #57                 // String Category cannot be NULL
+      10: invokespecial #58                 // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      13: athrow
+      14: aload_1
+      15: ifnonnull     28
+      18: new           #7                  // class java/lang/NullPointerException
+      21: dup
+      22: ldc           #59                 // String Can't set default locale to NULL
+      24: invokespecial #58                 // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      27: athrow
+      28: invokestatic  #60                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+      31: astore_2
+      32: aload_2
+      33: ifnull        51
+      36: aload_2
+      37: new           #61                 // class java/util/PropertyPermission
+      40: dup
+      41: ldc           #33                 // String user.language
+      43: ldc           #62                 // String write
+      45: invokespecial #63                 // Method java/util/PropertyPermission."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      48: invokevirtual #64                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      51: getstatic     #22                 // Field java/util/Locale$1.$SwitchMap$java$util$Locale$Category:[I
+      54: aload_0
+      55: invokevirtual #23                 // Method java/util/Locale$Category.ordinal:()I
+      58: iaload
+      59: lookupswitch  { // 2
+                     1: 84
+                     2: 91
+               default: 98
+          }
+      84: aload_1
+      85: putstatic     #24                 // Field defaultDisplayLocale:Ljava/util/Locale;
+      88: goto          114
+      91: aload_1
+      92: putstatic     #26                 // Field defaultFormatLocale:Ljava/util/Locale;
+      95: goto          114
+      98: getstatic     #27                 // Field $assertionsDisabled:Z
+     101: ifne          114
+     104: new           #28                 // class java/lang/AssertionError
+     107: dup
+     108: ldc           #29                 // String Unknown Category
+     110: invokespecial #30                 // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+     113: athrow
+     114: return
 
   public static java.util.Locale[] getAvailableLocales();
-    Signature: ()[Ljava/util/Locale;
+    descriptor: ()[Ljava/util/Locale;
+    Code:
+       0: invokestatic  #65                 // Method sun/util/locale/provider/LocaleServiceProviderPool.getAllAvailableLocales:()[Ljava/util/Locale;
+       3: areturn
 
   public static java.lang.String[] getISOCountries();
-    Signature: ()[Ljava/lang/String;
+    descriptor: ()[Ljava/lang/String;
+    Code:
+       0: getstatic     #66                 // Field isoCountries:[Ljava/lang/String;
+       3: ifnonnull     14
+       6: ldc           #68                 // String ADANDAEAREAFAFGAGATGAIAIAALALBAMARMANANTAOAGOAQATAARARGASASMATAUTAUAUSAWABWAXALAAZAZEBABIHBBBRBBDBGDBEBELBFBFABGBGRBHBHRBIBDIBJBENBLBLMBMBMUBNBRNBOBOLBQBESBRBRABSBHSBTBTNBVBVTBWBWABYBLRBZBLZCACANCCCCKCDCODCFCAFCGCOGCHCHECICIVCKCOKCLCHLCMCMRCNCHNCOCOLCRCRICUCUBCVCPVCWCUWCXCXRCYCYPCZCZEDEDEUDJDJIDKDNKDMDMADODOMDZDZAECECUEEESTEGEGYEHESHERERIESESPETETHFIFINFJFJIFKFLKFMFSMFOFROFRFRAGAGABGBGBRGDGRDGEGEOGFGUFGGGGYGHGHAGIGIBGLGRLGMGMBGNGINGPGLPGQGNQGRGRCGSSGSGTGTMGUGUMGWGNBGYGUYHKHKGHMHMDHNHNDHRHRVHTHTIHUHUNIDIDNIEIRLILISRIMIMNININDIOIOTIQIRQIRIRNISISLITITAJEJEYJMJAMJOJORJPJPNKEKENKGKGZKHKHMKIKIRKMCOMKNKNAKPPRKKRKORKWKWTKYCYMKZKAZLALAOLBLBNLCLCALILIELKLKALRLBRLSLSOLTLTULULUXLVLVALYLBYMAMARMCMCOMDMDAMEMNEMFMAFMGMDGMHMHLMKMKDMLMLIMMMMRMNMNGMOMACMPMNPMQMTQMRMRTMSMSRMTMLTMUMUSMVMDVMWMWIMXMEXMYMYSMZMOZNANAMNCNCLNENERNFNFKNGNGANINICNLNLDNONORNPNPLNRNRUNUNIUNZNZLOMOMNPAPANPEPERPFPYFPGPNGPHPHLPKPAKPLPOLPMSPMPNPCNPRPRIPSPSEPTPRTPWPLWPYPRYQAQATREREUROROURSSRBRURUSRWRWASASAUSBSLBSCSYCSDSDNSESWESGSGPSHSHNSISVNSJSJMSKSVKSLSLESMSMRSNSENSOSOMSRSURSSSSDSTSTPSVSLVSXSXMSYSYRSZSWZTCTCATDTCDTFATFTGTGOTHTHATJTJKTKTKLTLTLSTMTKMTNTUNTOTONTRTURTTTTOTVTUVTWTWNTZTZAUAUKRUGUGAUMUMIUSUSAUYURYUZUZBVAVATVCVCTVEVENVGVGBVIVIRVNVNMVUVUTWFWLFWSWSMYEYEMYTMYTZAZAFZMZMBZWZWE
+       8: invokestatic  #69                 // Method getISO2Table:(Ljava/lang/String;)[Ljava/lang/String;
+      11: putstatic     #66                 // Field isoCountries:[Ljava/lang/String;
+      14: getstatic     #66                 // Field isoCountries:[Ljava/lang/String;
+      17: arraylength
+      18: anewarray     #37                 // class java/lang/String
+      21: astore_0
+      22: getstatic     #66                 // Field isoCountries:[Ljava/lang/String;
+      25: iconst_0
+      26: aload_0
+      27: iconst_0
+      28: getstatic     #66                 // Field isoCountries:[Ljava/lang/String;
+      31: arraylength
+      32: invokestatic  #70                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      35: aload_0
+      36: areturn
 
   public static java.lang.String[] getISOLanguages();
-    Signature: ()[Ljava/lang/String;
+    descriptor: ()[Ljava/lang/String;
+    Code:
+       0: getstatic     #71                 // Field isoLanguages:[Ljava/lang/String;
+       3: ifnonnull     14
+       6: ldc           #72                 // String aaaarababkaeaveafafrakakaamamhanargararaasasmavavaayaymazazebabakbebelbgbulbhbihbibisbmbambnbenbobodbrbrebsboscacatcechechchacocoscrcrecscescuchucvchvcycymdadandedeudvdivdzdzoeeeweelellenengeoepoesspaetesteueusfafasfffulfifinfjfijfofaofrfrafyfrygaglegdglaglglggngrngugujgvglvhahauhehebhihinhohmohrhrvhthathuhunhyhyehzheriainaidindieileigiboiiiiiikipkinindioidoisislititaiuikuiwhebjajpnjiyidjvjavkakatkgkonkikikkjkuakkkazklkalkmkhmknkankokorkrkaukskaskukurkvkomkwcorkykirlalatlbltzlgluglilimlnlinlolaoltlitlulublvlavmgmlgmhmahmimrimkmkdmlmalmnmonmomolmrmarmsmsamtmltmymyananaunbnobndndenenepngndonlnldnnnnononornrnblnvnavnynyaocociojojiomormororiososspapanpipliplpolpspusptporququermrohrnrunroronrurusrwkinsasanscsrdsdsndsesmesgsagsisinskslkslslvsmsmosnsnasosomsqsqisrsrpsssswstsotsusunsvsweswswatatamteteltgtgkththatitirtktuktltgltntsntotontrturtstsotttattwtwitytahuguigukukrururduzuzbvevenvivievovolwawlnwowolxhxhoyiyidyoyorzazhazhzhozuzul
+       8: invokestatic  #69                 // Method getISO2Table:(Ljava/lang/String;)[Ljava/lang/String;
+      11: putstatic     #71                 // Field isoLanguages:[Ljava/lang/String;
+      14: getstatic     #71                 // Field isoLanguages:[Ljava/lang/String;
+      17: arraylength
+      18: anewarray     #37                 // class java/lang/String
+      21: astore_0
+      22: getstatic     #71                 // Field isoLanguages:[Ljava/lang/String;
+      25: iconst_0
+      26: aload_0
+      27: iconst_0
+      28: getstatic     #71                 // Field isoLanguages:[Ljava/lang/String;
+      31: arraylength
+      32: invokestatic  #70                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      35: aload_0
+      36: areturn
 
   public java.lang.String getLanguage();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+       7: areturn
 
   public java.lang.String getScript();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #75                 // Method sun/util/locale/BaseLocale.getScript:()Ljava/lang/String;
+       7: areturn
 
   public java.lang.String getCountry();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+       7: areturn
 
   public java.lang.String getVariant();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+       7: areturn
+
+  public boolean hasExtensions();
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+       4: ifnull        11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  public java.util.Locale stripExtensions();
+    descriptor: ()Ljava/util/Locale;
+    Code:
+       0: aload_0
+       1: invokevirtual #78                 // Method hasExtensions:()Z
+       4: ifeq          18
+       7: aload_0
+       8: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      11: aconst_null
+      12: invokestatic  #14                 // Method getInstance:(Lsun/util/locale/BaseLocale;Lsun/util/locale/LocaleExtensions;)Ljava/util/Locale;
+      15: goto          19
+      18: aload_0
+      19: areturn
 
   public java.lang.String getExtension(char);
-    Signature: (C)Ljava/lang/String;
+    descriptor: (C)Ljava/lang/String;
+    Code:
+       0: iload_1
+       1: invokestatic  #79                 // Method sun/util/locale/LocaleExtensions.isValidKey:(C)Z
+       4: ifne          34
+       7: new           #80                 // class java/lang/IllegalArgumentException
+      10: dup
+      11: new           #81                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #83                 // String Ill-formed extension key:
+      20: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: iload_1
+      24: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      27: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokespecial #87                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      33: athrow
+      34: aload_0
+      35: invokevirtual #78                 // Method hasExtensions:()Z
+      38: ifeq          55
+      41: aload_0
+      42: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      45: iload_1
+      46: invokestatic  #88                 // Method java/lang/Character.valueOf:(C)Ljava/lang/Character;
+      49: invokevirtual #89                 // Method sun/util/locale/LocaleExtensions.getExtensionValue:(Ljava/lang/Character;)Ljava/lang/String;
+      52: goto          56
+      55: aconst_null
+      56: areturn
 
   public java.util.Set<java.lang.Character> getExtensionKeys();
-    Signature: ()Ljava/util/Set;
+    descriptor: ()Ljava/util/Set;
+    Code:
+       0: aload_0
+       1: invokevirtual #78                 // Method hasExtensions:()Z
+       4: ifne          11
+       7: invokestatic  #90                 // Method java/util/Collections.emptySet:()Ljava/util/Set;
+      10: areturn
+      11: aload_0
+      12: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      15: invokevirtual #91                 // Method sun/util/locale/LocaleExtensions.getKeys:()Ljava/util/Set;
+      18: areturn
 
   public java.util.Set<java.lang.String> getUnicodeLocaleAttributes();
-    Signature: ()Ljava/util/Set;
+    descriptor: ()Ljava/util/Set;
+    Code:
+       0: aload_0
+       1: invokevirtual #78                 // Method hasExtensions:()Z
+       4: ifne          11
+       7: invokestatic  #90                 // Method java/util/Collections.emptySet:()Ljava/util/Set;
+      10: areturn
+      11: aload_0
+      12: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      15: invokevirtual #92                 // Method sun/util/locale/LocaleExtensions.getUnicodeLocaleAttributes:()Ljava/util/Set;
+      18: areturn
 
   public java.lang.String getUnicodeLocaleType(java.lang.String);
-    Signature: (Ljava/lang/String;)Ljava/lang/String;
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    Code:
+       0: aload_1
+       1: invokestatic  #93                 // Method isUnicodeExtensionKey:(Ljava/lang/String;)Z
+       4: ifne          34
+       7: new           #80                 // class java/lang/IllegalArgumentException
+      10: dup
+      11: new           #81                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #94                 // String Ill-formed Unicode locale key:
+      20: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: aload_1
+      24: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokespecial #87                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      33: athrow
+      34: aload_0
+      35: invokevirtual #78                 // Method hasExtensions:()Z
+      38: ifeq          52
+      41: aload_0
+      42: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      45: aload_1
+      46: invokevirtual #95                 // Method sun/util/locale/LocaleExtensions.getUnicodeLocaleType:(Ljava/lang/String;)Ljava/lang/String;
+      49: goto          53
+      52: aconst_null
+      53: areturn
 
   public java.util.Set<java.lang.String> getUnicodeLocaleKeys();
-    Signature: ()Ljava/util/Set;
+    descriptor: ()Ljava/util/Set;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+       4: ifnonnull     11
+       7: invokestatic  #90                 // Method java/util/Collections.emptySet:()Ljava/util/Set;
+      10: areturn
+      11: aload_0
+      12: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      15: invokevirtual #96                 // Method sun/util/locale/LocaleExtensions.getUnicodeLocaleKeys:()Ljava/util/Set;
+      18: areturn
 
   public final java.lang.String toString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+       7: invokevirtual #73                 // Method java/lang/String.length:()I
+      10: ifeq          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: istore_1
+      19: aload_0
+      20: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      23: invokevirtual #75                 // Method sun/util/locale/BaseLocale.getScript:()Ljava/lang/String;
+      26: invokevirtual #73                 // Method java/lang/String.length:()I
+      29: ifeq          36
+      32: iconst_1
+      33: goto          37
+      36: iconst_0
+      37: istore_2
+      38: aload_0
+      39: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      42: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+      45: invokevirtual #73                 // Method java/lang/String.length:()I
+      48: ifeq          55
+      51: iconst_1
+      52: goto          56
+      55: iconst_0
+      56: istore_3
+      57: aload_0
+      58: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      61: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+      64: invokevirtual #73                 // Method java/lang/String.length:()I
+      67: ifeq          74
+      70: iconst_1
+      71: goto          75
+      74: iconst_0
+      75: istore        4
+      77: aload_0
+      78: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      81: ifnull        101
+      84: aload_0
+      85: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      88: invokevirtual #97                 // Method sun/util/locale/LocaleExtensions.getID:()Ljava/lang/String;
+      91: invokevirtual #73                 // Method java/lang/String.length:()I
+      94: ifeq          101
+      97: iconst_1
+      98: goto          102
+     101: iconst_0
+     102: istore        5
+     104: new           #81                 // class java/lang/StringBuilder
+     107: dup
+     108: aload_0
+     109: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+     112: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+     115: invokespecial #98                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     118: astore        6
+     120: iload_3
+     121: ifne          142
+     124: iload_1
+     125: ifeq          160
+     128: iload         4
+     130: ifne          142
+     133: iload_2
+     134: ifne          142
+     137: iload         5
+     139: ifeq          160
+     142: aload         6
+     144: bipush        95
+     146: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     149: aload_0
+     150: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+     153: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+     156: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     159: pop
+     160: iload         4
+     162: ifeq          191
+     165: iload_1
+     166: ifne          173
+     169: iload_3
+     170: ifeq          191
+     173: aload         6
+     175: bipush        95
+     177: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     180: aload_0
+     181: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+     184: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+     187: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     190: pop
+     191: iload_2
+     192: ifeq          221
+     195: iload_1
+     196: ifne          203
+     199: iload_3
+     200: ifeq          221
+     203: aload         6
+     205: ldc           #99                 // String _#
+     207: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     210: aload_0
+     211: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+     214: invokevirtual #75                 // Method sun/util/locale/BaseLocale.getScript:()Ljava/lang/String;
+     217: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     220: pop
+     221: iload         5
+     223: ifeq          267
+     226: iload_1
+     227: ifne          234
+     230: iload_3
+     231: ifeq          267
+     234: aload         6
+     236: bipush        95
+     238: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     241: pop
+     242: iload_2
+     243: ifne          254
+     246: aload         6
+     248: bipush        35
+     250: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     253: pop
+     254: aload         6
+     256: aload_0
+     257: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+     260: invokevirtual #97                 // Method sun/util/locale/LocaleExtensions.getID:()Ljava/lang/String;
+     263: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     266: pop
+     267: aload         6
+     269: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     272: areturn
 
   public java.lang.String toLanguageTag();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #100                // Field languageTag:Ljava/lang/String;
+       4: ifnull        12
+       7: aload_0
+       8: getfield      #100                // Field languageTag:Ljava/lang/String;
+      11: areturn
+      12: aload_0
+      13: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      16: aload_0
+      17: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      20: invokestatic  #101                // Method sun/util/locale/LanguageTag.parseLocale:(Lsun/util/locale/BaseLocale;Lsun/util/locale/LocaleExtensions;)Lsun/util/locale/LanguageTag;
+      23: astore_1
+      24: new           #81                 // class java/lang/StringBuilder
+      27: dup
+      28: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      31: astore_2
+      32: aload_1
+      33: invokevirtual #102                // Method sun/util/locale/LanguageTag.getLanguage:()Ljava/lang/String;
+      36: astore_3
+      37: aload_3
+      38: invokevirtual #73                 // Method java/lang/String.length:()I
+      41: ifle          53
+      44: aload_2
+      45: aload_3
+      46: invokestatic  #103                // Method sun/util/locale/LanguageTag.canonicalizeLanguage:(Ljava/lang/String;)Ljava/lang/String;
+      49: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: pop
+      53: aload_1
+      54: invokevirtual #104                // Method sun/util/locale/LanguageTag.getScript:()Ljava/lang/String;
+      57: astore_3
+      58: aload_3
+      59: invokevirtual #73                 // Method java/lang/String.length:()I
+      62: ifle          81
+      65: aload_2
+      66: ldc           #106                // String -
+      68: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: pop
+      72: aload_2
+      73: aload_3
+      74: invokestatic  #107                // Method sun/util/locale/LanguageTag.canonicalizeScript:(Ljava/lang/String;)Ljava/lang/String;
+      77: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: pop
+      81: aload_1
+      82: invokevirtual #108                // Method sun/util/locale/LanguageTag.getRegion:()Ljava/lang/String;
+      85: astore_3
+      86: aload_3
+      87: invokevirtual #73                 // Method java/lang/String.length:()I
+      90: ifle          109
+      93: aload_2
+      94: ldc           #106                // String -
+      96: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: pop
+     100: aload_2
+     101: aload_3
+     102: invokestatic  #109                // Method sun/util/locale/LanguageTag.canonicalizeRegion:(Ljava/lang/String;)Ljava/lang/String;
+     105: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     108: pop
+     109: aload_1
+     110: invokevirtual #110                // Method sun/util/locale/LanguageTag.getVariants:()Ljava/util/List;
+     113: astore        4
+     115: aload         4
+     117: invokeinterface #111,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     122: astore        5
+     124: aload         5
+     126: invokeinterface #112,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     131: ifeq          163
+     134: aload         5
+     136: invokeinterface #113,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     141: checkcast     #37                 // class java/lang/String
+     144: astore        6
+     146: aload_2
+     147: ldc           #106                // String -
+     149: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     152: pop
+     153: aload_2
+     154: aload         6
+     156: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     159: pop
+     160: goto          124
+     163: aload_1
+     164: invokevirtual #114                // Method sun/util/locale/LanguageTag.getExtensions:()Ljava/util/List;
+     167: astore        4
+     169: aload         4
+     171: invokeinterface #111,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     176: astore        5
+     178: aload         5
+     180: invokeinterface #112,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     185: ifeq          220
+     188: aload         5
+     190: invokeinterface #113,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     195: checkcast     #37                 // class java/lang/String
+     198: astore        6
+     200: aload_2
+     201: ldc           #106                // String -
+     203: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     206: pop
+     207: aload_2
+     208: aload         6
+     210: invokestatic  #115                // Method sun/util/locale/LanguageTag.canonicalizeExtension:(Ljava/lang/String;)Ljava/lang/String;
+     213: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     216: pop
+     217: goto          178
+     220: aload_1
+     221: invokevirtual #116                // Method sun/util/locale/LanguageTag.getPrivateuse:()Ljava/lang/String;
+     224: astore_3
+     225: aload_3
+     226: invokevirtual #73                 // Method java/lang/String.length:()I
+     229: ifle          264
+     232: aload_2
+     233: invokevirtual #117                // Method java/lang/StringBuilder.length:()I
+     236: ifle          246
+     239: aload_2
+     240: ldc           #106                // String -
+     242: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     245: pop
+     246: aload_2
+     247: ldc           #118                // String x
+     249: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     252: ldc           #106                // String -
+     254: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     257: pop
+     258: aload_2
+     259: aload_3
+     260: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     263: pop
+     264: aload_2
+     265: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     268: astore        5
+     270: aload_0
+     271: dup
+     272: astore        6
+     274: monitorenter
+     275: aload_0
+     276: getfield      #100                // Field languageTag:Ljava/lang/String;
+     279: ifnonnull     288
+     282: aload_0
+     283: aload         5
+     285: putfield      #100                // Field languageTag:Ljava/lang/String;
+     288: aload         6
+     290: monitorexit
+     291: goto          302
+     294: astore        7
+     296: aload         6
+     298: monitorexit
+     299: aload         7
+     301: athrow
+     302: aload_0
+     303: getfield      #100                // Field languageTag:Ljava/lang/String;
+     306: areturn
+    Exception table:
+       from    to  target type
+         275   291   294   any
+         294   299   294   any
 
   public static java.util.Locale forLanguageTag(java.lang.String);
-    Signature: (Ljava/lang/String;)Ljava/util/Locale;
+    descriptor: (Ljava/lang/String;)Ljava/util/Locale;
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokestatic  #119                // Method sun/util/locale/LanguageTag.parse:(Ljava/lang/String;Lsun/util/locale/ParseStatus;)Lsun/util/locale/LanguageTag;
+       5: astore_1
+       6: new           #120                // class sun/util/locale/InternalLocaleBuilder
+       9: dup
+      10: invokespecial #121                // Method sun/util/locale/InternalLocaleBuilder."<init>":()V
+      13: astore_2
+      14: aload_2
+      15: aload_1
+      16: invokevirtual #122                // Method sun/util/locale/InternalLocaleBuilder.setLanguageTag:(Lsun/util/locale/LanguageTag;)Lsun/util/locale/InternalLocaleBuilder;
+      19: pop
+      20: aload_2
+      21: invokevirtual #123                // Method sun/util/locale/InternalLocaleBuilder.getBaseLocale:()Lsun/util/locale/BaseLocale;
+      24: astore_3
+      25: aload_2
+      26: invokevirtual #124                // Method sun/util/locale/InternalLocaleBuilder.getLocaleExtensions:()Lsun/util/locale/LocaleExtensions;
+      29: astore        4
+      31: aload         4
+      33: ifnonnull     67
+      36: aload_3
+      37: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+      40: invokevirtual #73                 // Method java/lang/String.length:()I
+      43: ifle          67
+      46: aload_3
+      47: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+      50: aload_3
+      51: invokevirtual #75                 // Method sun/util/locale/BaseLocale.getScript:()Ljava/lang/String;
+      54: aload_3
+      55: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+      58: aload_3
+      59: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+      62: invokestatic  #1                  // Method getCompatibilityExtensions:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lsun/util/locale/LocaleExtensions;
+      65: astore        4
+      67: aload_3
+      68: aload         4
+      70: invokestatic  #14                 // Method getInstance:(Lsun/util/locale/BaseLocale;Lsun/util/locale/LocaleExtensions;)Ljava/util/Locale;
+      73: areturn
 
   public java.lang.String getISO3Language() throws java.util.MissingResourceException;
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+       7: astore_1
+       8: aload_1
+       9: invokevirtual #73                 // Method java/lang/String.length:()I
+      12: iconst_3
+      13: if_icmpne     18
+      16: aload_1
+      17: areturn
+      18: aload_1
+      19: ldc           #72                 // String aaaarababkaeaveafafrakakaamamhanargararaasasmavavaayaymazazebabakbebelbgbulbhbihbibisbmbambnbenbobodbrbrebsboscacatcechechchacocoscrcrecscescuchucvchvcycymdadandedeudvdivdzdzoeeeweelellenengeoepoesspaetesteueusfafasfffulfifinfjfijfofaofrfrafyfrygaglegdglaglglggngrngugujgvglvhahauhehebhihinhohmohrhrvhthathuhunhyhyehzheriainaidindieileigiboiiiiiikipkinindioidoisislititaiuikuiwhebjajpnjiyidjvjavkakatkgkonkikikkjkuakkkazklkalkmkhmknkankokorkrkaukskaskukurkvkomkwcorkykirlalatlbltzlgluglilimlnlinlolaoltlitlulublvlavmgmlgmhmahmimrimkmkdmlmalmnmonmomolmrmarmsmsamtmltmymyananaunbnobndndenenepngndonlnldnnnnononornrnblnvnavnynyaocociojojiomormororiososspapanpipliplpolpspusptporququermrohrnrunroronrurusrwkinsasanscsrdsdsndsesmesgsagsisinskslkslslvsmsmosnsnasosomsqsqisrsrpsssswstsotsusunsvsweswswatatamteteltgtgkththatitirtktuktltgltntsntotontrturtstsotttattwtwitytahuguigukukrururduzuzbvevenvivievovolwawlnwowolxhxhoyiyidyoyorzazhazhzhozuzul
+      21: invokestatic  #125                // Method getISO3Code:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      24: astore_2
+      25: aload_2
+      26: ifnonnull     80
+      29: new           #126                // class java/util/MissingResourceException
+      32: dup
+      33: new           #81                 // class java/lang/StringBuilder
+      36: dup
+      37: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      40: ldc           #127                // String Couldn't find 3-letter language code for
+      42: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: aload_1
+      46: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      52: new           #81                 // class java/lang/StringBuilder
+      55: dup
+      56: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      59: ldc           #128                // String FormatData_
+      61: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: aload_0
+      65: invokevirtual #129                // Method toString:()Ljava/lang/String;
+      68: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      74: ldc           #130                // String ShortLanguage
+      76: invokespecial #131                // Method java/util/MissingResourceException."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      79: athrow
+      80: aload_2
+      81: areturn
 
   public java.lang.String getISO3Country() throws java.util.MissingResourceException;
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+       7: ldc           #68                 // String ADANDAEAREAFAFGAGATGAIAIAALALBAMARMANANTAOAGOAQATAARARGASASMATAUTAUAUSAWABWAXALAAZAZEBABIHBBBRBBDBGDBEBELBFBFABGBGRBHBHRBIBDIBJBENBLBLMBMBMUBNBRNBOBOLBQBESBRBRABSBHSBTBTNBVBVTBWBWABYBLRBZBLZCACANCCCCKCDCODCFCAFCGCOGCHCHECICIVCKCOKCLCHLCMCMRCNCHNCOCOLCRCRICUCUBCVCPVCWCUWCXCXRCYCYPCZCZEDEDEUDJDJIDKDNKDMDMADODOMDZDZAECECUEEESTEGEGYEHESHERERIESESPETETHFIFINFJFJIFKFLKFMFSMFOFROFRFRAGAGABGBGBRGDGRDGEGEOGFGUFGGGGYGHGHAGIGIBGLGRLGMGMBGNGINGPGLPGQGNQGRGRCGSSGSGTGTMGUGUMGWGNBGYGUYHKHKGHMHMDHNHNDHRHRVHTHTIHUHUNIDIDNIEIRLILISRIMIMNININDIOIOTIQIRQIRIRNISISLITITAJEJEYJMJAMJOJORJPJPNKEKENKGKGZKHKHMKIKIRKMCOMKNKNAKPPRKKRKORKWKWTKYCYMKZKAZLALAOLBLBNLCLCALILIELKLKALRLBRLSLSOLTLTULULUXLVLVALYLBYMAMARMCMCOMDMDAMEMNEMFMAFMGMDGMHMHLMKMKDMLMLIMMMMRMNMNGMOMACMPMNPMQMTQMRMRTMSMSRMTMLTMUMUSMVMDVMWMWIMXMEXMYMYSMZMOZNANAMNCNCLNENERNFNFKNGNGANINICNLNLDNONORNPNPLNRNRUNUNIUNZNZLOMOMNPAPANPEPERPFPYFPGPNGPHPHLPKPAKPLPOLPMSPMPNPCNPRPRIPSPSEPTPRTPWPLWPYPRYQAQATREREUROROURSSRBRURUSRWRWASASAUSBSLBSCSYCSDSDNSESWESGSGPSHSHNSISVNSJSJMSKSVKSLSLESMSMRSNSENSOSOMSRSURSSSSDSTSTPSVSLVSXSXMSYSYRSZSWZTCTCATDTCDTFATFTGTGOTHTHATJTJKTKTKLTLTLSTMTKMTNTUNTOTONTRTURTTTTOTVTUVTWTWNTZTZAUAUKRUGUGAUMUMIUSUSAUYURYUZUZBVAVATVCVCTVEVENVGVGBVIVIRVNVNMVUVUTWFWLFWSWSMYEYEMYTMYTZAZAFZMZMBZWZWE
+       9: invokestatic  #125                // Method getISO3Code:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      12: astore_1
+      13: aload_1
+      14: ifnonnull     74
+      17: new           #126                // class java/util/MissingResourceException
+      20: dup
+      21: new           #81                 // class java/lang/StringBuilder
+      24: dup
+      25: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      28: ldc           #132                // String Couldn't find 3-letter country code for
+      30: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: aload_0
+      34: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      37: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+      40: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      46: new           #81                 // class java/lang/StringBuilder
+      49: dup
+      50: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+      53: ldc           #128                // String FormatData_
+      55: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: aload_0
+      59: invokevirtual #129                // Method toString:()Ljava/lang/String;
+      62: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      68: ldc           #133                // String ShortCountry
+      70: invokespecial #131                // Method java/util/MissingResourceException."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      73: athrow
+      74: aload_1
+      75: areturn
 
   public final java.lang.String getDisplayLanguage();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       4: invokestatic  #135                // Method getDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+       7: invokevirtual #136                // Method getDisplayLanguage:(Ljava/util/Locale;)Ljava/lang/String;
+      10: areturn
 
   public java.lang.String getDisplayLanguage(java.util.Locale);
-    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       5: invokevirtual #74                 // Method sun/util/locale/BaseLocale.getLanguage:()Ljava/lang/String;
+       8: aload_1
+       9: iconst_0
+      10: invokespecial #137                // Method getDisplayString:(Ljava/lang/String;Ljava/util/Locale;I)Ljava/lang/String;
+      13: areturn
 
   public java.lang.String getDisplayScript();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       4: invokestatic  #135                // Method getDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+       7: invokevirtual #138                // Method getDisplayScript:(Ljava/util/Locale;)Ljava/lang/String;
+      10: areturn
 
   public java.lang.String getDisplayScript(java.util.Locale);
-    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       5: invokevirtual #75                 // Method sun/util/locale/BaseLocale.getScript:()Ljava/lang/String;
+       8: aload_1
+       9: iconst_3
+      10: invokespecial #137                // Method getDisplayString:(Ljava/lang/String;Ljava/util/Locale;I)Ljava/lang/String;
+      13: areturn
 
   public final java.lang.String getDisplayCountry();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       4: invokestatic  #135                // Method getDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+       7: invokevirtual #139                // Method getDisplayCountry:(Ljava/util/Locale;)Ljava/lang/String;
+      10: areturn
 
   public java.lang.String getDisplayCountry(java.util.Locale);
-    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       5: invokevirtual #76                 // Method sun/util/locale/BaseLocale.getRegion:()Ljava/lang/String;
+       8: aload_1
+       9: iconst_1
+      10: invokespecial #137                // Method getDisplayString:(Ljava/lang/String;Ljava/util/Locale;I)Ljava/lang/String;
+      13: areturn
 
   public final java.lang.String getDisplayVariant();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       4: invokestatic  #135                // Method getDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+       7: invokevirtual #147                // Method getDisplayVariant:(Ljava/util/Locale;)Ljava/lang/String;
+      10: areturn
 
   public java.lang.String getDisplayVariant(java.util.Locale);
-    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+       4: invokevirtual #77                 // Method sun/util/locale/BaseLocale.getVariant:()Ljava/lang/String;
+       7: invokevirtual #73                 // Method java/lang/String.length:()I
+      10: ifne          16
+      13: ldc           #10                 // String
+      15: areturn
+      16: invokestatic  #148                // Method sun/util/locale/provider/LocaleProviderAdapter.forJRE:()Lsun/util/locale/provider/LocaleProviderAdapter;
+      19: aload_1
+      20: invokevirtual #149                // Method sun/util/locale/provider/LocaleProviderAdapter.getLocaleResources:(Ljava/util/Locale;)Lsun/util/locale/provider/LocaleResources;
+      23: astore_2
+      24: aload_0
+      25: aload_1
+      26: invokespecial #150                // Method getDisplayVariantArray:(Ljava/util/Locale;)[Ljava/lang/String;
+      29: astore_3
+      30: aload_3
+      31: aload_2
+      32: ldc           #151                // String ListPattern
+      34: invokevirtual #152                // Method sun/util/locale/provider/LocaleResources.getLocaleName:(Ljava/lang/String;)Ljava/lang/String;
+      37: aload_2
+      38: ldc           #153                // String ListCompositionPattern
+      40: invokevirtual #152                // Method sun/util/locale/provider/LocaleResources.getLocaleName:(Ljava/lang/String;)Ljava/lang/String;
+      43: invokestatic  #154                // Method formatList:([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      46: areturn
 
   public final java.lang.String getDisplayName();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getstatic     #54                 // Field java/util/Locale$Category.DISPLAY:Ljava/util/Locale$Category;
+       4: invokestatic  #135                // Method getDefault:(Ljava/util/Locale$Category;)Ljava/util/Locale;
+       7: invokevirtual #155                // Method getDisplayName:(Ljava/util/Locale;)Ljava/lang/String;
+      10: areturn
 
   public java.lang.String getDisplayName(java.util.Locale);
-    Signature: (Ljava/util/Locale;)Ljava/lang/String;
+    descriptor: (Ljava/util/Locale;)Ljava/lang/String;
+    Code:
+       0: invokestatic  #148                // Method sun/util/locale/provider/LocaleProviderAdapter.forJRE:()Lsun/util/locale/provider/LocaleProviderAdapter;
+       3: aload_1
+       4: invokevirtual #149                // Method sun/util/locale/provider/LocaleProviderAdapter.getLocaleResources:(Ljava/util/Locale;)Lsun/util/locale/provider/LocaleResources;
+       7: astore_2
+       8: aload_0
+       9: aload_1
+      10: invokevirtual #136                // Method getDisplayLanguage:(Ljava/util/Locale;)Ljava/lang/String;
+      13: astore_3
+      14: aload_0
+      15: aload_1
+      16: invokevirtual #138                // Method getDisplayScript:(Ljava/util/Locale;)Ljava/lang/String;
+      19: astore        4
+      21: aload_0
+      22: aload_1
+      23: invokevirtual #139                // Method getDisplayCountry:(Ljava/util/Locale;)Ljava/lang/String;
+      26: astore        5
+      28: aload_0
+      29: aload_1
+      30: invokespecial #150                // Method getDisplayVariantArray:(Ljava/util/Locale;)[Ljava/lang/String;
+      33: astore        6
+      35: aload_2
+      36: ldc           #156                // String DisplayNamePattern
+      38: invokevirtual #152                // Method sun/util/locale/provider/LocaleResources.getLocaleName:(Ljava/lang/String;)Ljava/lang/String;
+      41: astore        7
+      43: aload_2
+      44: ldc           #151                // String ListPattern
+      46: invokevirtual #152                // Method sun/util/locale/provider/LocaleResources.getLocaleName:(Ljava/lang/String;)Ljava/lang/String;
+      49: astore        8
+      51: aload_2
+      52: ldc           #153                // String ListCompositionPattern
+      54: invokevirtual #152                // Method sun/util/locale/provider/LocaleResources.getLocaleName:(Ljava/lang/String;)Ljava/lang/String;
+      57: astore        9
+      59: aconst_null
+      60: astore        10
+      62: aconst_null
+      63: astore        11
+      65: aload_3
+      66: invokevirtual #73                 // Method java/lang/String.length:()I
+      69: ifne          107
+      72: aload         4
+      74: invokevirtual #73                 // Method java/lang/String.length:()I
+      77: ifne          107
+      80: aload         5
+      82: invokevirtual #73                 // Method java/lang/String.length:()I
+      85: ifne          107
+      88: aload         6
+      90: arraylength
+      91: ifne          97
+      94: ldc           #10                 // String
+      96: areturn
+      97: aload         6
+      99: aload         8
+     101: aload         9
+     103: invokestatic  #154                // Method formatList:([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     106: areturn
+     107: new           #157                // class java/util/ArrayList
+     110: dup
+     111: iconst_4
+     112: invokespecial #158                // Method java/util/ArrayList."<init>":(I)V
+     115: astore        12
+     117: aload_3
+     118: invokevirtual #73                 // Method java/lang/String.length:()I
+     121: ifeq          131
+     124: aload         12
+     126: aload_3
+     127: invokevirtual #159                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     130: pop
+     131: aload         4
+     133: invokevirtual #73                 // Method java/lang/String.length:()I
+     136: ifeq          147
+     139: aload         12
+     141: aload         4
+     143: invokevirtual #159                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     146: pop
+     147: aload         5
+     149: invokevirtual #73                 // Method java/lang/String.length:()I
+     152: ifeq          163
+     155: aload         12
+     157: aload         5
+     159: invokevirtual #159                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     162: pop
+     163: aload         6
+     165: arraylength
+     166: ifeq          180
+     169: aload         12
+     171: aload         6
+     173: invokestatic  #160                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+     176: invokevirtual #161                // Method java/util/ArrayList.addAll:(Ljava/util/Collection;)Z
+     179: pop
+     180: aload         12
+     182: iconst_0
+     183: invokevirtual #162                // Method java/util/ArrayList.get:(I)Ljava/lang/Object;
+     186: checkcast     #37                 // class java/lang/String
+     189: astore        10
+     191: aload         12
+     193: invokevirtual #163                // Method java/util/ArrayList.size:()I
+     196: istore        13
+     198: iload         13
+     200: iconst_1
+     201: if_icmple     230
+     204: aload         12
+     206: iconst_1
+     207: iload         13
+     209: invokevirtual #164                // Method java/util/ArrayList.subList:(II)Ljava/util/List;
+     212: iload         13
+     214: iconst_1
+     215: isub
+     216: anewarray     #37                 // class java/lang/String
+     219: invokeinterface #165,  2          // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     224: checkcast     #166                // class "[Ljava/lang/String;"
+     227: goto          234
+     230: iconst_0
+     231: anewarray     #37                 // class java/lang/String
+     234: astore        11
+     236: iconst_3
+     237: anewarray     #144                // class java/lang/Object
+     240: dup
+     241: iconst_0
+     242: new           #167                // class java/lang/Integer
+     245: dup
+     246: aload         11
+     248: arraylength
+     249: ifeq          256
+     252: iconst_2
+     253: goto          257
+     256: iconst_1
+     257: invokespecial #168                // Method java/lang/Integer."<init>":(I)V
+     260: aastore
+     261: dup
+     262: iconst_1
+     263: aload         10
+     265: aastore
+     266: dup
+     267: iconst_2
+     268: aload         11
+     270: arraylength
+     271: ifeq          286
+     274: aload         11
+     276: aload         8
+     278: aload         9
+     280: invokestatic  #154                // Method formatList:([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     283: goto          287
+     286: aconst_null
+     287: aastore
+     288: astore        14
+     290: aload         7
+     292: ifnull        310
+     295: new           #169                // class java/text/MessageFormat
+     298: dup
+     299: aload         7
+     301: invokespecial #170                // Method java/text/MessageFormat."<init>":(Ljava/lang/String;)V
+     304: aload         14
+     306: invokevirtual #171                // Method java/text/MessageFormat.format:(Ljava/lang/Object;)Ljava/lang/String;
+     309: areturn
+     310: new           #81                 // class java/lang/StringBuilder
+     313: dup
+     314: invokespecial #82                 // Method java/lang/StringBuilder."<init>":()V
+     317: astore        15
+     319: aload         15
+     321: aload         14
+     323: iconst_1
+     324: aaload
+     325: checkcast     #37                 // class java/lang/String
+     328: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     331: pop
+     332: aload         14
+     334: arraylength
+     335: iconst_2
+     336: if_icmple     368
+     339: aload         15
+     341: ldc           #172                // String  (
+     343: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     346: pop
+     347: aload         15
+     349: aload         14
+     351: iconst_2
+     352: aaload
+     353: checkcast     #37                 // class java/lang/String
+     356: invokevirtual #84                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     359: pop
+     360: aload         15
+     362: bipush        41
+     364: invokevirtual #85                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     367: pop
+     368: aload         15
+     370: invokevirtual #86                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     373: areturn
 
   public java.lang.Object clone();
-    Signature: ()Ljava/lang/Object;
+    descriptor: ()Ljava/lang/Object;
+    Code:
+       0: aload_0
+       1: invokespecial #173                // Method java/lang/Object.clone:()Ljava/lang/Object;
+       4: checkcast     #20                 // class java/util/Locale
+       7: astore_1
+       8: aload_1
+       9: areturn
+      10: astore_1
+      11: new           #175                // class java/lang/InternalError
+      14: dup
+      15: aload_1
+      16: invokespecial #176                // Method java/lang/InternalError."<init>":(Ljava/lang/Throwable;)V
+      19: athrow
+    Exception table:
+       from    to  target type
+           0     9    10   Class java/lang/CloneNotSupportedException
 
   public int hashCode();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field hashCodeValue:I
+       4: istore_1
+       5: iload_1
+       6: ifne          39
+       9: aload_0
+      10: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      13: invokevirtual #177                // Method sun/util/locale/BaseLocale.hashCode:()I
+      16: istore_1
+      17: aload_0
+      18: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      21: ifnull        34
+      24: iload_1
+      25: aload_0
+      26: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      29: invokevirtual #178                // Method sun/util/locale/LocaleExtensions.hashCode:()I
+      32: ixor
+      33: istore_1
+      34: aload_0
+      35: iload_1
+      36: putfield      #6                  // Field hashCodeValue:I
+      39: iload_1
+      40: ireturn
 
   public boolean equals(java.lang.Object);
-    Signature: (Ljava/lang/Object;)Z
+    descriptor: (Ljava/lang/Object;)Z
+    Code:
+       0: aload_0
+       1: aload_1
+       2: if_acmpne     7
+       5: iconst_1
+       6: ireturn
+       7: aload_1
+       8: instanceof    #20                 // class java/util/Locale
+      11: ifne          16
+      14: iconst_0
+      15: ireturn
+      16: aload_1
+      17: checkcast     #20                 // class java/util/Locale
+      20: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      23: astore_2
+      24: aload_0
+      25: getfield      #3                  // Field baseLocale:Lsun/util/locale/BaseLocale;
+      28: aload_2
+      29: invokevirtual #179                // Method sun/util/locale/BaseLocale.equals:(Ljava/lang/Object;)Z
+      32: ifne          37
+      35: iconst_0
+      36: ireturn
+      37: aload_0
+      38: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      41: ifnonnull     60
+      44: aload_1
+      45: checkcast     #20                 // class java/util/Locale
+      48: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      51: ifnonnull     58
+      54: iconst_1
+      55: goto          59
+      58: iconst_0
+      59: ireturn
+      60: aload_0
+      61: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      64: aload_1
+      65: checkcast     #20                 // class java/util/Locale
+      68: getfield      #2                  // Field localeExtensions:Lsun/util/locale/LocaleExtensions;
+      71: invokevirtual #180                // Method sun/util/locale/LocaleExtensions.equals:(Ljava/lang/Object;)Z
+      74: ireturn
+
+  public static java.util.List<java.util.Locale> filter(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.util.Locale>, java.util.Locale$FilteringMode);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokestatic  #222                // Method sun/util/locale/LocaleMatcher.filter:(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+       6: areturn
+
+  public static java.util.List<java.util.Locale> filter(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.util.Locale>);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;)Ljava/util/List;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: getstatic     #223                // Field java/util/Locale$FilteringMode.AUTOSELECT_FILTERING:Ljava/util/Locale$FilteringMode;
+       5: invokestatic  #224                // Method filter:(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+       8: areturn
+
+  public static java.util.List<java.lang.String> filterTags(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.lang.String>, java.util.Locale$FilteringMode);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokestatic  #225                // Method sun/util/locale/LocaleMatcher.filterTags:(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+       6: areturn
+
+  public static java.util.List<java.lang.String> filterTags(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.lang.String>);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;)Ljava/util/List;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: getstatic     #223                // Field java/util/Locale$FilteringMode.AUTOSELECT_FILTERING:Ljava/util/Locale$FilteringMode;
+       5: invokestatic  #226                // Method filterTags:(Ljava/util/List;Ljava/util/Collection;Ljava/util/Locale$FilteringMode;)Ljava/util/List;
+       8: areturn
+
+  public static java.util.Locale lookup(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.util.Locale>);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;)Ljava/util/Locale;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #227                // Method sun/util/locale/LocaleMatcher.lookup:(Ljava/util/List;Ljava/util/Collection;)Ljava/util/Locale;
+       5: areturn
+
+  public static java.lang.String lookupTag(java.util.List<java.util.Locale$LanguageRange>, java.util.Collection<java.lang.String>);
+    descriptor: (Ljava/util/List;Ljava/util/Collection;)Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #228                // Method sun/util/locale/LocaleMatcher.lookupTag:(Ljava/util/List;Ljava/util/Collection;)Ljava/lang/String;
+       5: areturn
 }

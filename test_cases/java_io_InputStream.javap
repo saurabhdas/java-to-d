@@ -1,32 +1,170 @@
 Compiled from "InputStream.java"
 public abstract class java.io.InputStream implements java.io.Closeable {
   public java.io.InputStream();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
 
   public abstract int read() throws java.io.IOException;
-    Signature: ()I
+    descriptor: ()I
 
   public int read(byte[]) throws java.io.IOException;
-    Signature: ([B)I
+    descriptor: ([B)I
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: aload_1
+       4: arraylength
+       5: invokevirtual #2                  // Method read:([BII)I
+       8: ireturn
 
   public int read(byte[], int, int) throws java.io.IOException;
-    Signature: ([BII)I
+    descriptor: ([BII)I
+    Code:
+       0: aload_1
+       1: ifnonnull     12
+       4: new           #3                  // class java/lang/NullPointerException
+       7: dup
+       8: invokespecial #4                  // Method java/lang/NullPointerException."<init>":()V
+      11: athrow
+      12: iload_2
+      13: iflt          28
+      16: iload_3
+      17: iflt          28
+      20: iload_3
+      21: aload_1
+      22: arraylength
+      23: iload_2
+      24: isub
+      25: if_icmple     36
+      28: new           #5                  // class java/lang/IndexOutOfBoundsException
+      31: dup
+      32: invokespecial #6                  // Method java/lang/IndexOutOfBoundsException."<init>":()V
+      35: athrow
+      36: iload_3
+      37: ifne          42
+      40: iconst_0
+      41: ireturn
+      42: aload_0
+      43: invokevirtual #7                  // Method read:()I
+      46: istore        4
+      48: iload         4
+      50: iconst_m1
+      51: if_icmpne     56
+      54: iconst_m1
+      55: ireturn
+      56: aload_1
+      57: iload_2
+      58: iload         4
+      60: i2b
+      61: bastore
+      62: iconst_1
+      63: istore        5
+      65: iload         5
+      67: iload_3
+      68: if_icmpge     101
+      71: aload_0
+      72: invokevirtual #7                  // Method read:()I
+      75: istore        4
+      77: iload         4
+      79: iconst_m1
+      80: if_icmpne     86
+      83: goto          101
+      86: aload_1
+      87: iload_2
+      88: iload         5
+      90: iadd
+      91: iload         4
+      93: i2b
+      94: bastore
+      95: iinc          5, 1
+      98: goto          65
+     101: goto          106
+     104: astore        6
+     106: iload         5
+     108: ireturn
+    Exception table:
+       from    to  target type
+          65   101   104   Class java/io/IOException
 
   public long skip(long) throws java.io.IOException;
-    Signature: (J)J
+    descriptor: (J)J
+    Code:
+       0: lload_1
+       1: lstore_3
+       2: lload_1
+       3: lconst_0
+       4: lcmp
+       5: ifgt          10
+       8: lconst_0
+       9: lreturn
+      10: ldc2_w        #10                 // long 2048l
+      13: lload_3
+      14: invokestatic  #12                 // Method java/lang/Math.min:(JJ)J
+      17: l2i
+      18: istore        6
+      20: iload         6
+      22: newarray       byte
+      24: astore        7
+      26: lload_3
+      27: lconst_0
+      28: lcmp
+      29: ifle          66
+      32: aload_0
+      33: aload         7
+      35: iconst_0
+      36: iload         6
+      38: i2l
+      39: lload_3
+      40: invokestatic  #12                 // Method java/lang/Math.min:(JJ)J
+      43: l2i
+      44: invokevirtual #2                  // Method read:([BII)I
+      47: istore        5
+      49: iload         5
+      51: ifge          57
+      54: goto          66
+      57: lload_3
+      58: iload         5
+      60: i2l
+      61: lsub
+      62: lstore_3
+      63: goto          26
+      66: lload_1
+      67: lload_3
+      68: lsub
+      69: lreturn
 
   public int available() throws java.io.IOException;
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: iconst_0
+       1: ireturn
 
   public void close() throws java.io.IOException;
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: return
 
   public synchronized void mark(int);
-    Signature: (I)V
+    descriptor: (I)V
+    Code:
+       0: return
 
   public synchronized void reset() throws java.io.IOException;
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: new           #8                  // class java/io/IOException
+       3: dup
+       4: ldc           #13                 // String mark/reset not supported
+       6: invokespecial #14                 // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+       9: athrow
 
   public boolean markSupported();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: iconst_0
+       1: ireturn
 }

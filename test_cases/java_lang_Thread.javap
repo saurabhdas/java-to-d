@@ -1,158 +1,1009 @@
 Compiled from "Thread.java"
 public class java.lang.Thread implements java.lang.Runnable {
   public static final int MIN_PRIORITY;
-    Signature: I
+    descriptor: I
+
   public static final int NORM_PRIORITY;
-    Signature: I
+    descriptor: I
+
   public static final int MAX_PRIORITY;
-    Signature: I
+    descriptor: I
+
   public static native java.lang.Thread currentThread();
-    Signature: ()Ljava/lang/Thread;
+    descriptor: ()Ljava/lang/Thread;
 
   public static native void yield();
-    Signature: ()V
+    descriptor: ()V
 
   public static native void sleep(long) throws java.lang.InterruptedException;
-    Signature: (J)V
+    descriptor: (J)V
 
   public static void sleep(long, int) throws java.lang.InterruptedException;
-    Signature: (JI)V
+    descriptor: (JI)V
+    Code:
+       0: lload_0
+       1: lconst_0
+       2: lcmp
+       3: ifge          16
+       6: new           #5                  // class java/lang/IllegalArgumentException
+       9: dup
+      10: ldc           #6                  // String timeout value is negative
+      12: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      15: athrow
+      16: iload_2
+      17: iflt          26
+      20: iload_2
+      21: ldc           #8                  // int 999999
+      23: if_icmple     36
+      26: new           #5                  // class java/lang/IllegalArgumentException
+      29: dup
+      30: ldc           #9                  // String nanosecond timeout value out of range
+      32: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      35: athrow
+      36: iload_2
+      37: ldc           #10                 // int 500000
+      39: if_icmpge     52
+      42: iload_2
+      43: ifeq          56
+      46: lload_0
+      47: lconst_0
+      48: lcmp
+      49: ifne          56
+      52: lload_0
+      53: lconst_1
+      54: ladd
+      55: lstore_0
+      56: lload_0
+      57: invokestatic  #11                 // Method sleep:(J)V
+      60: return
 
   public java.lang.Thread();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aconst_null
+      42: aconst_null
+      43: new           #51                 // class java/lang/StringBuilder
+      46: dup
+      47: invokespecial #52                 // Method java/lang/StringBuilder."<init>":()V
+      50: ldc           #53                 // String Thread-
+      52: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: invokestatic  #55                 // Method nextThreadNum:()I
+      58: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      61: invokevirtual #57                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: lconst_0
+      65: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      68: return
 
   public java.lang.Thread(java.lang.Runnable);
-    Signature: (Ljava/lang/Runnable;)V
+    descriptor: (Ljava/lang/Runnable;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aconst_null
+      42: aload_1
+      43: new           #51                 // class java/lang/StringBuilder
+      46: dup
+      47: invokespecial #52                 // Method java/lang/StringBuilder."<init>":()V
+      50: ldc           #53                 // String Thread-
+      52: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: invokestatic  #55                 // Method nextThreadNum:()I
+      58: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      61: invokevirtual #57                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: lconst_0
+      65: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      68: return
 
   public java.lang.Thread(java.lang.ThreadGroup, java.lang.Runnable);
-    Signature: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;)V
+    descriptor: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aload_1
+      42: aload_2
+      43: new           #51                 // class java/lang/StringBuilder
+      46: dup
+      47: invokespecial #52                 // Method java/lang/StringBuilder."<init>":()V
+      50: ldc           #53                 // String Thread-
+      52: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: invokestatic  #55                 // Method nextThreadNum:()I
+      58: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      61: invokevirtual #57                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: lconst_0
+      65: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      68: return
 
   public java.lang.Thread(java.lang.String);
-    Signature: (Ljava/lang/String;)V
+    descriptor: (Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aconst_null
+      42: aconst_null
+      43: aload_1
+      44: lconst_0
+      45: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      48: return
 
   public java.lang.Thread(java.lang.ThreadGroup, java.lang.String);
-    Signature: (Ljava/lang/ThreadGroup;Ljava/lang/String;)V
+    descriptor: (Ljava/lang/ThreadGroup;Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aload_1
+      42: aconst_null
+      43: aload_2
+      44: lconst_0
+      45: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      48: return
 
   public java.lang.Thread(java.lang.Runnable, java.lang.String);
-    Signature: (Ljava/lang/Runnable;Ljava/lang/String;)V
+    descriptor: (Ljava/lang/Runnable;Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aconst_null
+      42: aload_1
+      43: aload_2
+      44: lconst_0
+      45: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      48: return
 
   public java.lang.Thread(java.lang.ThreadGroup, java.lang.Runnable, java.lang.String);
-    Signature: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;)V
+    descriptor: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aload_1
+      42: aload_2
+      43: aload_3
+      44: lconst_0
+      45: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      48: return
 
   public java.lang.Thread(java.lang.ThreadGroup, java.lang.Runnable, java.lang.String, long);
-    Signature: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+    descriptor: (Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+    Code:
+       0: aload_0
+       1: invokespecial #46                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #30                 // Field daemon:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #47                 // Field stillborn:Z
+      14: aload_0
+      15: aconst_null
+      16: putfield      #48                 // Field threadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #39                 // Field inheritableThreadLocals:Ljava/lang/ThreadLocal$ThreadLocalMap;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #49                 // Field threadStatus:I
+      29: aload_0
+      30: new           #50                 // class java/lang/Object
+      33: dup
+      34: invokespecial #46                 // Method java/lang/Object."<init>":()V
+      37: putfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      40: aload_0
+      41: aload_1
+      42: aload_2
+      43: aload_3
+      44: lload         4
+      46: invokespecial #58                 // Method init:(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+      49: return
 
   public synchronized void start();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: getfield      #49                 // Field threadStatus:I
+       4: ifeq          15
+       7: new           #59                 // class java/lang/IllegalThreadStateException
+      10: dup
+      11: invokespecial #60                 // Method java/lang/IllegalThreadStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: getfield      #28                 // Field group:Ljava/lang/ThreadGroup;
+      19: aload_0
+      20: invokevirtual #61                 // Method java/lang/ThreadGroup.add:(Ljava/lang/Thread;)V
+      23: iconst_0
+      24: istore_1
+      25: aload_0
+      26: invokespecial #62                 // Method start0:()V
+      29: iconst_1
+      30: istore_1
+      31: iload_1
+      32: ifne          43
+      35: aload_0
+      36: getfield      #28                 // Field group:Ljava/lang/ThreadGroup;
+      39: aload_0
+      40: invokevirtual #63                 // Method java/lang/ThreadGroup.threadStartFailed:(Ljava/lang/Thread;)V
+      43: goto          70
+      46: astore_2
+      47: goto          70
+      50: astore_3
+      51: iload_1
+      52: ifne          63
+      55: aload_0
+      56: getfield      #28                 // Field group:Ljava/lang/ThreadGroup;
+      59: aload_0
+      60: invokevirtual #63                 // Method java/lang/ThreadGroup.threadStartFailed:(Ljava/lang/Thread;)V
+      63: goto          68
+      66: astore        4
+      68: aload_3
+      69: athrow
+      70: return
+    Exception table:
+       from    to  target type
+          31    43    46   Class java/lang/Throwable
+          25    31    50   any
+          51    63    66   Class java/lang/Throwable
 
   public void run();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: getfield      #37                 // Field target:Ljava/lang/Runnable;
+       4: ifnull        16
+       7: aload_0
+       8: getfield      #37                 // Field target:Ljava/lang/Runnable;
+      11: invokeinterface #65,  1           // InterfaceMethod java/lang/Runnable.run:()V
+      16: return
 
   public final void stop();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+       3: astore_1
+       4: aload_1
+       5: ifnull        26
+       8: aload_0
+       9: invokevirtual #68                 // Method checkAccess:()V
+      12: aload_0
+      13: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+      16: if_acmpeq     26
+      19: aload_1
+      20: getstatic     #69                 // Field sun/security/util/SecurityConstants.STOP_THREAD_PERMISSION:Ljava/lang/RuntimePermission;
+      23: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      26: aload_0
+      27: getfield      #49                 // Field threadStatus:I
+      30: ifeq          37
+      33: aload_0
+      34: invokevirtual #70                 // Method resume:()V
+      37: aload_0
+      38: new           #71                 // class java/lang/ThreadDeath
+      41: dup
+      42: invokespecial #72                 // Method java/lang/ThreadDeath."<init>":()V
+      45: invokespecial #73                 // Method stop0:(Ljava/lang/Object;)V
+      48: return
 
   public final synchronized void stop(java.lang.Throwable);
-    Signature: (Ljava/lang/Throwable;)V
+    descriptor: (Ljava/lang/Throwable;)V
+    Code:
+       0: new           #74                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: invokespecial #75                 // Method java/lang/UnsupportedOperationException."<init>":()V
+       7: athrow
 
   public void interrupt();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+       4: if_acmpeq     11
+       7: aload_0
+       8: invokevirtual #68                 // Method checkAccess:()V
+      11: aload_0
+      12: getfield      #3                  // Field blockerLock:Ljava/lang/Object;
+      15: dup
+      16: astore_1
+      17: monitorenter
+      18: aload_0
+      19: getfield      #4                  // Field blocker:Lsun/nio/ch/Interruptible;
+      22: astore_2
+      23: aload_2
+      24: ifnull        41
+      27: aload_0
+      28: invokespecial #76                 // Method interrupt0:()V
+      31: aload_2
+      32: aload_0
+      33: invokeinterface #77,  2           // InterfaceMethod sun/nio/ch/Interruptible.interrupt:(Ljava/lang/Thread;)V
+      38: aload_1
+      39: monitorexit
+      40: return
+      41: aload_1
+      42: monitorexit
+      43: goto          51
+      46: astore_3
+      47: aload_1
+      48: monitorexit
+      49: aload_3
+      50: athrow
+      51: aload_0
+      52: invokespecial #76                 // Method interrupt0:()V
+      55: return
+    Exception table:
+       from    to  target type
+          18    40    46   any
+          41    43    46   any
+          46    49    46   any
 
   public static boolean interrupted();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+       3: iconst_1
+       4: invokespecial #78                 // Method isInterrupted:(Z)Z
+       7: ireturn
 
   public boolean isInterrupted();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: invokespecial #78                 // Method isInterrupted:(Z)Z
+       5: ireturn
 
   public void destroy();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: new           #79                 // class java/lang/NoSuchMethodError
+       3: dup
+       4: invokespecial #80                 // Method java/lang/NoSuchMethodError."<init>":()V
+       7: athrow
 
   public final native boolean isAlive();
-    Signature: ()Z
+    descriptor: ()Z
 
   public final void suspend();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: aload_0
+       5: invokespecial #81                 // Method suspend0:()V
+       8: return
 
   public final void resume();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: aload_0
+       5: invokespecial #82                 // Method resume0:()V
+       8: return
 
   public final void setPriority(int);
-    Signature: (I)V
+    descriptor: (I)V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: iload_1
+       5: bipush        10
+       7: if_icmpgt     15
+      10: iload_1
+      11: iconst_1
+      12: if_icmpge     23
+      15: new           #5                  // class java/lang/IllegalArgumentException
+      18: dup
+      19: invokespecial #84                 // Method java/lang/IllegalArgumentException."<init>":()V
+      22: athrow
+      23: aload_0
+      24: invokevirtual #21                 // Method getThreadGroup:()Ljava/lang/ThreadGroup;
+      27: dup
+      28: astore_2
+      29: ifnull        55
+      32: iload_1
+      33: aload_2
+      34: invokevirtual #85                 // Method java/lang/ThreadGroup.getMaxPriority:()I
+      37: if_icmple     45
+      40: aload_2
+      41: invokevirtual #85                 // Method java/lang/ThreadGroup.getMaxPriority:()I
+      44: istore_1
+      45: aload_0
+      46: aload_0
+      47: iload_1
+      48: dup_x1
+      49: putfield      #32                 // Field priority:I
+      52: invokespecial #86                 // Method setPriority0:(I)V
+      55: return
 
   public final int getPriority();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field priority:I
+       4: ireturn
 
-  public final void setName(java.lang.String);
-    Signature: (Ljava/lang/String;)V
+  public final synchronized void setName(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #16                 // Method java/lang/String.toCharArray:()[C
+       9: putfield      #17                 // Field name:[C
+      12: aload_0
+      13: getfield      #49                 // Field threadStatus:I
+      16: ifeq          24
+      19: aload_0
+      20: aload_1
+      21: invokespecial #87                 // Method setNativeName:(Ljava/lang/String;)V
+      24: return
 
   public final java.lang.String getName();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: new           #88                 // class java/lang/String
+       3: dup
+       4: aload_0
+       5: getfield      #17                 // Field name:[C
+       8: iconst_1
+       9: invokespecial #89                 // Method java/lang/String."<init>":([CZ)V
+      12: areturn
 
   public final java.lang.ThreadGroup getThreadGroup();
-    Signature: ()Ljava/lang/ThreadGroup;
+    descriptor: ()Ljava/lang/ThreadGroup;
+    Code:
+       0: aload_0
+       1: getfield      #28                 // Field group:Ljava/lang/ThreadGroup;
+       4: areturn
 
   public static int activeCount();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+       3: invokevirtual #21                 // Method getThreadGroup:()Ljava/lang/ThreadGroup;
+       6: invokevirtual #90                 // Method java/lang/ThreadGroup.activeCount:()I
+       9: ireturn
 
   public static int enumerate(java.lang.Thread[]);
-    Signature: ([Ljava/lang/Thread;)I
+    descriptor: ([Ljava/lang/Thread;)I
+    Code:
+       0: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+       3: invokevirtual #21                 // Method getThreadGroup:()Ljava/lang/ThreadGroup;
+       6: aload_0
+       7: invokevirtual #91                 // Method java/lang/ThreadGroup.enumerate:([Ljava/lang/Thread;)I
+      10: ireturn
 
   public native int countStackFrames();
-    Signature: ()I
+    descriptor: ()I
 
   public final synchronized void join(long) throws java.lang.InterruptedException;
-    Signature: (J)V
+    descriptor: (J)V
+    Code:
+       0: invokestatic  #92                 // Method java/lang/System.currentTimeMillis:()J
+       3: lstore_3
+       4: lconst_0
+       5: lstore        5
+       7: lload_1
+       8: lconst_0
+       9: lcmp
+      10: ifge          23
+      13: new           #5                  // class java/lang/IllegalArgumentException
+      16: dup
+      17: ldc           #6                  // String timeout value is negative
+      19: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      22: athrow
+      23: lload_1
+      24: lconst_0
+      25: lcmp
+      26: ifne          44
+      29: aload_0
+      30: invokevirtual #93                 // Method isAlive:()Z
+      33: ifeq          83
+      36: aload_0
+      37: lconst_0
+      38: invokevirtual #94                 // Method java/lang/Object.wait:(J)V
+      41: goto          29
+      44: aload_0
+      45: invokevirtual #93                 // Method isAlive:()Z
+      48: ifeq          83
+      51: lload_1
+      52: lload         5
+      54: lsub
+      55: lstore        7
+      57: lload         7
+      59: lconst_0
+      60: lcmp
+      61: ifgt          67
+      64: goto          83
+      67: aload_0
+      68: lload         7
+      70: invokevirtual #94                 // Method java/lang/Object.wait:(J)V
+      73: invokestatic  #92                 // Method java/lang/System.currentTimeMillis:()J
+      76: lload_3
+      77: lsub
+      78: lstore        5
+      80: goto          44
+      83: return
 
   public final synchronized void join(long, int) throws java.lang.InterruptedException;
-    Signature: (JI)V
+    descriptor: (JI)V
+    Code:
+       0: lload_1
+       1: lconst_0
+       2: lcmp
+       3: ifge          16
+       6: new           #5                  // class java/lang/IllegalArgumentException
+       9: dup
+      10: ldc           #6                  // String timeout value is negative
+      12: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      15: athrow
+      16: iload_3
+      17: iflt          26
+      20: iload_3
+      21: ldc           #8                  // int 999999
+      23: if_icmple     36
+      26: new           #5                  // class java/lang/IllegalArgumentException
+      29: dup
+      30: ldc           #9                  // String nanosecond timeout value out of range
+      32: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      35: athrow
+      36: iload_3
+      37: ldc           #10                 // int 500000
+      39: if_icmpge     52
+      42: iload_3
+      43: ifeq          56
+      46: lload_1
+      47: lconst_0
+      48: lcmp
+      49: ifne          56
+      52: lload_1
+      53: lconst_1
+      54: ladd
+      55: lstore_1
+      56: aload_0
+      57: lload_1
+      58: invokevirtual #95                 // Method join:(J)V
+      61: return
 
   public final void join() throws java.lang.InterruptedException;
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: aload_0
+       1: lconst_0
+       2: invokevirtual #95                 // Method join:(J)V
+       5: return
 
   public static void dumpStack();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: new           #96                 // class java/lang/Exception
+       3: dup
+       4: ldc           #97                 // String Stack trace
+       6: invokespecial #98                 // Method java/lang/Exception."<init>":(Ljava/lang/String;)V
+       9: invokevirtual #99                 // Method java/lang/Exception.printStackTrace:()V
+      12: return
 
   public final void setDaemon(boolean);
-    Signature: (Z)V
+    descriptor: (Z)V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: aload_0
+       5: invokevirtual #93                 // Method isAlive:()Z
+       8: ifeq          19
+      11: new           #59                 // class java/lang/IllegalThreadStateException
+      14: dup
+      15: invokespecial #60                 // Method java/lang/IllegalThreadStateException."<init>":()V
+      18: athrow
+      19: aload_0
+      20: iload_1
+      21: putfield      #30                 // Field daemon:Z
+      24: return
 
   public final boolean isDaemon();
-    Signature: ()Z
+    descriptor: ()Z
+    Code:
+       0: aload_0
+       1: getfield      #30                 // Field daemon:Z
+       4: ireturn
 
   public final void checkAccess();
-    Signature: ()V
+    descriptor: ()V
+    Code:
+       0: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+       3: astore_1
+       4: aload_1
+       5: ifnull        13
+       8: aload_1
+       9: aload_0
+      10: invokevirtual #100                // Method java/lang/SecurityManager.checkAccess:(Ljava/lang/Thread;)V
+      13: return
 
   public java.lang.String toString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: invokevirtual #21                 // Method getThreadGroup:()Ljava/lang/ThreadGroup;
+       4: astore_1
+       5: aload_1
+       6: ifnull        61
+       9: new           #51                 // class java/lang/StringBuilder
+      12: dup
+      13: invokespecial #52                 // Method java/lang/StringBuilder."<init>":()V
+      16: ldc           #101                // String Thread[
+      18: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      21: aload_0
+      22: invokevirtual #102                // Method getName:()Ljava/lang/String;
+      25: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: ldc           #103                // String ,
+      30: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: aload_0
+      34: invokevirtual #31                 // Method getPriority:()I
+      37: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      40: ldc           #103                // String ,
+      42: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: aload_1
+      46: invokevirtual #104                // Method java/lang/ThreadGroup.getName:()Ljava/lang/String;
+      49: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: ldc           #105                // String ]
+      54: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: invokevirtual #57                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      60: areturn
+      61: new           #51                 // class java/lang/StringBuilder
+      64: dup
+      65: invokespecial #52                 // Method java/lang/StringBuilder."<init>":()V
+      68: ldc           #101                // String Thread[
+      70: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: aload_0
+      74: invokevirtual #102                // Method getName:()Ljava/lang/String;
+      77: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: ldc           #103                // String ,
+      82: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      85: aload_0
+      86: invokevirtual #31                 // Method getPriority:()I
+      89: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      92: ldc           #103                // String ,
+      94: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      97: ldc           #106                // String
+      99: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     102: ldc           #105                // String ]
+     104: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     107: invokevirtual #57                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     110: areturn
 
   public java.lang.ClassLoader getContextClassLoader();
-    Signature: ()Ljava/lang/ClassLoader;
+    descriptor: ()Ljava/lang/ClassLoader;
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field contextClassLoader:Ljava/lang/ClassLoader;
+       4: ifnonnull     9
+       7: aconst_null
+       8: areturn
+       9: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+      12: astore_1
+      13: aload_1
+      14: ifnull        27
+      17: aload_0
+      18: getfield      #34                 // Field contextClassLoader:Ljava/lang/ClassLoader;
+      21: invokestatic  #107                // Method sun/reflect/Reflection.getCallerClass:()Ljava/lang/Class;
+      24: invokestatic  #108                // Method java/lang/ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V
+      27: aload_0
+      28: getfield      #34                 // Field contextClassLoader:Ljava/lang/ClassLoader;
+      31: areturn
 
   public void setContextClassLoader(java.lang.ClassLoader);
-    Signature: (Ljava/lang/ClassLoader;)V
+    descriptor: (Ljava/lang/ClassLoader;)V
+    Code:
+       0: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+       3: astore_2
+       4: aload_2
+       5: ifnull        21
+       8: aload_2
+       9: new           #109                // class java/lang/RuntimePermission
+      12: dup
+      13: ldc           #110                // String setContextClassLoader
+      15: invokespecial #111                // Method java/lang/RuntimePermission."<init>":(Ljava/lang/String;)V
+      18: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      21: aload_0
+      22: aload_1
+      23: putfield      #34                 // Field contextClassLoader:Ljava/lang/ClassLoader;
+      26: return
 
   public static native boolean holdsLock(java.lang.Object);
-    Signature: (Ljava/lang/Object;)Z
+    descriptor: (Ljava/lang/Object;)Z
 
   public java.lang.StackTraceElement[] getStackTrace();
-    Signature: ()[Ljava/lang/StackTraceElement;
+    descriptor: ()[Ljava/lang/StackTraceElement;
+    Code:
+       0: aload_0
+       1: invokestatic  #18                 // Method currentThread:()Ljava/lang/Thread;
+       4: if_acmpeq     59
+       7: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+      10: astore_1
+      11: aload_1
+      12: ifnull        22
+      15: aload_1
+      16: getstatic     #112                // Field sun/security/util/SecurityConstants.GET_STACK_TRACE_PERMISSION:Ljava/lang/RuntimePermission;
+      19: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      22: aload_0
+      23: invokevirtual #93                 // Method isAlive:()Z
+      26: ifne          33
+      29: getstatic     #113                // Field EMPTY_STACK_TRACE:[Ljava/lang/StackTraceElement;
+      32: areturn
+      33: iconst_1
+      34: anewarray     #83                 // class java/lang/Thread
+      37: dup
+      38: iconst_0
+      39: aload_0
+      40: aastore
+      41: invokestatic  #114                // Method dumpThreads:([Ljava/lang/Thread;)[[Ljava/lang/StackTraceElement;
+      44: astore_2
+      45: aload_2
+      46: iconst_0
+      47: aaload
+      48: astore_3
+      49: aload_3
+      50: ifnonnull     57
+      53: getstatic     #113                // Field EMPTY_STACK_TRACE:[Ljava/lang/StackTraceElement;
+      56: astore_3
+      57: aload_3
+      58: areturn
+      59: new           #96                 // class java/lang/Exception
+      62: dup
+      63: invokespecial #115                // Method java/lang/Exception."<init>":()V
+      66: invokevirtual #116                // Method java/lang/Exception.getStackTrace:()[Ljava/lang/StackTraceElement;
+      69: areturn
 
   public static java.util.Map<java.lang.Thread, java.lang.StackTraceElement[]> getAllStackTraces();
-    Signature: ()Ljava/util/Map;
+    descriptor: ()Ljava/util/Map;
+    Code:
+       0: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+       3: astore_0
+       4: aload_0
+       5: ifnull        22
+       8: aload_0
+       9: getstatic     #112                // Field sun/security/util/SecurityConstants.GET_STACK_TRACE_PERMISSION:Ljava/lang/RuntimePermission;
+      12: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      15: aload_0
+      16: getstatic     #117                // Field sun/security/util/SecurityConstants.MODIFY_THREADGROUP_PERMISSION:Ljava/lang/RuntimePermission;
+      19: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      22: invokestatic  #118                // Method getThreads:()[Ljava/lang/Thread;
+      25: astore_1
+      26: aload_1
+      27: invokestatic  #114                // Method dumpThreads:([Ljava/lang/Thread;)[[Ljava/lang/StackTraceElement;
+      30: astore_2
+      31: new           #119                // class java/util/HashMap
+      34: dup
+      35: aload_1
+      36: arraylength
+      37: invokespecial #120                // Method java/util/HashMap."<init>":(I)V
+      40: astore_3
+      41: iconst_0
+      42: istore        4
+      44: iload         4
+      46: aload_1
+      47: arraylength
+      48: if_icmpge     81
+      51: aload_2
+      52: iload         4
+      54: aaload
+      55: astore        5
+      57: aload         5
+      59: ifnull        75
+      62: aload_3
+      63: aload_1
+      64: iload         4
+      66: aaload
+      67: aload         5
+      69: invokeinterface #121,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      74: pop
+      75: iinc          4, 1
+      78: goto          44
+      81: aload_3
+      82: areturn
 
   public long getId();
-    Signature: ()J
+    descriptor: ()J
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field tid:J
+       4: lreturn
 
   public java.lang.Thread$State getState();
-    Signature: ()Ljava/lang/Thread$State;
+    descriptor: ()Ljava/lang/Thread$State;
+    Code:
+       0: aload_0
+       1: getfield      #49                 // Field threadStatus:I
+       4: invokestatic  #136                // Method sun/misc/VM.toThreadState:(I)Ljava/lang/Thread$State;
+       7: areturn
 
   public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler);
-    Signature: (Ljava/lang/Thread$UncaughtExceptionHandler;)V
+    descriptor: (Ljava/lang/Thread$UncaughtExceptionHandler;)V
+    Code:
+       0: invokestatic  #19                 // Method java/lang/System.getSecurityManager:()Ljava/lang/SecurityManager;
+       3: astore_1
+       4: aload_1
+       5: ifnull        21
+       8: aload_1
+       9: new           #109                // class java/lang/RuntimePermission
+      12: dup
+      13: ldc           #137                // String setDefaultUncaughtExceptionHandler
+      15: invokespecial #111                // Method java/lang/RuntimePermission."<init>":(Ljava/lang/String;)V
+      18: invokevirtual #26                 // Method java/lang/SecurityManager.checkPermission:(Ljava/security/Permission;)V
+      21: aload_0
+      22: putstatic     #138                // Field defaultUncaughtExceptionHandler:Ljava/lang/Thread$UncaughtExceptionHandler;
+      25: return
 
   public static java.lang.Thread$UncaughtExceptionHandler getDefaultUncaughtExceptionHandler();
-    Signature: ()Ljava/lang/Thread$UncaughtExceptionHandler;
+    descriptor: ()Ljava/lang/Thread$UncaughtExceptionHandler;
+    Code:
+       0: getstatic     #138                // Field defaultUncaughtExceptionHandler:Ljava/lang/Thread$UncaughtExceptionHandler;
+       3: areturn
 
   public java.lang.Thread$UncaughtExceptionHandler getUncaughtExceptionHandler();
-    Signature: ()Ljava/lang/Thread$UncaughtExceptionHandler;
+    descriptor: ()Ljava/lang/Thread$UncaughtExceptionHandler;
+    Code:
+       0: aload_0
+       1: getfield      #67                 // Field uncaughtExceptionHandler:Ljava/lang/Thread$UncaughtExceptionHandler;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #67                 // Field uncaughtExceptionHandler:Ljava/lang/Thread$UncaughtExceptionHandler;
+      11: goto          18
+      14: aload_0
+      15: getfield      #28                 // Field group:Ljava/lang/ThreadGroup;
+      18: areturn
 
   public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler);
-    Signature: (Ljava/lang/Thread$UncaughtExceptionHandler;)V
+    descriptor: (Ljava/lang/Thread$UncaughtExceptionHandler;)V
+    Code:
+       0: aload_0
+       1: invokevirtual #68                 // Method checkAccess:()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #67                 // Field uncaughtExceptionHandler:Ljava/lang/Thread$UncaughtExceptionHandler;
+       9: return
 }

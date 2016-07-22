@@ -1,5 +1,5 @@
 Compiled from "Comparable.java"
-public interface java.lang.Comparable<T extends U> {
+public interface java.lang.Comparable<T> {
   public abstract int compareTo(T);
-    Signature: (Ljava/lang/Object;)I
+    descriptor: (Ljava/lang/Object;)I
 }

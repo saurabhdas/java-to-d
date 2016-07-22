@@ -1,13 +1,15 @@
-﻿module jgrammar;
+﻿module detail.jgrammar;
 
 import std.string, std.algorithm, std.array, std.typecons;
+import pegged.grammar;
 
+private:
 enum javapGrammar = `
 J:
     Body                    < Heading Declaration "{" Definition* "}"
     Heading                 < "Compiled from \"" Name ".java\""
     Declaration             < (ClassDeclaration / InterfaceDeclaration)
-    Definition              < JavaSignature ("Signature:"/"descriptor:") JniSignature
+    Definition              < JavaSignature ("Signature:"/"descriptor:") JniSignature Code?
 
     InterfaceDeclaration    < Modifier* "interface" ClassName Extends?
     ClassDeclaration        < Modifier* "class" ClassName Extends? Implements?
@@ -37,13 +39,15 @@ J:
     Wildcard                <- '?'
     Array                   <- "[]"+
     Name                    <- identifier
+
+    Code                    <- :endOfLine? '    '? 'Code:' :endOfLine ('    ' (!endOfLine .)+ :endOfLine)+
 `;
+
+public:
+mixin(grammar(javapGrammar));
 
 unittest
 {
-    import pegged.grammar;
-    mixin(grammar(javapGrammar));
-    
     assert(J.Heading("Compiled from \"Object.java\"").successful);
     assert(J.Heading("Compiled from \"Class.java\"").successful);
     assert(!J.Heading("Compiled from \"abc.Class.java\"").successful);
@@ -92,7 +96,14 @@ unittest
     assert(J.JniSignature("(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;").successful);
     assert(J.JniSignature("()[[Ljava/lang/annotation/Annotation;").successful);
     assert(J.JniSignature("(Ljava/util/Locale$Category;)Ljava/util/Locale;").successful);
-    
+
+    assert(J.Code(`    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+`).successful);
+
     import std.file;
     assert(J(readText("test_cases/java_lang_Comparable.javap")).successful);
     assert(J(readText("test_cases/my_example_InterfaceExtends.javap")).successful);
@@ -102,7 +113,7 @@ unittest
     assert(J(readText("test_cases/java_lang_Class.javap")).successful);
     assert(J(readText("test_cases/java_lang_reflect_Method.javap")).successful);
     assert(J(readText("test_cases/java_io_InputStream.javap")).successful);
-    assert(J(readText("test_cases/java_nio_charset_Chartset.javap")).successful);
+    assert(J(readText("test_cases/java_nio_charset_Charset.javap")).successful);
     assert(J(readText("test_cases/java_util_Locale.javap")).successful);
     assert(J(readText("test_cases/java_util_Locale_Category.javap")).successful);
     assert(J(readText("test_cases/java_lang_AbstractStringBuilder.javap")).successful);
@@ -110,62 +121,3 @@ unittest
     assert(J(readText("test_cases/java_lang_Thread.javap")).successful);
     assert(J(readText("test_cases/java_io_Serializable.javap")).successful);
 }
-
-class ParseException : Exception
-{
-    import pegged.peg;
-    const ParseTree parseTree;
-    
-    @nogc @safe pure nothrow this(in ref ParseTree parseTree_, string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null)
-    {
-        parseTree = parseTree_;
-        super(msg, file, line, next);
-    }
-}
-
-import pegged.peg;
-auto deepFindAllFirst(PT)(in auto ref PT haystack, in string needle)
-{
-    if (haystack.name == needle)
-        return [haystack];
-    else
-        return haystack.children.map!(a => deepFindAllFirst(a, needle)).join.array;
-}
-
-auto shallowFindOnlyOne(PT)(in auto ref PT haystack, in string needle) @trusted
-{
-    auto f = haystack.children.filter!(a => a.name == needle).array;
-    import std.conv;
-    assert(f.length == 1, "Found " ~ to!string(f.length) ~ " elements, expected exactly 1 of '" ~ needle ~ "'");
-    return f[0];
-}
-
-auto shallowFindMaxOne(PT)(in auto ref PT haystack, in string needle)
-{
-    auto f = haystack.children.filter!(a => a.name == needle).array;
-    assert(f.length == 0 || f.length == 1);
-    return (f.length == 0) ? PT.init : f[0];
-}
-
-auto shallowFindOneOf(PT)(in auto ref PT haystack, in string[] needles)
-{
-    auto rxs = needles
-        .map!(a => tuple!("whichMatch", "match")(a, haystack.shallowFindMaxOne(a)))
-        .filter!(a => a.match != PT.init).array;
-    assert(rxs.length == 1);
-    return rxs[0];
-}
-
-auto shallowFindMany(PT)(in auto ref PT haystack, in string needle)
-{
-    return haystack.children.filter!(a => a.name == needle).array;
-}
-
-// This one is untested
-//auto shallowFindManyOf(PT)(in auto ref PT haystack, in string[] needles)
-//{
-//    auto rxs = needles
-//        .map!(a => tuple!("whichMatch", "match")(a, haystack.shallowFindMaxOne(a)))
-//            .filter!(a => a.match != PT.init).array;
-//    return rxs;
-//}

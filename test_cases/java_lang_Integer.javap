@@ -1,124 +1,1164 @@
 Compiled from "Integer.java"
 public final class java.lang.Integer extends java.lang.Number implements java.lang.Comparable<java.lang.Integer> {
   public static final int MIN_VALUE;
-    Signature: I
+    descriptor: I
+
   public static final int MAX_VALUE;
-    Signature: I
+    descriptor: I
+
   public static final java.lang.Class<java.lang.Integer> TYPE;
-    Signature: Ljava/lang/Class;
+    descriptor: Ljava/lang/Class;
+
   public static final int SIZE;
-    Signature: I
+    descriptor: I
+
+  public static final int BYTES;
+    descriptor: I
+
   public static java.lang.String toString(int, int);
-    Signature: (II)Ljava/lang/String;
+    descriptor: (II)Ljava/lang/String;
+    Code:
+       0: iload_1
+       1: iconst_2
+       2: if_icmplt     11
+       5: iload_1
+       6: bipush        36
+       8: if_icmple     14
+      11: bipush        10
+      13: istore_1
+      14: iload_1
+      15: bipush        10
+      17: if_icmpne     25
+      20: iload_0
+      21: invokestatic  #4                  // Method toString:(I)Ljava/lang/String;
+      24: areturn
+      25: bipush        33
+      27: newarray       char
+      29: astore_2
+      30: iload_0
+      31: ifge          38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: istore_3
+      40: bipush        32
+      42: istore        4
+      44: iload_3
+      45: ifne          51
+      48: iload_0
+      49: ineg
+      50: istore_0
+      51: iload_0
+      52: iload_1
+      53: ineg
+      54: if_icmpgt     79
+      57: aload_2
+      58: iload         4
+      60: iinc          4, -1
+      63: getstatic     #5                  // Field digits:[C
+      66: iload_0
+      67: iload_1
+      68: irem
+      69: ineg
+      70: caload
+      71: castore
+      72: iload_0
+      73: iload_1
+      74: idiv
+      75: istore_0
+      76: goto          51
+      79: aload_2
+      80: iload         4
+      82: getstatic     #5                  // Field digits:[C
+      85: iload_0
+      86: ineg
+      87: caload
+      88: castore
+      89: iload_3
+      90: ifeq          102
+      93: aload_2
+      94: iinc          4, -1
+      97: iload         4
+      99: bipush        45
+     101: castore
+     102: new           #6                  // class java/lang/String
+     105: dup
+     106: aload_2
+     107: iload         4
+     109: bipush        33
+     111: iload         4
+     113: isub
+     114: invokespecial #7                  // Method java/lang/String."<init>":([CII)V
+     117: areturn
+
+  public static java.lang.String toUnsignedString(int, int);
+    descriptor: (II)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       4: iload_1
+       5: invokestatic  #9                  // Method java/lang/Long.toUnsignedString:(JI)Ljava/lang/String;
+       8: areturn
 
   public static java.lang.String toHexString(int);
-    Signature: (I)Ljava/lang/String;
+    descriptor: (I)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: iconst_4
+       2: invokestatic  #10                 // Method toUnsignedString0:(II)Ljava/lang/String;
+       5: areturn
 
   public static java.lang.String toOctalString(int);
-    Signature: (I)Ljava/lang/String;
+    descriptor: (I)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: iconst_3
+       2: invokestatic  #10                 // Method toUnsignedString0:(II)Ljava/lang/String;
+       5: areturn
 
   public static java.lang.String toBinaryString(int);
-    Signature: (I)Ljava/lang/String;
+    descriptor: (I)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: iconst_1
+       2: invokestatic  #10                 // Method toUnsignedString0:(II)Ljava/lang/String;
+       5: areturn
 
   public static java.lang.String toString(int);
-    Signature: (I)Ljava/lang/String;
+    descriptor: (I)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: ldc           #15                 // int -2147483648
+       3: if_icmpne     9
+       6: ldc           #16                 // String -2147483648
+       8: areturn
+       9: iload_0
+      10: ifge          23
+      13: iload_0
+      14: ineg
+      15: invokestatic  #17                 // Method stringSize:(I)I
+      18: iconst_1
+      19: iadd
+      20: goto          27
+      23: iload_0
+      24: invokestatic  #17                 // Method stringSize:(I)I
+      27: istore_1
+      28: iload_1
+      29: newarray       char
+      31: astore_2
+      32: iload_0
+      33: iload_1
+      34: aload_2
+      35: invokestatic  #18                 // Method getChars:(II[C)V
+      38: new           #6                  // class java/lang/String
+      41: dup
+      42: aload_2
+      43: iconst_1
+      44: invokespecial #14                 // Method java/lang/String."<init>":([CZ)V
+      47: areturn
+
+  public static java.lang.String toUnsignedString(int);
+    descriptor: (I)Ljava/lang/String;
+    Code:
+       0: iload_0
+       1: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       4: invokestatic  #19                 // Method java/lang/Long.toString:(J)Ljava/lang/String;
+       7: areturn
 
   public static int parseInt(java.lang.String, int) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;I)I
+    descriptor: (Ljava/lang/String;I)I
+    Code:
+       0: aload_0
+       1: ifnonnull     14
+       4: new           #25                 // class java/lang/NumberFormatException
+       7: dup
+       8: ldc           #26                 // String null
+      10: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      13: athrow
+      14: iload_1
+      15: iconst_2
+      16: if_icmpge     51
+      19: new           #25                 // class java/lang/NumberFormatException
+      22: dup
+      23: new           #28                 // class java/lang/StringBuilder
+      26: dup
+      27: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+      30: ldc           #30                 // String radix
+      32: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      35: iload_1
+      36: invokevirtual #32                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      39: ldc           #33                 // String  less than Character.MIN_RADIX
+      41: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      44: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      47: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      50: athrow
+      51: iload_1
+      52: bipush        36
+      54: if_icmple     89
+      57: new           #25                 // class java/lang/NumberFormatException
+      60: dup
+      61: new           #28                 // class java/lang/StringBuilder
+      64: dup
+      65: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+      68: ldc           #30                 // String radix
+      70: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: iload_1
+      74: invokevirtual #32                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      77: ldc           #35                 // String  greater than Character.MAX_RADIX
+      79: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      82: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      85: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      88: athrow
+      89: iconst_0
+      90: istore_2
+      91: iconst_0
+      92: istore_3
+      93: iconst_0
+      94: istore        4
+      96: aload_0
+      97: invokevirtual #36                 // Method java/lang/String.length:()I
+     100: istore        5
+     102: ldc           #37                 // int -2147483647
+     104: istore        6
+     106: iload         5
+     108: ifle          245
+     111: aload_0
+     112: iconst_0
+     113: invokevirtual #38                 // Method java/lang/String.charAt:(I)C
+     116: istore        9
+     118: iload         9
+     120: bipush        48
+     122: if_icmpge     167
+     125: iload         9
+     127: bipush        45
+     129: if_icmpne     141
+     132: iconst_1
+     133: istore_3
+     134: ldc           #15                 // int -2147483648
+     136: istore        6
+     138: goto          153
+     141: iload         9
+     143: bipush        43
+     145: if_icmpeq     153
+     148: aload_0
+     149: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     152: athrow
+     153: iload         5
+     155: iconst_1
+     156: if_icmpne     164
+     159: aload_0
+     160: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     163: athrow
+     164: iinc          4, 1
+     167: iload         6
+     169: iload_1
+     170: idiv
+     171: istore        7
+     173: iload         4
+     175: iload         5
+     177: if_icmpge     242
+     180: aload_0
+     181: iload         4
+     183: iinc          4, 1
+     186: invokevirtual #38                 // Method java/lang/String.charAt:(I)C
+     189: iload_1
+     190: invokestatic  #40                 // Method java/lang/Character.digit:(CI)I
+     193: istore        8
+     195: iload         8
+     197: ifge          205
+     200: aload_0
+     201: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     204: athrow
+     205: iload_2
+     206: iload         7
+     208: if_icmpge     216
+     211: aload_0
+     212: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     215: athrow
+     216: iload_2
+     217: iload_1
+     218: imul
+     219: istore_2
+     220: iload_2
+     221: iload         6
+     223: iload         8
+     225: iadd
+     226: if_icmpge     234
+     229: aload_0
+     230: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     233: athrow
+     234: iload_2
+     235: iload         8
+     237: isub
+     238: istore_2
+     239: goto          173
+     242: goto          250
+     245: aload_0
+     246: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     249: athrow
+     250: iload_3
+     251: ifeq          258
+     254: iload_2
+     255: goto          260
+     258: iload_2
+     259: ineg
+     260: ireturn
 
   public static int parseInt(java.lang.String) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;)I
+    descriptor: (Ljava/lang/String;)I
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokestatic  #41                 // Method parseInt:(Ljava/lang/String;I)I
+       6: ireturn
+
+  public static int parseUnsignedInt(java.lang.String, int) throws java.lang.NumberFormatException;
+    descriptor: (Ljava/lang/String;I)I
+    Code:
+       0: aload_0
+       1: ifnonnull     14
+       4: new           #25                 // class java/lang/NumberFormatException
+       7: dup
+       8: ldc           #26                 // String null
+      10: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      13: athrow
+      14: aload_0
+      15: invokevirtual #36                 // Method java/lang/String.length:()I
+      18: istore_2
+      19: iload_2
+      20: ifle          122
+      23: aload_0
+      24: iconst_0
+      25: invokevirtual #38                 // Method java/lang/String.charAt:(I)C
+      28: istore_3
+      29: iload_3
+      30: bipush        45
+      32: if_icmpne     56
+      35: new           #25                 // class java/lang/NumberFormatException
+      38: dup
+      39: ldc           #42                 // String Illegal leading minus sign on unsigned string %s.
+      41: iconst_1
+      42: anewarray     #43                 // class java/lang/Object
+      45: dup
+      46: iconst_0
+      47: aload_0
+      48: aastore
+      49: invokestatic  #44                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      52: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      55: athrow
+      56: iload_2
+      57: iconst_5
+      58: if_icmple     73
+      61: iload_1
+      62: bipush        10
+      64: if_icmpne     79
+      67: iload_2
+      68: bipush        9
+      70: if_icmpgt     79
+      73: aload_0
+      74: iload_1
+      75: invokestatic  #41                 // Method parseInt:(Ljava/lang/String;I)I
+      78: ireturn
+      79: aload_0
+      80: iload_1
+      81: invokestatic  #45                 // Method java/lang/Long.parseLong:(Ljava/lang/String;I)J
+      84: lstore        4
+      86: lload         4
+      88: ldc2_w        #46                 // long -4294967296l
+      91: land
+      92: lconst_0
+      93: lcmp
+      94: ifne          101
+      97: lload         4
+      99: l2i
+     100: ireturn
+     101: new           #25                 // class java/lang/NumberFormatException
+     104: dup
+     105: ldc           #48                 // String String value %s exceeds range of unsigned int.
+     107: iconst_1
+     108: anewarray     #43                 // class java/lang/Object
+     111: dup
+     112: iconst_0
+     113: aload_0
+     114: aastore
+     115: invokestatic  #44                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     118: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+     121: athrow
+     122: aload_0
+     123: invokestatic  #39                 // Method java/lang/NumberFormatException.forInputString:(Ljava/lang/String;)Ljava/lang/NumberFormatException;
+     126: athrow
+
+  public static int parseUnsignedInt(java.lang.String) throws java.lang.NumberFormatException;
+    descriptor: (Ljava/lang/String;)I
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokestatic  #49                 // Method parseUnsignedInt:(Ljava/lang/String;I)I
+       6: ireturn
 
   public static java.lang.Integer valueOf(java.lang.String, int) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;I)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;I)Ljava/lang/Integer;
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokestatic  #41                 // Method parseInt:(Ljava/lang/String;I)I
+       5: invokestatic  #50                 // Method valueOf:(I)Ljava/lang/Integer;
+       8: areturn
 
   public static java.lang.Integer valueOf(java.lang.String) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;)Ljava/lang/Integer;
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokestatic  #41                 // Method parseInt:(Ljava/lang/String;I)I
+       6: invokestatic  #50                 // Method valueOf:(I)Ljava/lang/Integer;
+       9: areturn
 
   public static java.lang.Integer valueOf(int);
-    Signature: (I)Ljava/lang/Integer;
+    descriptor: (I)Ljava/lang/Integer;
+    Code:
+       0: iload_0
+       1: bipush        -128
+       3: if_icmplt     23
+       6: iload_0
+       7: getstatic     #52                 // Field java/lang/Integer$IntegerCache.high:I
+      10: if_icmpgt     23
+      13: getstatic     #53                 // Field java/lang/Integer$IntegerCache.cache:[Ljava/lang/Integer;
+      16: iload_0
+      17: sipush        128
+      20: iadd
+      21: aaload
+      22: areturn
+      23: new           #1                  // class java/lang/Integer
+      26: dup
+      27: iload_0
+      28: invokespecial #54                 // Method "<init>":(I)V
+      31: areturn
 
   public java.lang.Integer(int);
-    Signature: (I)V
+    descriptor: (I)V
+    Code:
+       0: aload_0
+       1: invokespecial #55                 // Method java/lang/Number."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #56                 // Field value:I
+       9: return
 
   public java.lang.Integer(java.lang.String) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;)V
+    descriptor: (Ljava/lang/String;)V
+    Code:
+       0: aload_0
+       1: invokespecial #55                 // Method java/lang/Number."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: bipush        10
+       8: invokestatic  #41                 // Method parseInt:(Ljava/lang/String;I)I
+      11: putfield      #56                 // Field value:I
+      14: return
 
   public byte byteValue();
-    Signature: ()B
+    descriptor: ()B
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: i2b
+       5: ireturn
 
   public short shortValue();
-    Signature: ()S
+    descriptor: ()S
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: i2s
+       5: ireturn
 
   public int intValue();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: ireturn
 
   public long longValue();
-    Signature: ()J
+    descriptor: ()J
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: i2l
+       5: lreturn
 
   public float floatValue();
-    Signature: ()F
+    descriptor: ()F
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: i2f
+       5: freturn
 
   public double doubleValue();
-    Signature: ()D
+    descriptor: ()D
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: i2d
+       5: dreturn
 
   public java.lang.String toString();
-    Signature: ()Ljava/lang/String;
+    descriptor: ()Ljava/lang/String;
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: invokestatic  #4                  // Method toString:(I)Ljava/lang/String;
+       7: areturn
 
   public int hashCode();
-    Signature: ()I
+    descriptor: ()I
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: invokestatic  #57                 // Method hashCode:(I)I
+       7: ireturn
+
+  public static int hashCode(int);
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: ireturn
 
   public boolean equals(java.lang.Object);
-    Signature: (Ljava/lang/Object;)Z
+    descriptor: (Ljava/lang/Object;)Z
+    Code:
+       0: aload_1
+       1: instanceof    #1                  // class java/lang/Integer
+       4: ifeq          27
+       7: aload_0
+       8: getfield      #56                 // Field value:I
+      11: aload_1
+      12: checkcast     #1                  // class java/lang/Integer
+      15: invokevirtual #58                 // Method intValue:()I
+      18: if_icmpne     25
+      21: iconst_1
+      22: goto          26
+      25: iconst_0
+      26: ireturn
+      27: iconst_0
+      28: ireturn
 
   public static java.lang.Integer getInteger(java.lang.String);
-    Signature: (Ljava/lang/String;)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;)Ljava/lang/Integer;
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokestatic  #59                 // Method getInteger:(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/Integer;
+       5: areturn
 
   public static java.lang.Integer getInteger(java.lang.String, int);
-    Signature: (Ljava/lang/String;I)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;I)Ljava/lang/Integer;
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokestatic  #59                 // Method getInteger:(Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/Integer;
+       5: astore_2
+       6: aload_2
+       7: ifnonnull     17
+      10: iload_1
+      11: invokestatic  #50                 // Method valueOf:(I)Ljava/lang/Integer;
+      14: goto          18
+      17: aload_2
+      18: areturn
 
   public static java.lang.Integer getInteger(java.lang.String, java.lang.Integer);
-    Signature: (Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;Ljava/lang/Integer;)Ljava/lang/Integer;
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_0
+       3: invokestatic  #60                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       6: astore_2
+       7: goto          11
+      10: astore_3
+      11: aload_2
+      12: ifnull        21
+      15: aload_2
+      16: invokestatic  #63                 // Method decode:(Ljava/lang/String;)Ljava/lang/Integer;
+      19: areturn
+      20: astore_3
+      21: aload_1
+      22: areturn
+    Exception table:
+       from    to  target type
+           2     7    10   Class java/lang/IllegalArgumentException
+           2     7    10   Class java/lang/NullPointerException
+          15    19    20   Class java/lang/NumberFormatException
 
   public static java.lang.Integer decode(java.lang.String) throws java.lang.NumberFormatException;
-    Signature: (Ljava/lang/String;)Ljava/lang/Integer;
+    descriptor: (Ljava/lang/String;)Ljava/lang/Integer;
+    Code:
+       0: bipush        10
+       2: istore_1
+       3: iconst_0
+       4: istore_2
+       5: iconst_0
+       6: istore_3
+       7: aload_0
+       8: invokevirtual #36                 // Method java/lang/String.length:()I
+      11: ifne          24
+      14: new           #25                 // class java/lang/NumberFormatException
+      17: dup
+      18: ldc           #64                 // String Zero length string
+      20: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+      23: athrow
+      24: aload_0
+      25: iconst_0
+      26: invokevirtual #38                 // Method java/lang/String.charAt:(I)C
+      29: istore        5
+      31: iload         5
+      33: bipush        45
+      35: if_icmpne     46
+      38: iconst_1
+      39: istore_3
+      40: iinc          2, 1
+      43: goto          56
+      46: iload         5
+      48: bipush        43
+      50: if_icmpne     56
+      53: iinc          2, 1
+      56: aload_0
+      57: ldc           #65                 // String 0x
+      59: iload_2
+      60: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+      63: ifne          76
+      66: aload_0
+      67: ldc           #67                 // String 0X
+      69: iload_2
+      70: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+      73: ifeq          85
+      76: iinc          2, 2
+      79: bipush        16
+      81: istore_1
+      82: goto          130
+      85: aload_0
+      86: ldc           #68                 // String #
+      88: iload_2
+      89: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+      92: ifeq          104
+      95: iinc          2, 1
+      98: bipush        16
+     100: istore_1
+     101: goto          130
+     104: aload_0
+     105: ldc           #69                 // String 0
+     107: iload_2
+     108: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+     111: ifeq          130
+     114: aload_0
+     115: invokevirtual #36                 // Method java/lang/String.length:()I
+     118: iconst_1
+     119: iload_2
+     120: iadd
+     121: if_icmple     130
+     124: iinc          2, 1
+     127: bipush        8
+     129: istore_1
+     130: aload_0
+     131: ldc           #70                 // String -
+     133: iload_2
+     134: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+     137: ifne          150
+     140: aload_0
+     141: ldc           #71                 // String +
+     143: iload_2
+     144: invokevirtual #66                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+     147: ifeq          160
+     150: new           #25                 // class java/lang/NumberFormatException
+     153: dup
+     154: ldc           #72                 // String Sign character in wrong position
+     156: invokespecial #27                 // Method java/lang/NumberFormatException."<init>":(Ljava/lang/String;)V
+     159: athrow
+     160: aload_0
+     161: iload_2
+     162: invokevirtual #73                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     165: iload_1
+     166: invokestatic  #74                 // Method valueOf:(Ljava/lang/String;I)Ljava/lang/Integer;
+     169: astore        4
+     171: iload_3
+     172: ifeq          187
+     175: aload         4
+     177: invokevirtual #58                 // Method intValue:()I
+     180: ineg
+     181: invokestatic  #50                 // Method valueOf:(I)Ljava/lang/Integer;
+     184: goto          189
+     187: aload         4
+     189: astore        4
+     191: goto          241
+     194: astore        6
+     196: iload_3
+     197: ifeq          226
+     200: new           #28                 // class java/lang/StringBuilder
+     203: dup
+     204: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+     207: ldc           #70                 // String -
+     209: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     212: aload_0
+     213: iload_2
+     214: invokevirtual #73                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     217: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     220: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     223: goto          231
+     226: aload_0
+     227: iload_2
+     228: invokevirtual #73                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     231: astore        7
+     233: aload         7
+     235: iload_1
+     236: invokestatic  #74                 // Method valueOf:(Ljava/lang/String;I)Ljava/lang/Integer;
+     239: astore        4
+     241: aload         4
+     243: areturn
+    Exception table:
+       from    to  target type
+         160   191   194   Class java/lang/NumberFormatException
 
   public int compareTo(java.lang.Integer);
-    Signature: (Ljava/lang/Integer;)I
+    descriptor: (Ljava/lang/Integer;)I
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field value:I
+       4: aload_1
+       5: getfield      #56                 // Field value:I
+       8: invokestatic  #75                 // Method compare:(II)I
+      11: ireturn
 
   public static int compare(int, int);
-    Signature: (II)I
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: if_icmpge     9
+       5: iconst_m1
+       6: goto          19
+       9: iload_0
+      10: iload_1
+      11: if_icmpne     18
+      14: iconst_0
+      15: goto          19
+      18: iconst_1
+      19: ireturn
+
+  public static int compareUnsigned(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: ldc           #15                 // int -2147483648
+       3: iadd
+       4: iload_1
+       5: ldc           #15                 // int -2147483648
+       7: iadd
+       8: invokestatic  #75                 // Method compare:(II)I
+      11: ireturn
+
+  public static long toUnsignedLong(int);
+    descriptor: (I)J
+    Code:
+       0: iload_0
+       1: i2l
+       2: ldc2_w        #76                 // long 4294967295l
+       5: land
+       6: lreturn
+
+  public static int divideUnsigned(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       4: iload_1
+       5: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       8: ldiv
+       9: l2i
+      10: ireturn
+
+  public static int remainderUnsigned(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       4: iload_1
+       5: invokestatic  #8                  // Method toUnsignedLong:(I)J
+       8: lrem
+       9: l2i
+      10: ireturn
 
   public static int highestOneBit(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: iload_0
+       2: iconst_1
+       3: ishr
+       4: ior
+       5: istore_0
+       6: iload_0
+       7: iload_0
+       8: iconst_2
+       9: ishr
+      10: ior
+      11: istore_0
+      12: iload_0
+      13: iload_0
+      14: iconst_4
+      15: ishr
+      16: ior
+      17: istore_0
+      18: iload_0
+      19: iload_0
+      20: bipush        8
+      22: ishr
+      23: ior
+      24: istore_0
+      25: iload_0
+      26: iload_0
+      27: bipush        16
+      29: ishr
+      30: ior
+      31: istore_0
+      32: iload_0
+      33: iload_0
+      34: iconst_1
+      35: iushr
+      36: isub
+      37: ireturn
 
   public static int lowestOneBit(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: iload_0
+       2: ineg
+       3: iand
+       4: ireturn
 
   public static int numberOfLeadingZeros(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: ifne          7
+       4: bipush        32
+       6: ireturn
+       7: iconst_1
+       8: istore_1
+       9: iload_0
+      10: bipush        16
+      12: iushr
+      13: ifne          24
+      16: iinc          1, 16
+      19: iload_0
+      20: bipush        16
+      22: ishl
+      23: istore_0
+      24: iload_0
+      25: bipush        24
+      27: iushr
+      28: ifne          39
+      31: iinc          1, 8
+      34: iload_0
+      35: bipush        8
+      37: ishl
+      38: istore_0
+      39: iload_0
+      40: bipush        28
+      42: iushr
+      43: ifne          53
+      46: iinc          1, 4
+      49: iload_0
+      50: iconst_4
+      51: ishl
+      52: istore_0
+      53: iload_0
+      54: bipush        30
+      56: iushr
+      57: ifne          67
+      60: iinc          1, 2
+      63: iload_0
+      64: iconst_2
+      65: ishl
+      66: istore_0
+      67: iload_1
+      68: iload_0
+      69: bipush        31
+      71: iushr
+      72: isub
+      73: istore_1
+      74: iload_1
+      75: ireturn
 
   public static int numberOfTrailingZeros(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: ifne          7
+       4: bipush        32
+       6: ireturn
+       7: bipush        31
+       9: istore_2
+      10: iload_0
+      11: bipush        16
+      13: ishl
+      14: istore_1
+      15: iload_1
+      16: ifeq          26
+      19: iload_2
+      20: bipush        16
+      22: isub
+      23: istore_2
+      24: iload_1
+      25: istore_0
+      26: iload_0
+      27: bipush        8
+      29: ishl
+      30: istore_1
+      31: iload_1
+      32: ifeq          42
+      35: iload_2
+      36: bipush        8
+      38: isub
+      39: istore_2
+      40: iload_1
+      41: istore_0
+      42: iload_0
+      43: iconst_4
+      44: ishl
+      45: istore_1
+      46: iload_1
+      47: ifeq          56
+      50: iload_2
+      51: iconst_4
+      52: isub
+      53: istore_2
+      54: iload_1
+      55: istore_0
+      56: iload_0
+      57: iconst_2
+      58: ishl
+      59: istore_1
+      60: iload_1
+      61: ifeq          70
+      64: iload_2
+      65: iconst_2
+      66: isub
+      67: istore_2
+      68: iload_1
+      69: istore_0
+      70: iload_2
+      71: iload_0
+      72: iconst_1
+      73: ishl
+      74: bipush        31
+      76: iushr
+      77: isub
+      78: ireturn
 
   public static int bitCount(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: iload_0
+       2: iconst_1
+       3: iushr
+       4: ldc           #78                 // int 1431655765
+       6: iand
+       7: isub
+       8: istore_0
+       9: iload_0
+      10: ldc           #79                 // int 858993459
+      12: iand
+      13: iload_0
+      14: iconst_2
+      15: iushr
+      16: ldc           #79                 // int 858993459
+      18: iand
+      19: iadd
+      20: istore_0
+      21: iload_0
+      22: iload_0
+      23: iconst_4
+      24: iushr
+      25: iadd
+      26: ldc           #80                 // int 252645135
+      28: iand
+      29: istore_0
+      30: iload_0
+      31: iload_0
+      32: bipush        8
+      34: iushr
+      35: iadd
+      36: istore_0
+      37: iload_0
+      38: iload_0
+      39: bipush        16
+      41: iushr
+      42: iadd
+      43: istore_0
+      44: iload_0
+      45: bipush        63
+      47: iand
+      48: ireturn
 
   public static int rotateLeft(int, int);
-    Signature: (II)I
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: ishl
+       3: iload_0
+       4: iload_1
+       5: ineg
+       6: iushr
+       7: ior
+       8: ireturn
 
   public static int rotateRight(int, int);
-    Signature: (II)I
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: iushr
+       3: iload_0
+       4: iload_1
+       5: ineg
+       6: ishl
+       7: ior
+       8: ireturn
 
   public static int reverse(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: ldc           #78                 // int 1431655765
+       3: iand
+       4: iconst_1
+       5: ishl
+       6: iload_0
+       7: iconst_1
+       8: iushr
+       9: ldc           #78                 // int 1431655765
+      11: iand
+      12: ior
+      13: istore_0
+      14: iload_0
+      15: ldc           #79                 // int 858993459
+      17: iand
+      18: iconst_2
+      19: ishl
+      20: iload_0
+      21: iconst_2
+      22: iushr
+      23: ldc           #79                 // int 858993459
+      25: iand
+      26: ior
+      27: istore_0
+      28: iload_0
+      29: ldc           #80                 // int 252645135
+      31: iand
+      32: iconst_4
+      33: ishl
+      34: iload_0
+      35: iconst_4
+      36: iushr
+      37: ldc           #80                 // int 252645135
+      39: iand
+      40: ior
+      41: istore_0
+      42: iload_0
+      43: bipush        24
+      45: ishl
+      46: iload_0
+      47: ldc           #81                 // int 65280
+      49: iand
+      50: bipush        8
+      52: ishl
+      53: ior
+      54: iload_0
+      55: bipush        8
+      57: iushr
+      58: ldc           #81                 // int 65280
+      60: iand
+      61: ior
+      62: iload_0
+      63: bipush        24
+      65: iushr
+      66: ior
+      67: istore_0
+      68: iload_0
+      69: ireturn
 
   public static int signum(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: bipush        31
+       3: ishr
+       4: iload_0
+       5: ineg
+       6: bipush        31
+       8: iushr
+       9: ior
+      10: ireturn
 
   public static int reverseBytes(int);
-    Signature: (I)I
+    descriptor: (I)I
+    Code:
+       0: iload_0
+       1: bipush        24
+       3: iushr
+       4: iload_0
+       5: bipush        8
+       7: ishr
+       8: ldc           #81                 // int 65280
+      10: iand
+      11: ior
+      12: iload_0
+      13: bipush        8
+      15: ishl
+      16: ldc           #82                 // int 16711680
+      18: iand
+      19: ior
+      20: iload_0
+      21: bipush        24
+      23: ishl
+      24: ior
+      25: ireturn
+
+  public static int sum(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: iadd
+       3: ireturn
+
+  public static int max(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: invokestatic  #12                 // Method java/lang/Math.max:(II)I
+       5: ireturn
+
+  public static int min(int, int);
+    descriptor: (II)I
+    Code:
+       0: iload_0
+       1: iload_1
+       2: invokestatic  #83                 // Method java/lang/Math.min:(II)I
+       5: ireturn
 
   public int compareTo(java.lang.Object);
-    Signature: (Ljava/lang/Object;)I
+    descriptor: (Ljava/lang/Object;)I
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #1                  // class java/lang/Integer
+       5: invokevirtual #84                 // Method compareTo:(Ljava/lang/Integer;)I
+       8: ireturn
 }
