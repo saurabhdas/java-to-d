@@ -44,6 +44,7 @@ J:
 `;
 
 public:
+
 mixin(grammar(javapGrammar));
 
 unittest

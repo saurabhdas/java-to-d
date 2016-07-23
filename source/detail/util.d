@@ -3,7 +3,15 @@
 import std.string, std.algorithm, std.array, std.typecons;
 import std.exception;;
 
-PT[] deepFindAllFirst(PT)(auto ref PT haystack, in string needle)
+@trusted:
+
+void log(Args...)(auto ref Args args)
+{
+    import std.stdio;
+    debug writeln(args);
+}
+
+auto deepFindAllFirst(PT)(auto ref PT haystack, in string needle)
 {
     if (haystack.name == needle)
         return [haystack];
@@ -53,6 +61,7 @@ auto shallowFindManyOf(PT)(auto ref PT haystack, in string[] needles)
     return rxs2;
 }
 
+@system:
 unittest
 {
     class TestNode
