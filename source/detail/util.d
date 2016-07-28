@@ -61,6 +61,34 @@ auto shallowFindManyOf(PT)(auto ref PT haystack, in string[] needles)
     return rxs2;
 }
 
+string tabs(in int tabDepth)
+{
+    import std.range, std.conv;
+    return "    ".repeat.take(tabDepth).join.to!string;
+}
+
+@trusted:
+
+// Chain is a system function. We blindly trust it here
+auto trustedChain(Ranges...)(Ranges rs)
+{
+    import std.range;
+    return chain(rs).array;
+}
+
+// Array is a system function. We blindly trust it here
+auto trustedArray(Range)(Range r)
+{
+    import std.array;
+    return r.array;
+}
+
+// Join is a system function. We blindly trust it here
+auto trustedJoin(Range)(Range r)
+{
+    return r.join;
+}
+
 @system:
 unittest
 {

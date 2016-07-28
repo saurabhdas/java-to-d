@@ -1,11 +1,11 @@
-﻿module detail.types.base;
+﻿module detail.ast_base;
 
-public import std.string, std.algorithm, std.array, std.typecons;
+public import std.string, std.algorithm, std.array, std.typecons, std.range;
 public import std.exception;
 public import std.regex;
 public import std.conv : to;
-public import detail.jgrammar;
 public import detail.util;
+import pegged.peg;
 import std.typecons;
 
 @safe:
@@ -16,7 +16,11 @@ alias JniSig = Typedef!(string, null, "JniSig");
 
 interface ISerializeToD
 {
-    void serializeToD(ref Appender!string app) const;
+    DName serializeName() const;
+    DName importName() const;
+
+    // serializeFull returns TRUE if a file should be written for this object
+    bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const;
 }
 
 class SymbolTable
@@ -43,35 +47,43 @@ class SymbolTable
         if (name in table)
             return;
 
-        auto nn = name.extract;
-        if (nn.length > 2 && nn[$-2 .. $] == "[]")
-        {
-            new JArray(this, JName(nn[0 .. $-2]));
-        }
-        else
-        {
-            new UnresolvedSymbol(this, name);
-            assert(name in table);
-        }
+        new UnresolvedSymbol(this, name);
+        assert(name in table);
     }
 }
 
 class UnresolvedSymbol : ISerializeToD
 {
     JName name;
-    
-    this(SymbolTable st, in JName name_)
+
+    SymbolTable st;
+
+    this(SymbolTable st_, in JName name_)
     {
+        st = st_;
         log("Creating UnresolvedSymbol '", name_.extract, "'");
 
         name = name_;
         enforce(name_ !in st.table);
         st.table[name] = this;
     }
-    
-    void serializeToD(ref Appender!string app) const
+
+    DName serializeName() const
+    {
+        import detail.ast_d_helpers;
+        return DName("/+ UnresolvedSymbol +/" ~ convClassName(name).extract);
+    }
+
+    DName importName() const
+    {
+        import detail.ast_d_helpers;
+        return DName.init;
+    }
+
+    bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
         enforce(false, "Unresolved Symbol '" ~ name.extract ~ "'");
+        return false;
     }
 }
 
@@ -80,36 +92,32 @@ class JIntrinsic : ISerializeToD
     JName javaName;
     string jniName;
     DName dName;
+
+    SymbolTable st;
     
-    this(SymbolTable st, in JName javaName_, in string jniName_, in DName dName_)
+    this(SymbolTable st_, in JName javaName_, in string jniName_, in DName dName_)
     {
+        st = st_;
         javaName = javaName_;
         jniName = jniName_;
         dName = dName_;
         
         st.table[javaName] = this;
     }
-    
-    void serializeToD(ref Appender!string app) const
-    {
-        app.put(dName.to!string);
-    }
-}
 
-class JArray : ISerializeToD
-{
-    JName type;
-
-    // Only ensureType can create this
-    private this(SymbolTable st, in JName type_)
+    DName serializeName() const
     {
-        type = type_;
-        st.table[JName(type_.extract ~ "[]")] = this;
-        st.ensureSymbol(type);
+        return dName;
     }
 
-    void serializeToD(ref Appender!string app) const
+    DName importName() const
     {
+        return DName.init;
+    }
+
+    bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
+    {
+        return false;
     }
 }
 
@@ -191,37 +199,31 @@ Tuple!(JName, "returnType", JName[], "arguments") jniReturnType(SymbolTable st, 
     return Tuple!(JName, "returnType", JName[], "arguments")(ret1, ret2);
 }
 
+JName parseJName(SymbolTable st, in ParseTree pTree)
+{
+    // Currently we discard the generic args portion
+    auto n1 = pTree.shallowFindOnlyOne("J.OnlyClassName").matches.join;
+    auto pArray = pTree.shallowFindMaxOne("J.Array");
+    if (pArray != ParseTree.init)
+    {
+        auto arrayDepth = pArray.matches.length;
+        import std.range;
+        n1 ~= "[]".repeat.take(arrayDepth).array.join;
+    }
+    
+    auto jn = JName(n1);
+    st.ensureSymbol(jn);
+    return jn;
+}
+
 @system:
 unittest
 {
-    log("Running unittest 'base'");
-
-    SymbolTable st = new SymbolTable;
-    st.ensureSymbol(JName("java.lang.Whatever[][][]"));
-    auto b1 = st.table.get(JName("java.lang.Whatever[][][]"), null);
-    assert(b1 !is null);
-    auto a1 = cast(JArray)b1;
-    assert(a1 !is null);
-    assert(a1.type == JName("java.lang.Whatever[][]"));
-
-    auto b2 = st.table.get(a1.type, null);
-    assert(b2 !is null);
-    auto a2 = cast(JArray)b2;
-    assert(a2 !is null);
-    assert(a2.type == JName("java.lang.Whatever[]"));
-
-    auto b3 = st.table.get(a2.type, null);
-    assert(b3 !is null);
-    auto a3 = cast(JArray)b3;
-    assert(a3 !is null);
-    assert(a3.type == JName("java.lang.Whatever"));
-
-    auto b4 = st.table.get(a3.type, null);
-    assert(b4 !is null);
-    auto a4 = cast(UnresolvedSymbol)b4;
-    assert(a4 !is null);
+    log("Running unittest 'ast_base'");
 
     assert(JName("java.lang.Something").extract == "java.lang.Something");
+
+    auto st = new SymbolTable;
 
     alias TOR = Tuple!(JName, "returnType", JName[], "arguments");
     assert(st.jniReturnType(JniSig("S")) == TOR(JName("short"), null));

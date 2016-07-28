@@ -5,9 +5,6 @@ import std.stdio;
 
 import pegged.peg;
 
-import detail.jgrammar;
-import detail.util;
-
 //import j_class_info;
 //import d_module_writer;
 

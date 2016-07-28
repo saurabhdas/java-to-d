@@ -1,4 +1,4 @@
-﻿module detail.jgrammar;
+﻿module detail.java_grammar_parser;
 
 import std.string, std.algorithm, std.array, std.typecons;
 import pegged.grammar;
