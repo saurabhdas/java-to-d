@@ -10,8 +10,10 @@
     "sourcePaths": [
         "source"
     ],
+    "excludedSourceFiles": ["source/jni_d/*"],
     "copyFilesCommented": [
-        "source/jni.d"
+        "source/jni_d/jni.d",
+        "source/jni_d/jni_d.d"
     ],
     "targetType": "executable",
     "dependencies": {

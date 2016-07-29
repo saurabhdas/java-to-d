@@ -7,7 +7,7 @@
  + 
  +/
 
-module jni;
+module jni_d.jni;
 
 import core.stdc.stdarg;
 

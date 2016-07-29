@@ -209,6 +209,9 @@ class JClass : ISerializeToD
         }
 
         definitions = parseDefinitions(st, pDefinitions, name);
+
+        // Add a protected constructor for subclasses to call
+        definitions ~= new JConstructor(st, name);
     }
 
     void fixInheritedImplements()
@@ -258,6 +261,7 @@ class JClass : ISerializeToD
                     .map!(a => cast(const JMethod)a)
                     .filter!(a => a !is null)
                     .filter!(a => !a.isStatic)
+                    .filter!(a => a.hasCode)
                     .array)
                 .trustedJoin;
 
@@ -267,9 +271,12 @@ class JClass : ISerializeToD
                 .filter!(a => a !is null)
                 .filter!(a => !a.isStatic)
                 .trustedArray;
-
-        return allInterfaceMethods
-            .filter!(x => !allMyMethods.canFind!((a, b) => (a.name == b.name && a.args == b.args))(x)).trustedArray;
+                
+        return
+            allInterfaceMethods
+                .filter!(x => !allMyMethods.canFind!((a, b) => (a.name == b.name && a.args == b.args))(x))
+                .map!(x => new JMethod(x, name))
+                .trustedArray;
     }
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
@@ -397,27 +404,41 @@ class JMember : ISerializeToD
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
         // Getter
-        app.put(tabs(tabDepth));
-        app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
-        if (isStatic)
-            app.put("static ");
-        app.put(st.table.get(type, null).serializeName.extract);
-        app.put(' ');
-        app.put(convRegularName(name).extract);
-        app.put("()");
-        if (!isStatic)
-            app.put(" const");
+        {
+            app.put(tabs(tabDepth));
+            if (!isStatic)
+                app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
+            if (isStatic)
+                app.put("static ");
+            app.put(st.table.get(type, null).serializeName.extract);
+            app.put(' ');
+            app.put(convRegularName(name).extract);
+            app.put("()");
+            if (!isStatic)
+                app.put(" const");
+            app.put("\n");
 
-        // TODO
-        app.put(";");
+            app.put(tabs(tabDepth));
+            app.put("{\n");
 
-        app.put("\n");
+            app.put(tabs(tabDepth+1));
+            app.put("// TODO");
+            app.put("\n");
+
+            app.put(tabs(tabDepth+1));
+            app.put("return typeof(return).init;");
+            app.put("\n");
+
+            app.put(tabs(tabDepth));
+            app.put("}\n");
+        }
 
         // Putter
         if (!isFinal)
         {
             app.put(tabs(tabDepth));
-            app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
+            if (!isStatic)
+                app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
             if (isStatic)
                 app.put("static ");
             app.put("void");
@@ -425,13 +446,20 @@ class JMember : ISerializeToD
             app.put(convRegularName(name).extract);
             app.put("(");
             app.put(st.table.get(type, null).serializeName.extract);
-            app.put("_arg0) const");
+            app.put("_arg0)");
             
-            // TODO
-            app.put(";");
-            
+            app.put(tabs(tabDepth));
+            app.put("{\n");
+
+            app.put(tabs(tabDepth+1));
+            app.put("// TODO");
             app.put("\n");
+
+            app.put(tabs(tabDepth));
+            app.put("}\n");
         }
+
+        app.put("\n");
 
         // Imports
         auto sym1 = st.table.get(type, null);
@@ -452,8 +480,30 @@ class JConstructor : ISerializeToD
 
     SymbolTable st;
 
+    bool isProtected, isDummyConstructor;
+
+    this(SymbolTable st_, JName parent_)
+    {
+        // This is a dummy constructor for base classes
+        st = st_;
+        name = parent_;
+        parent = parent_;
+
+        jniSig = JniSig("(Ljni_d.DummyConstructorDistinguisher;)V");
+        auto jrt = st.jniReturnType(jniSig);
+        assert(jrt.returnType == JName("void"));
+        args = jrt.arguments;
+
+        isProtected = true;
+        isDummyConstructor = true;
+    }
+
     this(SymbolTable st_, in ParseTree pMe, in JName parent_, in JniSig jniSig_, in bool hasCode_)
     {
+        // The dummy constructor type
+        if (JName("jni_d.DummyConstructorDistinguisher") !in st_.table)
+            new JIntrinsic(st_, JName("jni_d.DummyConstructorDistinguisher"), JniSig("Ljni_d.DummyConstructorDistinguisher;"), DName("jni_d.DummyConstructorDistinguisher"));
+
         parent = parent_;
         st = st_;
         name = JName(pMe.shallowFindOnlyOne("J.ClassName").matches.join);
@@ -496,6 +546,10 @@ class JConstructor : ISerializeToD
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
         app.put(tabs(tabDepth));
+
+        if (isProtected)
+            app.put("protected ");
+
         app.put("this(");
         app.put(args.enumerate.map!(a => st.table.get(a.value, null).serializeName ~ " _arg" ~ a.index.to!string).join(", "));
         app.put(")\n");
@@ -503,9 +557,32 @@ class JConstructor : ISerializeToD
         app.put(tabs(tabDepth));
         app.put("{\n");
 
-        app.put(tabs(tabDepth+1));
-        app.put("// TODO");
-        app.put("\n");
+        if (isDummyConstructor)
+        {
+            app.put(tabs(tabDepth+1));
+            // Except for java.lang.Object, all other classes will need to pass on the dummy construction
+            if (parent == JName("java.lang.Object"))
+            {
+                app.put("// Nothing needed here");
+            }
+            else
+            {
+                app.put("super(_arg0);");
+            }
+            app.put("\n");
+        }
+        else
+        {
+            if (parent != JName("java.lang.Object"))
+            {
+                app.put(tabs(tabDepth+1));
+                app.put("super(jni_d.DummyConstructorDistinguisher.init);\n");
+            }
+
+            app.put(tabs(tabDepth+1));
+            app.put("// TODO");
+            app.put("\n");
+        }
 
         app.put(tabs(tabDepth));
         app.put("}\n");
@@ -529,7 +606,39 @@ class JMethod : ISerializeToD
     bool hasCode;
     JName parent;
 
-    SymbolTable st;
+    const SymbolTable st;
+
+    this(const JMethod m, in JName newParent_)
+    {
+        // Instantiate defender method
+        log("Creating defender method:");
+        log(m.parent, " -> ", newParent_);
+        log(m.name);
+        log(m.returnType);
+        log(m.isAbstract);
+        log(m.hasCode);
+
+        assert(!m.isFinal);
+        assert(!m.isStatic);
+        assert(!m.isAbstract);
+        assert(m.hasCode);
+
+        isFinal = m.isFinal;
+        isStatic = m.isStatic;
+        isAbstract = false;
+        isNative = m.isNative;
+        isSynchronized = m.isSynchronized;
+
+        name = m.name;
+        returnType = m.returnType;
+        args = m.args.dup;
+        jniSig = m.jniSig;
+        hasCode = m.hasCode;
+
+        parent = newParent_;
+
+        st = m.st;
+    }
 
     this(SymbolTable st_, in ParseTree pMe, in JName parent_, in JniSig jniSig_, in bool hasCode_)
     {
@@ -537,7 +646,10 @@ class JMethod : ISerializeToD
         st = st_;
         name = JName(pMe.shallowFindOnlyOne("J.Name").matches.join);
         log("Creating Method '", parent.extract, " > ", name.extract, "'");
-        
+
+        jniSig = jniSig_;
+        hasCode = hasCode_;
+
         foreach (mod; pMe.shallowFindMany("J.Modifier"))
         {
             switch (mod.matches.join)
@@ -556,6 +668,7 @@ class JMethod : ISerializeToD
                     isAbstract = true;
                     break;
                 case "native":
+                    hasCode = true;
                     isNative = true;
                     break;
                 case "synchronized":
@@ -564,16 +677,16 @@ class JMethod : ISerializeToD
             }
         }
 
-        jniSig = jniSig_;
-        hasCode = hasCode_;
+        // A class can't be final AND abstract
+        assert(!(isFinal && isAbstract));
 
-        auto jrt = st.jniReturnType(jniSig);
+        auto jrt = st_.jniReturnType(jniSig);
         returnType = jrt.returnType;
         args = jrt.arguments;
     }
 
     bool isOverride() const
-    body
+        body
     {
         if (isStatic)
             return false;
@@ -592,7 +705,7 @@ class JMethod : ISerializeToD
 
             if (p3 is null)
                 continue;                           // Override methods don't apply if the parent is an Interface
-                
+            
             auto wl =
                 trustedChain(p3.definitions, p3.defenderMethods)
                     .map!(a => cast(const JMethod)a)
@@ -678,15 +791,20 @@ class JMethod : ISerializeToD
         auto bm = isBridgeMethod;
         if (bm.isBridgeMethod && !bm.isMoreDerived)
             return false;
-            
+
+        auto parentIsInterface = (cast(const JInterface)st.table.get(parent, null)) !is null;
+
         app.put(tabs(tabDepth));
 
         if (isFinal)
             app.put("final ");
         if (isStatic)
             app.put("static ");
-        if (isAbstract && (cast(const JInterface)st.table.get(parent, null)) is null)
+        if ((isAbstract || !hasCode) && !parentIsInterface)
+        {
+            log("Abstract for ", parent.extract, " > ", name.extract, ": ", isAbstract, " ", hasCode, " ", parentIsInterface);
             app.put("abstract ");       // Don't put abstract if parent is an interface
+        }
         if (isOverride)
             app.put("override ");
 
@@ -696,10 +814,32 @@ class JMethod : ISerializeToD
         app.put("(");
         app.put(args.enumerate.map!(a => st.table.get(a.value, null).serializeName ~ " _arg" ~ a.index.to!string).join(", "));
         app.put(")");
-        
-        // TODO
-        app.put(";");
-        
+
+        if (hasCode && !parentIsInterface)
+        {
+            app.put("\n");
+
+            app.put(tabs(tabDepth));
+            app.put("{\n");
+
+            app.put(tabs(tabDepth+1));
+            app.put("// TODO");
+            app.put("\n");
+
+            if (returnType != JName("void"))
+            {
+                app.put(tabs(tabDepth+1));
+                app.put("return typeof(return).init;");
+                app.put("\n");
+            }
+
+            app.put(tabs(tabDepth));
+            app.put("}\n");
+        }
+        else
+        {
+            app.put(";\n");
+        }
         app.put("\n");
 
         // Imports
