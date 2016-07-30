@@ -24,3 +24,8 @@ dub.userprefs
 
 # Code coverage
 *.lst
+
+# Generated modules
+examples/java*
+examples/jni_d/*
+

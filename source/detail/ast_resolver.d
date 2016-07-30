@@ -16,7 +16,7 @@ public import detail.ast_d_helpers;
 
 ISerializeToD attemptResolution(SymbolTable st, UnresolvedSymbol us, in string[] classPaths)
 {
-    log("Attempting Resolution of symbol '", us.name.extract, "'");
+    logInfo("Resolving symbol '", us.name.extract, "'");
 
     assert(us.name in st.table);
     assert(cast(UnresolvedSymbol)st.table[us.name] is us);

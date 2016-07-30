@@ -271,7 +271,7 @@ class JClass : ISerializeToD
                 .filter!(a => a !is null)
                 .filter!(a => !a.isStatic)
                 .trustedArray;
-                
+        
         return
             allInterfaceMethods
                 .filter!(x => !allMyMethods.canFind!((a, b) => (a.name == b.name && a.args == b.args))(x))
@@ -318,6 +318,13 @@ class JClass : ISerializeToD
 
         foreach(dfm; defenderMethods)
             dfm.serializeFull(app, imports, tabDepth+1);
+
+        // Members and functions needed for JNI calls
+        app.put(tabs(tabDepth+1));
+        app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
+
+        app.put(tabs(tabDepth+1));
+        app.put("private static void ensureClassLoaded() { if (_jniClass is null) _jniClass = jni_d.jni_d.loadClass(\"" ~ name.extract ~ "\"); assert(_jniClass !is null); }\n");
         
         app.put(tabs(tabDepth));
         app.put("}\n");
@@ -489,7 +496,7 @@ class JConstructor : ISerializeToD
         name = parent_;
         parent = parent_;
 
-        jniSig = JniSig("(Ljni_d.DummyConstructorDistinguisher;)V");
+        jniSig = JniSig("(Ljni_d.jni_d.InternalConstructorInfo;)V");
         auto jrt = st.jniReturnType(jniSig);
         assert(jrt.returnType == JName("void"));
         args = jrt.arguments;
@@ -501,8 +508,8 @@ class JConstructor : ISerializeToD
     this(SymbolTable st_, in ParseTree pMe, in JName parent_, in JniSig jniSig_, in bool hasCode_)
     {
         // The dummy constructor type
-        if (JName("jni_d.DummyConstructorDistinguisher") !in st_.table)
-            new JIntrinsic(st_, JName("jni_d.DummyConstructorDistinguisher"), JniSig("Ljni_d.DummyConstructorDistinguisher;"), DName("jni_d.DummyConstructorDistinguisher"));
+        if (JName("jni_d..jni_d.InternalConstructorInfo") !in st_.table)
+            new JIntrinsic(st_, JName("jni_d.jni_d.InternalConstructorInfo"), JniSig("Ljni_d.jni_d.InternalConstructorInfo;"), DName("jni_d.jni_d.InternalConstructorInfo"));
 
         parent = parent_;
         st = st_;
@@ -563,7 +570,7 @@ class JConstructor : ISerializeToD
             // Except for java.lang.Object, all other classes will need to pass on the dummy construction
             if (parent == JName("java.lang.Object"))
             {
-                app.put("// Nothing needed here");
+                app.put("// TODO Will assign javaPointer to the object here");
             }
             else
             {
@@ -573,15 +580,27 @@ class JConstructor : ISerializeToD
         }
         else
         {
-            if (parent != JName("java.lang.Object"))
-            {
-                app.put(tabs(tabDepth+1));
-                app.put("super(jni_d.DummyConstructorDistinguisher.init);\n");
-            }
-
             app.put(tabs(tabDepth+1));
             app.put("// TODO");
             app.put("\n");
+
+            import std.format;
+            if (parent != JName("java.lang.Object"))
+            {
+                app.put(tabs(tabDepth+1));
+                app.put("ensureClassLoaded();\n");
+                app.put(tabs(tabDepth+1));
+                app.put("super(jni_d.jni_d.InternalConstructorInfo.init);\n");
+                //                app.put(format("super(InternalConstructorInfo(helperClassConstructor!(%s)(%s)));\n", parent.name, arg));
+            }
+            else
+            {
+                app.put(tabs(tabDepth+1));
+                app.put("ensureClassLoaded();\n");
+                app.put(tabs(tabDepth+1));
+                app.put("this(jni_d.jni_d.InternalConstructorInfo.init);\n");
+                //                app.put("this(InternalConstructorInfo(helperClassConstructor!));\n");
+            }
         }
 
         app.put(tabs(tabDepth));
@@ -870,7 +889,7 @@ class JArray : JClass
     {
         auto tt = st.table.get(innerType, null);
         assert(tt !is null);
-        return DName("jni_d.JavaArray!(" ~ tt.serializeName.extract ~ ")");
+        return DName("jni_d.jni_d.JavaArray!(" ~ tt.serializeName.extract ~ ")");
     }
 
     override DName importName() const

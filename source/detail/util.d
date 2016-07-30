@@ -8,7 +8,13 @@ import std.exception;;
 void log(Args...)(auto ref Args args)
 {
     import std.stdio;
-    debug writeln(args);
+    version(unittest) writeln(args);
+}
+
+void logInfo(Args...)(auto ref Args args)
+{
+    import std.stdio;
+    writeln(args);
 }
 
 auto deepFindAllFirst(PT)(auto ref PT haystack, in string needle)

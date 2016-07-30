@@ -1,23 +1,27 @@
 {
-	"name": "java-to-d",
-	"authors": [
-		"Saurabh Das"
-	],
-	"description": "Parse Java classes into D modules. Use within D via the JNI",
-	"copyright": "Copyright © 2016, Saurabh Das",
-	"license": "MIT License",
-    "homepage": "https://github.com/saurabhdas/java-to-d",
-    "sourcePaths": [
-        "source"
-    ],
-    "excludedSourceFiles": ["source/jni_d/*"],
-    "copyFilesCommented": [
-        "source/jni_d/jni.d",
-        "source/jni_d/jni_d.d"
-    ],
-    "targetType": "executable",
-    "dependencies": {
-        "pegged": "~>0.3.2"
+   "name": "java-to-d",
+   "authors": ["Saurabh Das"],
+   "description": "Parse Java classes into D modules. Use within D via the JNI",
+   "copyright": "Copyright © 2016, Saurabh Das",
+   "license": "MIT License",
+   "homepage": "https://github.com/saurabhdas/java-to-d",
+   "targetPath": "bin",
+   "configurations": [
+    {
+        "name": "build",
+        "targetType": "executable",
+        "sourcePaths": ["source"],
+        "excludedSourceFiles": ["source/jni_d/*"],
+        "copyFiles": ["source/jni_d/jni.d", "source/jni_d/jni_d.d"],
+        "dependencies": {
+            "pegged": "~>0.3.2"
+        }
     },
-    "targetPath": "bin"
+    {
+        "name": "examples",
+        "targetType": "executable",
+        "excludedSourceFiles": ["source/*"],
+        "sourcePaths": ["examples"],
+    }
+]
 }
