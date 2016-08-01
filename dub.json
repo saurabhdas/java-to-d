@@ -22,6 +22,8 @@
         "targetType": "executable",
         "excludedSourceFiles": ["source/*"],
         "sourcePaths": ["examples"],
+        "dflags": ["-main"],
+        "lflags": ["-ljvm"]
     }
 ]
 }

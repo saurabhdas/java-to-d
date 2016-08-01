@@ -188,7 +188,6 @@ class JClass : ISerializeToD
         }
 
         name = parseJName(st, pDeclaration.shallowFindOnlyOne("J.ClassName"));
-        log("Testing ", name.extract, " == ", expectedName.extract);
         enforce(name == expectedName);
 
         auto pExtends = pDeclaration.shallowFindMaxOne("J.Extends");
@@ -324,7 +323,25 @@ class JClass : ISerializeToD
         app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
 
         app.put(tabs(tabDepth+1));
-        app.put("private static void ensureClassLoaded() { if (_jniClass is null) _jniClass = jni_d.jni_d.loadClass(\"" ~ name.extract ~ "\"); assert(_jniClass !is null); }\n");
+        app.put("private static bool _jniClassLoadedCheck()\n");
+        app.put(tabs(tabDepth+1));
+        app.put("{\n");
+        app.put(tabs(tabDepth+2));
+        app.put("if (_jniClass !is null)\n");
+        app.put(tabs(tabDepth+3));
+        app.put("return false;\n");
+        app.put(tabs(tabDepth+2));
+        app.put("_jniClass = jni_d.jni_d.loadClass(\"" ~ name.extract ~ "\");\n");
+        app.put(tabs(tabDepth+2));
+        app.put("return true;\n");
+        app.put(tabs(tabDepth+1));
+        app.put("}\n");
+
+        app.put(tabs(tabDepth+1));
+        app.put("~this() { /* TODO */ }\n");
+
+        app.put(tabs(tabDepth+1));
+        app.put("private jni_d.jni.jobject _jniObjectPtr;\n");
         
         app.put(tabs(tabDepth));
         app.put("}\n");
@@ -566,45 +583,57 @@ class JConstructor : ISerializeToD
 
         if (isDummyConstructor)
         {
-            app.put(tabs(tabDepth+1));
             // Except for java.lang.Object, all other classes will need to pass on the dummy construction
             if (parent == JName("java.lang.Object"))
             {
-                app.put("// TODO Will assign javaPointer to the object here");
+                app.put(tabs(tabDepth+1));
+                app.put("_jniClassLoadedCheck();\n");
+
+                app.put(tabs(tabDepth+1));
+                app.put("_jniObjectPtr = _arg0.javaPointer;\n");
             }
             else
             {
-                app.put("super(_arg0);");
+                app.put(tabs(tabDepth+1));
+                app.put("_jniClassLoadedCheck();\n");
+
+                app.put(tabs(tabDepth+1));
+                app.put("super(_arg0);\n");
             }
-            app.put("\n");
         }
         else
         {
             app.put(tabs(tabDepth+1));
-            app.put("// TODO");
-            app.put("\n");
+            app.put("_jniClassLoadedCheck();\n");
 
+            string myMangledName = "_" ~ mangleName(DName("this"), jniSig).extract;
+            
+            app.put(tabs(tabDepth+1));
+            app.put("if (" ~ myMangledName ~ " is null)\n");
+            app.put(tabs(tabDepth+2));
+            app.put(myMangledName ~ " = jni_d.jni_d.loadMethod(_jniClass, \"<init>\", \"" ~ jniSig ~ "\");\n");
+            
+            app.put(tabs(tabDepth+1));
+            app.put("auto allocatedObj = jni_d.jni_d.callNewObject(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+            
             import std.format;
             if (parent != JName("java.lang.Object"))
-            {
+            {                
                 app.put(tabs(tabDepth+1));
-                app.put("ensureClassLoaded();\n");
-                app.put(tabs(tabDepth+1));
-                app.put("super(jni_d.jni_d.InternalConstructorInfo.init);\n");
-                //                app.put(format("super(InternalConstructorInfo(helperClassConstructor!(%s)(%s)));\n", parent.name, arg));
+                app.put("super(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
             }
             else
-            {
+            {                
                 app.put(tabs(tabDepth+1));
-                app.put("ensureClassLoaded();\n");
-                app.put(tabs(tabDepth+1));
-                app.put("this(jni_d.jni_d.InternalConstructorInfo.init);\n");
-                //                app.put("this(InternalConstructorInfo(helperClassConstructor!));\n");
+                app.put("this(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
             }
         }
 
         app.put(tabs(tabDepth));
         app.put("}\n");
+        
+        app.put(tabs(tabDepth));
+        app.put("private static jni_d.jni.jmethodID _" ~ mangleName(DName("this"), jniSig).extract ~ ";\n");
 
         app.put("\n");
 

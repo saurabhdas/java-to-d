@@ -54,6 +54,11 @@ DName convClassName(in JName jn)
     return DName(res);
 }
 
+DName mangleName(in DName functionName, in JniSig jniSig)
+{
+    return DName(functionName.extract ~ "_" ~ jniSig.extract.replace(".", "_1").replace("/", "_2").replace("(", "_3").replace(")", "_4").replace(";", "_5").replace("$", "_6").replace("[", "_7"));
+}
+
 @system:
 
 unittest
@@ -74,4 +79,7 @@ unittest
     assert(convClassName(JName("java.lang.Object")) == DName("java.lang.JObject.JObject"));
     assert(convClassName(JName("java.lang.Thread$State")) == DName("java.lang.JThread.JThread.JState"));
     assert(convClassName(JName("java.lang.Thread$State$Cap")) == DName("java.lang.JThread.JThread.JState.JCap"));
+
+    assert(mangleName(DName("func"), JniSig("(II)V")) == "func__II_V");
+    assert(mangleName(DName("func"), JniSig("(Ljava.lang.Thread$State$Cap;)V")) == "func__Ljava_lang_Thread_State_Cap__V");
 }
