@@ -7,7 +7,7 @@ import detail.ast_base;
 
 string[] tabooWords()
 {
-    return ["cast", "function", "with", "delete", "toString", "version"];
+    return ["cast", "function", "with", "delete", "toString", "version", "in", "out", "body", "is"];
 }
 
 private auto convRegularName(in string n)

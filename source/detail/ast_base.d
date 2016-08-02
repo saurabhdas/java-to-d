@@ -31,15 +31,15 @@ class SymbolTable
     {
         log("Creating SymbolTable");
 
-        new JIntrinsic(this, JName("boolean"), JniSig("jboolean"), DName("bool"));
-        new JIntrinsic(this, JName("byte"), JniSig("jbyte"), DName("byte"));
-        new JIntrinsic(this, JName("char"), JniSig("jchar"), DName("char"));
-        new JIntrinsic(this, JName("short"), JniSig("jshort"), DName("short"));
-        new JIntrinsic(this, JName("int"), JniSig("jint"), DName("int"));
-        new JIntrinsic(this, JName("long"), JniSig("jlong"), DName("long"));
-        new JIntrinsic(this, JName("float"), JniSig("jfloat"), DName("float"));
-        new JIntrinsic(this, JName("double"), JniSig("jdouble"), DName("double"));
-        new JIntrinsic(this, JName("void"), JniSig("jboolean"), DName("void"));
+        new JIntrinsic(this, JName("boolean"), "jboolean", DName("bool"));
+        new JIntrinsic(this, JName("byte"), "jbyte", DName("byte"));
+        new JIntrinsic(this, JName("char"), "jchar", DName("wchar"));
+        new JIntrinsic(this, JName("short"), "jshort", DName("short"));
+        new JIntrinsic(this, JName("int"), "jint", DName("int"));
+        new JIntrinsic(this, JName("long"), "jlong", DName("long"));
+        new JIntrinsic(this, JName("float"), "jfloat", DName("float"));
+        new JIntrinsic(this, JName("double"), "jdouble", DName("double"));
+        new JIntrinsic(this, JName("void"), "jboolean", DName("void"));
     }
 
     void ensureSymbol(in JName name)
@@ -90,16 +90,16 @@ class UnresolvedSymbol : ISerializeToD
 class JIntrinsic : ISerializeToD
 {
     JName javaName;
-    JniSig jniName;
+    string jniLinkageName;
     DName dName;
 
     SymbolTable st;
     
-    this(SymbolTable st_, in JName javaName_, in JniSig jniName_, in DName dName_)
+    this(SymbolTable st_, in JName javaName_, in string jniLinkageName_, in DName dName_)
     {
         st = st_;
         javaName = javaName_;
-        jniName = jniName_;
+        jniLinkageName = jniLinkageName_;
         dName = dName_;
         
         st.table[javaName] = this;
