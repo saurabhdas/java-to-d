@@ -1,12 +1,13 @@
 module jni_d.jni_d;
 
 static import java.lang.JObject;
+
 private import jni_d.jni;
 private import std.conv : to;
 private import std.string;
 private import std.meta;
+private import std.typecons : Tuple;
 
-// Return value: Was a new JVM init'd or was there an existing one already
 bool jvmIsRunning()
 {
     assert((_jvm is null) == (_env is null));
@@ -47,14 +48,12 @@ void jvmDestroy()
     _env = null;
 }
 
-class JavaArray(T) : java.lang.JObject.JObject
-{
-}
-
 struct InternalConstructorInfo
 {
     jobject javaPointer;
 }
+
+enum JniRegistrationFunction;
 
 string typeToCallSig(ReturnType)() nothrow
 {
@@ -70,12 +69,62 @@ string typeToCallSig(ReturnType)() nothrow
     else                                                    return "Object";
 }
 
-auto returnTypeConv(string callRetType, ReturnType, T)(T rval)
+string helperGetClassNameAsString(jobject obj)
 {
+    jclass cls = (*_env).GetObjectClass(_env, obj);
+    
+    // First get the class object
+    jmethodID mid = (*_env).GetMethodID(_env, cls, "getClass", "()Ljava/lang/Class;");
+    jobject clsObj = (*_env).CallObjectMethod(_env, obj, mid);
+    
+    // Now get the class object's class descriptor
+    cls = (*_env).GetObjectClass(_env, clsObj);
+    
+    // Find the getName() method on the class object
+    mid = (*_env).GetMethodID(_env, cls, "getName", "()Ljava/lang/String;");
+    
+    // Call the getName() to get a jstring object back
+    jstring strObj = (*_env).CallObjectMethod(_env, clsObj, mid);
+    
+    // Now get the c string from the java jstring object
+    const char* str = (*_env).GetStringUTFChars(_env, strObj, null);
+    
+    // Print the class name
+    auto rv = fromStringz(str).idup;
+    
+    // Release the memory pinned char array
+    (*_env).ReleaseStringUTFChars(_env, strObj, str);
+
+    return rv;
+}
+
+ReturnType returnTypeConv(string callRetType, ReturnType, T)(T rval)
+{
+    import std.stdio;
     static if (callRetType == "Object")
     {
-        static assert(is(ReturnType == interface) || is(ReturnType : java.lang.JObject.JObject));
-        return cast(ReturnType)(new java.lang.JObject.JObject(InternalConstructorInfo(rval)));
+        assert(is(T == jobject));
+        ReturnType._jniRegisterAll();
+        import std.traits;
+        static if (!is(ReturnType == class) || !(isNested!ReturnType))
+        {
+            jclass objectClass = (*_env).GetObjectClass(_env, rval);
+            assert(objectClass !is null);
+            writeln("Objectclass = ", objectClass);
+            auto secretConstructor = _jniKnownClassConstructors.get(objectClass, null);
+            if (secretConstructor !is null)
+            {
+                auto rr = cast(ReturnType)secretConstructor(InternalConstructorInfo(rval));
+                assert(rr !is null);
+                return rr;
+            }
+            else
+                throw new Exception("jni_d got a class which is not registered. Directly linked classes are automatically registered, but java functions which return derived classes of known classes need to be loaded manually. Fix this by calling '_jniRegisterAll()' on the derived class before this method is invoked. The class returned is: " ~ helperGetClassNameAsString(rval));
+        }
+        else
+        {
+            assert(false, "Not implemented yet :(");
+        }
     }
     else static if (callRetType == "Boolean")
         return (rval != 0);
@@ -87,21 +136,29 @@ auto returnTypeConv(string callRetType, ReturnType, T)(T rval)
 
 // TODO - For ALL calls to JNI, check for exceptions!
 
-jclass loadClass(string name)
+jclass loadClass(string name, ConstructorDelegate del)
 {
+    import std.stdio;
+    writeln("loadClass ", name);
     assert(jvmIsRunning);
-
     jclass cls = (*_env).FindClass(_env, toStringz(name.replace(".", "/")));
     if (cls is null)
         throw new Exception("Could not load class '" ~ name ~ "'");
+
+    if (del !is null)
+    {
+        writeln("Setting secret constructor for ", name, " cls=", cls);
+        _jniKnownClassConstructors[cls] = del;
+    }
     return cls;
 }
 
 jmethodID loadClassMethod(jclass classz, string methodName, string methodJniSig)
 {
+    import std.stdio;
+    writeln("loadClassMethod ", methodName, " : ", methodJniSig);
     assert(jvmIsRunning);
     assert(classz !is null);
-
     jmethodID jm = (*_env).GetMethodID(_env, classz, toStringz(methodName), toStringz(methodJniSig));
     if (jm is null)
         throw new Exception("Could not load class method '" ~ methodName ~ "' with signature '" ~ methodJniSig ~ "'");
@@ -110,6 +167,8 @@ jmethodID loadClassMethod(jclass classz, string methodName, string methodJniSig)
 
 jmethodID loadStaticMethod(jclass classz, string methodName, string methodJniSig)
 {
+    import std.stdio;
+    writeln("loadStaticMethod ", methodName, " : ", methodJniSig);
     assert(jvmIsRunning);
     assert(classz !is null);
     jmethodID jm = (*_env).GetStaticMethodID(_env, classz, toStringz(methodName), toStringz(methodJniSig));
@@ -118,8 +177,10 @@ jmethodID loadStaticMethod(jclass classz, string methodName, string methodJniSig
     return jm;
 }
 
-jfieldID loadClassField(jclass classz, string fieldName, string fieldName, string fieldJniSig)
+jfieldID loadClassField(jclass classz, string fieldName, string fieldJniSig)
 {
+    import std.stdio;
+    writeln("loadClassField ", fieldName, " : ", fieldJniSig);
     assert(jvmIsRunning);
     assert(classz !is null);
     jfieldID jf = (*_env).GetFieldID(_env, classz, toStringz(fieldName), toStringz(fieldJniSig));
@@ -128,8 +189,10 @@ jfieldID loadClassField(jclass classz, string fieldName, string fieldName, strin
     return jf;
 }
 
-jfieldID loadStaticField(jclass classz, string fieldName, string fieldName, string fieldJniSig)
+jfieldID loadStaticField(jclass classz, string fieldName, string fieldJniSig)
 {
+    import std.stdio;
+    writeln("loadStaticField ", fieldName, " : ", fieldJniSig);
     assert(jvmIsRunning);
     assert(classz !is null);
     jfieldID jf = (*_env).GetStaticFieldID(_env, classz, toStringz(fieldName), toStringz(fieldJniSig));
@@ -190,6 +253,8 @@ ReturnType callStaticMethodProxy(ReturnType, Args...)(jclass classz, jmethodID m
     assert(classz !is null);
     assert(methodID !is null);
     enum callRetType = typeToCallSig!ReturnType;
+    import std.stdio;
+    writeln("Calling static method...");
 
     static if (callRetType == "Void")
     {
@@ -207,7 +272,7 @@ ReturnType callClassFieldGet(ReturnType)(jobject obj, jfieldID fieldID)
 {
     assert(obj !is null);
     assert(fieldID !is null);
-    enum calRetType = typeToCallSig!ReturnType;
+    enum callRetType = typeToCallSig!ReturnType;
     mixin("auto rval = (*_env).Get" ~ callRetType ~ "Field(_env, obj, fieldID);");
     return returnTypeConv!(callRetType, ReturnType)(rval);
 }
@@ -216,7 +281,7 @@ ReturnType callStaticFieldGet(ReturnType)(jclass classz, jfieldID fieldID)
 {
     assert(classz !is null);
     assert(fieldID !is null);
-    enum calRetType = typeToCallSig!ReturnType;
+    enum callRetType = typeToCallSig!ReturnType;
     mixin("auto rval = (*_env).GetStatic" ~ callRetType ~ "Field(_env, classz, fieldID);");
     return returnTypeConv!(callRetType, ReturnType)(rval);
 }
@@ -225,7 +290,7 @@ void callClassFieldSet(T)(jobject obj, jfieldID fieldID, T newValue)
 {
     assert(obj !is null);
     assert(fieldID !is null);
-    enum calRetType = typeToCallSig!T;
+    enum callRetType = typeToCallSig!T;
     mixin("(*_env).Set" ~ callRetType ~ "Field(_env, obj, fieldID, newValue);");
 }
 
@@ -233,7 +298,7 @@ void callStaticFieldSet(T)(jclass classz, jfieldID fieldID, T newValue)
 {
     assert(classz !is null);
     assert(fieldID !is null);
-    enum calRetType = typeToCallSig!T;
+    enum callRetType = typeToCallSig!T;
     mixin("(*_env).SetStatic" ~ callRetType ~ "Field(_env, classz, fieldID, newValue);");
 }
 
@@ -241,3 +306,8 @@ private:
 
 __gshared JavaVM* _jvm;
 __gshared JNIEnv* _env;
+
+alias ConstructorDelegate = Object function(InternalConstructorInfo);
+
+// TODO
+__gshared ConstructorDelegate[jclass] _jniKnownClassConstructors;

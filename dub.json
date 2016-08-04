@@ -12,7 +12,7 @@
         "targetType": "executable",
         "sourcePaths": ["source"],
         "excludedSourceFiles": ["source/jni_d/*"],
-        "copyFiles": ["source/jni_d/jni.d", "source/jni_d/jni_d.d"],
+        "copyFiles": ["source/jni_d/jni.d", "source/jni_d/jni_d.d", "source/jni_d/jni_interface.d", "source/jni_d/jni_array.d"],
         "dependencies": {
             "pegged": "~>0.3.2"
         }

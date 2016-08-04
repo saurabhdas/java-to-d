@@ -9,11 +9,20 @@ shared static this()
         
     import std.stdio;
 
+    writeln("========================= 1");
     import java.lang.JString;
     auto s1 = JString.valueOf(true);
 
+    writeln("========================= 2");
     import java.lang.JSystem;
-//    JSystem.jout.print(s1);
+    auto a = JSystem.jout;
+
+    writeln("========================= 3");
+    writeln(s1._jniGetObjectPtr);
+    writeln(a._jniGetObjectPtr);
+    writeln(typeof(s1).stringof);
+    writeln(typeof(a).stringof);
+    a.println(s1);
 }
 
 shared static ~this()

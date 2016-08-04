@@ -111,6 +111,11 @@ class JInterface : ISerializeToD
             app.put(extends.map!(a => convClassName(a).extract).join(", "));
             imports.put(extends.map!(a => st.table.get(a, null).importName));
         }
+        else
+        {
+            app.put(" : ");
+            app.put("jni_d.jni_interface.JavaRootInterface");
+        }
         app.put('\n');
 
         app.put(tabs(tabDepth));
@@ -121,6 +126,13 @@ class JInterface : ISerializeToD
 
         foreach(nes; findNested(st, name))
             nes.serializeFull(app, imports, tabDepth+1);
+
+        app.put(tabs(tabDepth+1));
+        app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
+        
+        app.put(format("%sprivate static void jniRegister_%s() { _jniClass = jni_d.jni_d.loadClass(\"%s\", null); }\n", tabs(tabDepth+1), "interface", name.extract));
+
+        app.put(format("%sstatic void _jniRegisterAll() { if (_jniClass !is null) return; jniRegister_interface(); foreach (mem; __traits(derivedMembers, typeof(this))) static if (mem != \"this\") foreach(attr; __traits(getAttributes, __traits(getMember, typeof(this), mem))) static if ( is(attr == jni_d.jni_d.JniRegistrationFunction)) __traits(getMember, typeof(this), mem)(); }\n", tabs(tabDepth+1)));
 
         app.put(tabs(tabDepth));
         app.put("}\n");
@@ -297,13 +309,18 @@ class JClass : ISerializeToD
             app.put(exim.map!(a => convClassName(a).extract).join(", "));
             imports.put(exim.map!(a => st.table.get(a, null).importName));
         }
+        else
+        {
+            app.put(" : ");
+            app.put("jni_d.jni_interface.JavaRootInterface");
+        }
         app.put('\n');
         
         app.put(tabs(tabDepth));
         app.put("{\n");
 
         app.put(tabs(tabDepth+1));
-        app.put("static assert(this.sizeof == ulong.sizeof);\n");
+        app.put("static assert(this.sizeof == ulong.sizeof);\n\n");
 
         foreach(def; definitions)
             def.serializeFull(app, imports, tabDepth+1);
@@ -325,20 +342,14 @@ class JClass : ISerializeToD
         app.put(tabs(tabDepth+1));
         app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
 
-        app.put(tabs(tabDepth+1));
-        app.put("private static bool _jniClassLoadedCheck()\n");
-        app.put(tabs(tabDepth+1));
-        app.put("{\n");
-        app.put(tabs(tabDepth+2));
-        app.put("if (_jniClass !is null)\n");
-        app.put(tabs(tabDepth+3));
-        app.put("return false;\n");
-        app.put(tabs(tabDepth+2));
-        app.put("_jniClass = jni_d.jni_d.loadClass(\"" ~ name.extract ~ "\");\n");
-        app.put(tabs(tabDepth+2));
-        app.put("return true;\n");
-        app.put(tabs(tabDepth+1));
-        app.put("}\n");
+        app.put(format("%sprivate static void jniRegister_%s() { _jniClass = jni_d.jni_d.loadClass(\"%s\", &_secretConstructor); }\n", tabs(tabDepth+1), "class", name.extract));
+
+        app.put(format("%sstatic void _jniRegisterAll() { if (_jniClass !is null) return; jniRegister_class(); foreach (mem; __traits(derivedMembers, typeof(this))) static if (mem != \"this\") foreach(attr; __traits(getAttributes, __traits(getMember, typeof(this), mem))) static if ( is(attr == jni_d.jni_d.JniRegistrationFunction)) __traits(getMember, typeof(this), mem)(); }\n", tabs(tabDepth+1)));
+
+        if (isAbstract || parent != JName.init)
+            app.put(format("%sprivate static Object _secretConstructor(jni_d.jni_d.InternalConstructorInfo inf) { assert(false); }\n", tabs(tabDepth+1)));
+        else
+            app.put(format("%sprivate static Object _secretConstructor(jni_d.jni_d.InternalConstructorInfo inf) { return new typeof(this)(inf); }\n", tabs(tabDepth+1)));
 
         app.put(tabs(tabDepth+1));
         app.put("~this() { /* TODO */ }\n");
@@ -347,6 +358,8 @@ class JClass : ISerializeToD
         {
             app.put(tabs(tabDepth+1));
             app.put("protected jni_d.jni.jobject _jniObjectPtr;\n");
+
+            app.put(format("%spublic jni_d.jni.jobject _jniGetObjectPtr() { return _jniObjectPtr; }\n", tabs(tabDepth+1)));
         }
         
         app.put(tabs(tabDepth));
@@ -433,6 +446,8 @@ class JMember : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
+        string myMangledName = "_" ~ mangleName(convRegularName(name), jniSig).extract;
+
         // Getter
         {
             app.put(tabs(tabDepth));
@@ -451,13 +466,16 @@ class JMember : ISerializeToD
             app.put(tabs(tabDepth));
             app.put("{\n");
 
-            app.put(tabs(tabDepth+1));
-            app.put("// TODO");
-            app.put("\n");
+            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
 
-            app.put(tabs(tabDepth+1));
-            app.put("return typeof(return).init;");
-            app.put("\n");
+            if (!isStatic)
+            {
+                app.put(format("%sreturn jni_d.jni_d.callClassFieldGet!(typeof(return))(_jniObjectPtr, %s);\n", tabs(tabDepth+1), myMangledName));
+            }
+            else
+            {
+                app.put(format("%sreturn jni_d.jni_d.callStaticFieldGet!(typeof(return))(_jniClass, %s);\n", tabs(tabDepth+1), myMangledName));
+            }
 
             app.put(tabs(tabDepth));
             app.put("}\n");
@@ -481,12 +499,27 @@ class JMember : ISerializeToD
             app.put(tabs(tabDepth));
             app.put("{\n");
 
-            app.put(tabs(tabDepth+1));
-            app.put("// TODO");
-            app.put("\n");
+            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
+
+            if (!isStatic)
+            {
+                app.put(format("%sjni_d.jni_d.callClassFieldSet(_jniObjectPtr, %s, _arg0%s);\n", tabs(tabDepth+1), myMangledName, type.insertObjectPtr));
+            }
+            else
+            {
+                app.put(format("%sjni_d.jni_d.callStaticFieldSet(_jniClass, %s, _arg0%s);\n", tabs(tabDepth+1), myMangledName, type.insertObjectPtr));
+            }
 
             app.put(tabs(tabDepth));
             app.put("}\n");
+        }
+
+        // Field stuff
+        {
+            app.put(tabs(tabDepth));
+            app.put("private static jni_d.jni.jfieldID " ~ myMangledName ~ ";\n");
+
+            app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sField(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, isStatic ? "Static" : "Class", name.extract, jniSig.extract));
         }
 
         app.put("\n");
@@ -587,10 +620,9 @@ class JConstructor : ISerializeToD
         app.put(tabs(tabDepth));
         app.put("{\n");
 
-        string myMangledName = "_" ~ mangleName(DName("this"), jniSig).extract;
+        app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
 
-        app.put(tabs(tabDepth+1));
-        app.put("_jniClassLoadedCheck();\n");
+        string myMangledName = "_" ~ mangleName(DName("this"), jniSig).extract;
 
         if (isDummyConstructor)
         {
@@ -605,20 +637,19 @@ class JConstructor : ISerializeToD
                 app.put(tabs(tabDepth+1));
                 app.put("super(_arg0);\n");
             }
+
+            app.put(tabs(tabDepth));
+            app.put("}\n");
+
         }
         else
         {
             app.put(tabs(tabDepth+1));
-            app.put("if (" ~ myMangledName ~ " is null)\n");
-            app.put(tabs(tabDepth+2));
-            app.put(myMangledName ~ " = jni_d.jni_d.loadClassMethod(_jniClass, \"<init>\", \"" ~ jniSig ~ "\");\n");
-            
-            app.put(tabs(tabDepth+1));
-            app.put("auto allocatedObj = jni_d.jni_d.callNewObject(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+            app.put("auto allocatedObj = jni_d.jni_d.callNewObject(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
             
             import std.format;
             if (parent != JName("java.lang.Object"))
-            {                
+            {
                 app.put(tabs(tabDepth+1));
                 app.put("super(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
             }
@@ -627,13 +658,15 @@ class JConstructor : ISerializeToD
                 app.put(tabs(tabDepth+1));
                 app.put("this(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
             }
-        }
 
-        app.put(tabs(tabDepth));
-        app.put("}\n");
-        
-        app.put(tabs(tabDepth));
-        app.put("private static jni_d.jni.jmethodID " ~ myMangledName ~ ";\n");
+            app.put(tabs(tabDepth));
+            app.put("}\n");
+            
+            app.put(tabs(tabDepth));
+            app.put("private static jni_d.jni.jmethodID " ~ myMangledName ~ ";\n");
+            
+            app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sMethod(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, "Class", "<init>", jniSig.extract));
+        }
 
         app.put("\n");
 
@@ -872,42 +905,32 @@ class JMethod : ISerializeToD
             app.put(tabs(tabDepth));
             app.put("{\n");
 
-            app.put(tabs(tabDepth+1));
-            app.put("_jniClassLoadedCheck();\n");
-
-            app.put(tabs(tabDepth+1));
-            app.put("if (" ~ myMangledName ~ " is null)\n");
+            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
 
             if (!isStatic)
             {
-                app.put(tabs(tabDepth+2));
-                app.put(myMangledName ~ " = jni_d.jni_d.loadClassMethod(_jniClass, \"" ~ name.extract ~ "\", \"" ~ jniSig ~ "\");\n");
-
                 if (returnType != JName("void"))
                 {
                     app.put(tabs(tabDepth+1));
-                    app.put("return jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+                    app.put("return jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
                 }
                 else
                 {
                     app.put(tabs(tabDepth+1));
-                    app.put("jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+                    app.put("jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
                 }
             }
             else
             {
-                app.put(tabs(tabDepth+2));
-                app.put(myMangledName ~ " = jni_d.jni_d.loadStaticMethod(_jniClass, \"" ~ name.extract ~ "\", \"" ~ jniSig ~ "\");\n");
-
                 if (returnType != JName("void"))
                 {
                     app.put(tabs(tabDepth+1));
-                    app.put("return jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+                    app.put("return jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
                 }
                 else
                 {
                     app.put(tabs(tabDepth+1));
-                    app.put("jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string).array).join(", ") ~ ");\n");
+                    app.put("jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
                 }
             }
             app.put(tabs(tabDepth));
@@ -920,6 +943,8 @@ class JMethod : ISerializeToD
 
         app.put(tabs(tabDepth));
         app.put("private static jni_d.jni.jmethodID " ~ myMangledName ~ ";\n");
+
+        app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sMethod(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, isStatic ? "Static" : "Class", name.extract, jniSig.extract));
 
         app.put("\n");
 
@@ -951,7 +976,7 @@ class JArray : JClass
     {
         auto tt = st.table.get(innerType, null);
         assert(tt !is null);
-        return DName("jni_d.jni_d.JavaArray!(" ~ tt.serializeName.extract ~ ")");
+        return DName("jni_d.jni_array.JavaArray!(" ~ tt.serializeName.extract ~ ")");
     }
 
     override DName importName() const

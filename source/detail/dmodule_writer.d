@@ -20,10 +20,10 @@ uint writeAll(in SymbolTable st, string outputDirectory = ".")
             continue;
 
         auto modStringName = convModuleName(item.key).extract;
-        auto mText = chain(["module ", modStringName, ";\n"],
-            ["static import jni_d.jni;\n", "static import jni_d.jni_d;\n", "\n"],
+        auto mText = chain(["module ", modStringName, ";\n", "\n"],
+            ["static import jni_d.jni;\n", "static import jni_d.jni_d;\n", "static import jni_d.jni_interface;\n", "static import jni_d.jni_array;\n", "\n"],
             sort(app2.data.filter!(a => a != DName.init).map!(a => a.extract).filter!(a => a != modStringName).array).uniq.map!(a => "static import " ~ a ~ ";\n").array,
-            ["\n", app1.data]).join;
+            ["\n", app1.data, "\n"]).join;
 
         auto mPath = convModuleName(item.key).extract.replace(".", "/") ~ ".d";
 

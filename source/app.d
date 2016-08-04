@@ -36,6 +36,8 @@ void main(string[] args)
     mkdirRecurse(outputDirectory ~ "/jni_d/");
     copy(executablePath ~ "/jni.d", outputDirectory ~ "/jni_d/jni.d");
     copy(executablePath ~ "/jni_d.d", outputDirectory ~ "/jni_d/jni_d.d");
+    copy(executablePath ~ "/jni_interface.d", outputDirectory ~ "/jni_d/jni_interface.d");
+    copy(executablePath ~ "/jni_array.d", outputDirectory ~ "/jni_d/jni_array.d");
 
     auto st = new SymbolTable;
     javaClassNames.each!(a => st.ensureSymbol(JName(a)));

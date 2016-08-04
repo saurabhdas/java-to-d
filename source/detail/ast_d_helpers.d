@@ -59,6 +59,15 @@ DName mangleName(in DName functionName, in JniSig jniSig)
     return DName(functionName.extract ~ "_" ~ jniSig.extract.replace(".", "_1").replace("/", "_2").replace("(", "_3").replace(")", "_4").replace(";", "_5").replace("$", "_6").replace("[", "_7"));
 }
 
+string insertObjectPtr(JName arg)
+{
+    static okList = ["boolean", "byte", "char", "short", "int", "long", "float", "double"];
+    if (okList.canFind(arg.extract))
+        return "";
+    else
+        return "._jniGetObjectPtr()";
+}
+
 @system:
 
 unittest
