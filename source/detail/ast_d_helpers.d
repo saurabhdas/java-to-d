@@ -65,7 +65,7 @@ string insertObjectPtr(JName arg)
     if (okList.canFind(arg.extract))
         return "";
     else
-        return "._jniGetObjectPtr()";
+        return "._jniObjectPtr";
 }
 
 @system:

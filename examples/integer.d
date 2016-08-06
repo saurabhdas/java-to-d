@@ -18,8 +18,6 @@ shared static this()
     auto a = JSystem.jout;
 
     writeln("========================= 3");
-    writeln(s1._jniGetObjectPtr);
-    writeln(a._jniGetObjectPtr);
     writeln(typeof(s1).stringof);
     writeln(typeof(a).stringof);
     a.println(s1);

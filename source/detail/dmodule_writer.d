@@ -21,7 +21,7 @@ uint writeAll(in SymbolTable st, string outputDirectory = ".")
 
         auto modStringName = convModuleName(item.key).extract;
         auto mText = chain(["module ", modStringName, ";\n", "\n"],
-            ["static import jni_d.jni;\n", "static import jni_d.jni_d;\n", "static import jni_d.jni_interface;\n", "static import jni_d.jni_array;\n", "\n"],
+            ["static import jni_d.jni;\n", "static import jni_d.support;\n", "static import jni_d.java_root;\n", "\n"],
             sort(app2.data.filter!(a => a != DName.init).map!(a => a.extract).filter!(a => a != modStringName).array).uniq.map!(a => "static import " ~ a ~ ";\n").array,
             ["\n", app1.data, "\n"]).join;
 
