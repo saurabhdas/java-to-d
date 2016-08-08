@@ -21,6 +21,8 @@ interface ISerializeToD
 
     // serializeFull returns TRUE if a file should be written for this object
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const;
+
+    static bool commentThisSerialise = false;
 }
 
 class SymbolTable
@@ -215,6 +217,16 @@ JName parseJName(SymbolTable st, in ParseTree pTree)
     st.ensureSymbol(jn);
     return jn;
 }
+
+string tabs(in int tabDepth)
+{
+    import std.range, std.conv;
+    if (!ISerializeToD.commentThisSerialise)
+        return "    ".repeat.take(tabDepth).join.to!string;
+    else
+        return "    ".repeat.take(tabDepth).join.to!string ~ "// ";
+}
+
 
 @system:
 unittest

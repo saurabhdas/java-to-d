@@ -58,12 +58,12 @@ void jvmDestroy()
 jclass findClassWorker(string className)
 {
     import std.stdio;
-    writeln("loadClass ", name);
+    writeln("loadClass ", className);
     
     assert(jvmIsRunning);
-    myClass = (*_env).FindClass(_env, toStringz(className.replace(".", "/")));
+    jclass myClass = (*_env).FindClass(_env, toStringz(className.replace(".", "/")));
     if (myClass is null)
-        throw new Exception("Could not load class '" ~ name ~ "'");
+        throw new Exception("Could not load class '" ~ className ~ "'");
     return myClass;
 }
 
@@ -97,7 +97,7 @@ auto findMethodOrFieldWorker(bool isStatic, bool isMethod)(jclass classz, string
     else                    static assert(is(typeof(rv) == jfieldID));
 
     if (rv is null)
-        throw new Exception("Could not load '" ~ name ~ "' with signature '" ~ jniSig ~ "'");
+        throw new Exception("Could not load '" ~ name ~ "' with signature '" ~ jniSig ~ "'" ~ " isStatic=" ~ to!string(isStatic) ~ " isMethod=" ~ to!string(isMethod));
 
     return rv;
 }
@@ -189,7 +189,7 @@ ReturnType callStaticMethodWorker(ReturnType, Args...)(jclass classz, jmethodID 
 ReturnType callStaticMethod(CallingClass, ReturnType, string name, string jniSig, Args...)(Args args)
 {
     jclass myClass = findClass!CallingClass();
-    jmethodID myMethodID = findMethodOrField!(CallingClass, false, true, name, jniSig)();
+    jmethodID myMethodID = findMethodOrField!(CallingClass, true, true, name, jniSig)();
     
     return callStaticMethodWorker!(ReturnType, ReplaceAll!(bool, ubyte, Args))(myClass, myMethodID, args);
 }
@@ -197,7 +197,7 @@ ReturnType callStaticMethod(CallingClass, ReturnType, string name, string jniSig
 ReturnType callGetField(CallingClass, ReturnType, string name, string jniSig)(jobject obj)
 {
     assert(obj !is null);
-    auto myFieldID = findMethodOrField!(CallingClass, false, false, name, jniSig)();
+    jfieldID myFieldID = findMethodOrField!(CallingClass, false, false, name, jniSig)();
 
     enum callRetType = typeToCallSig!ReturnType;
     mixin("auto rval = (*_env).Get" ~ callRetType ~ "Field(_env, obj, myFieldID);");
@@ -207,7 +207,7 @@ ReturnType callGetField(CallingClass, ReturnType, string name, string jniSig)(jo
 ReturnType callGetStaticField(CallingClass, ReturnType, string name, string jniSig)()
 {
     jclass myClass = findClass!CallingClass();
-    jmethodID myFieldID = findMethodOrField!(CallingClass, true, false, name, jniSig)();
+    jfieldID myFieldID = findMethodOrField!(CallingClass, true, false, name, jniSig)();
 
     enum callRetType = typeToCallSig!ReturnType;
     mixin("auto rval = (*_env).GetStatic" ~ callRetType ~ "Field(_env, myClass, myFieldID);");
@@ -217,7 +217,7 @@ ReturnType callGetStaticField(CallingClass, ReturnType, string name, string jniS
 void callSetField(CallingClass, ArgType, string name, string jniSig)(jobject obj, ArgType newValue)
 {
     assert(obj !is null);
-    auto myFieldID = findMethodOrField!(CallingClass, false, false, name, jniSig)();
+    jfieldID myFieldID = findMethodOrField!(CallingClass, false, false, name, jniSig)();
 
     enum callRetType = typeToCallSig!ArgType;
     mixin("(*_env).Set" ~ callRetType ~ "Field(_env, obj, myFieldID, newValue);");
@@ -226,7 +226,7 @@ void callSetField(CallingClass, ArgType, string name, string jniSig)(jobject obj
 void callSetStaticField(CallingClass, ArgType, string name, string jniSig)(ArgType newValue)
 {
     jclass myClass = findClass!CallingClass();
-    jmethodID myFieldID = findMethodOrField!(CallingClass, true, false, name, jniSig)();
+    jfieldID myFieldID = findMethodOrField!(CallingClass, true, false, name, jniSig)();
 
     enum callRetType = typeToCallSig!T;
     mixin("(*_env).SetStatic" ~ callRetType ~ "Field(_env, myClass, myFieldID, newValue);");
@@ -235,6 +235,16 @@ void callSetStaticField(CallingClass, ArgType, string name, string jniSig)(ArgTy
 void destroyObject(jobject obj)
 {
     (*_env).DeleteLocalRef(_env, obj);
+}
+
+jstring callNewString(const(wchar[]) str)
+{
+    jstring rval = (*_env).NewString(_env, cast(const ushort*)(str.ptr), cast(int)(str.length));
+
+    if (rval is null)
+        throw new Exception("Could not construct string");
+
+    return rval;
 }
 
 private:
