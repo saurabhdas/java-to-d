@@ -35,9 +35,9 @@ void main(string[] args)
     import std.file;
     mkdirRecurse(outputDirectory ~ "/jni_d/");
     copy(executablePath ~ "/jni.d", outputDirectory ~ "/jni_d/jni.d");
-    copy(executablePath ~ "/jni_d.d", outputDirectory ~ "/jni_d/jni_d.d");
-    copy(executablePath ~ "/jni_interface.d", outputDirectory ~ "/jni_d/jni_interface.d");
-    copy(executablePath ~ "/jni_array.d", outputDirectory ~ "/jni_d/jni_array.d");
+    copy(executablePath ~ "/java_root.d", outputDirectory ~ "/jni_d/java_root.d");
+    copy(executablePath ~ "/support.d", outputDirectory ~ "/jni_d/support.d");
+    copy(executablePath ~ "/package.d", outputDirectory ~ "/jni_d/package.d");
 
     auto st = new SymbolTable;
     javaClassNames.each!(a => st.ensureSymbol(JName(a)));

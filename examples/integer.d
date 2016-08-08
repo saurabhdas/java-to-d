@@ -1,32 +1,41 @@
 ﻿module integer;
 
-import jni_d.jni_d;
+import jni_d;
 
 shared static this()
 {
+    import std.stdio;
     if (!jvmIsRunning)
         jvmInit();
         
-    import std.stdio;
+    writeln("Constructing a java.lang.Integer from an int");
+    import java.lang.JInteger;
+    auto i1 = new JInteger(42);
 
-    writeln("========================= 1");
+    writeln("Constructing a java.lang.Integer from an string");
     import java.lang.JString;
-    auto s1 = JString.valueOf(true);
+    auto i2 = new JInteger(new JString("43"));
 
-    writeln("========================= 2");
+    writeln("Printing these integers");
     import java.lang.JSystem;
-    auto a = JSystem.jout;
+    JSystem.jout.println(i1);
+    JSystem.jout.println(i2);
 
-    writeln("========================= 3");
-    writeln(s1._jniGetObjectPtr);
-    writeln(a._jniGetObjectPtr);
-    writeln(typeof(s1).stringof);
-    writeln(typeof(a).stringof);
-    a.println(s1);
+    writeln("MIN_VALUE = ", JInteger.MIN_VALUE);
+    writeln("MAX_VALUE = ", JInteger.MAX_VALUE);
+    writeln("max(42,2) = ", JInteger.max(42, 2));
+    writeln("min(42,2) = ", JInteger.min(42, 2));
+    writeln("sum(42,2) = ", JInteger.sum(42, 2));
 }
 
 shared static ~this()
 {
     if (jvmIsRunning)
+    {
+        // To destroy the GC, we need to ensure that all JNI linked objects are destroyed
+        import core.memory;
+        GC.collect();
+
         jvmDestroy();
+    }
 }

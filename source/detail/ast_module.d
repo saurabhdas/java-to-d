@@ -6,7 +6,8 @@ import pegged.peg;
 import detail.ast_base;
 import detail.ast_d_helpers;
 
-@safe:
+//@safe:
+@trusted:        // TODO Remove this line
 
 ISerializeToD parseModule(SymbolTable st, in ParseTree pTree, in JName expectedName)
 {
@@ -100,44 +101,7 @@ class JInterface : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
-        app.put(tabs(tabDepth));
-        if (parent != JName.init)
-            app.put("static ");     // In java, all nested interfaces are static
-        app.put("interface ");
-        app.put(convClassName(name).extract.split('.')[$-1]);
-        if (extends.length > 0)
-        {
-            app.put(" : ");
-            app.put(extends.map!(a => convClassName(a).extract).join(", "));
-            imports.put(extends.map!(a => st.table.get(a, null).importName));
-        }
-        else
-        {
-            app.put(" : ");
-            app.put("jni_d.jni_interface.JavaRootInterface");
-        }
-        app.put('\n');
-
-        app.put(tabs(tabDepth));
-        app.put("{\n");
-
-        foreach(def; definitions)
-            def.serializeFull(app, imports, tabDepth+1);
-
-        foreach(nes; findNested(st, name))
-            nes.serializeFull(app, imports, tabDepth+1);
-
-        app.put(tabs(tabDepth+1));
-        app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
-        
-        app.put(format("%sprivate static void jniRegister_%s() { _jniClass = jni_d.jni_d.loadClass(\"%s\", null); }\n", tabs(tabDepth+1), "interface", name.extract));
-
-        app.put(format("%sstatic void _jniRegisterAll() { if (_jniClass !is null) return; jniRegister_interface(); foreach (mem; __traits(derivedMembers, typeof(this))) static if (mem != \"this\") foreach(attr; __traits(getAttributes, __traits(getMember, typeof(this), mem))) static if ( is(attr == jni_d.jni_d.JniRegistrationFunction)) __traits(getMember, typeof(this), mem)(); }\n", tabs(tabDepth+1)));
-
-        app.put(tabs(tabDepth));
-        app.put("}\n");
-
-        return (parent == JName.init);
+        return this.buildClass(app, imports, tabDepth);
     }
 }
 
@@ -220,9 +184,6 @@ class JClass : ISerializeToD
         }
 
         definitions = parseDefinitions(st, pDefinitions, name);
-
-        // Add a protected constructor for subclasses to call
-        definitions ~= new JConstructor(st, name);
     }
 
     void fixInheritedImplements()
@@ -292,79 +253,229 @@ class JClass : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
-        app.put(tabs(tabDepth));
-        if (isFinal)
-            app.put("final ");
-        if (isStatic || (parent != JName.init && cast(const JInterface)(st.table.get(parent, null)) !is null))
-            app.put("static ");             // An inner class of an interface is always static
-        if (isAbstract)
-            app.put("abstract ");
-        app.put("class ");
-        app.put(convClassName(name).extract.split('.')[$-1]);
+        return this.buildClass(app, imports, tabDepth);
+    }
+}
 
-        auto exim = trustedChain([extends], implements).filter!(a => a != JName.init);
-        if (!exim.empty)
+struct DefinitionAdder(DefType) if (is(DefType == JMember) || is(DefType == JConstructor) || is(DefType == JMethod))
+{
+    const(DefType)[] defs;
+    const(JName)[] parentClasses;
+
+    // We have 2 types of auto casts to consider - return type casts and argument casts
+    // Return casts - same name and argument signature - comment out all but the most derived type
+    // Arg casts - collect same name and number of args and do the derived computation
+    // Members have an arg cast for the putter and a return cast for the getter
+    // Constructors have an arg cast and no return cast (constructors don't return anything)
+    // Members have an arg cast and a return cast (keep the most derived type)
+
+    struct ArgCastKey
+    {
+        JName funcName;
+        ulong nArgs;
+        bool isStatic;
+    }
+    const(JName)[][][ArgCastKey] argCastInfo;
+
+    static if (!is(DefType == JConstructor))
+    {
+        struct RetCastKey
         {
-            app.put(" : ");
-            app.put(exim.map!(a => convClassName(a).extract).join(", "));
-            imports.put(exim.map!(a => st.table.get(a, null).importName));
+            JName funcName;
+            string jniSigArgsPart;
+            bool isStatic;
         }
+        struct RetCastInfo
+        {
+            JName[] returnTypes;
+            bool oneAdded;
+        }
+        RetCastInfo[RetCastKey] retCastInfo;
+    }
+
+    void addOne(in DefType def, in JName parentClass)
+    {
+        defs ~= def;
+        parentClasses ~= parentClass;
+        assert(defs.length == parentClasses.length);
+
+        static if (is(DefType == JMember))
+            argCastInfo[ArgCastKey(def.name, 1, def.isStatic)] ~= [def.type];
+        else static if (is(DefType == JConstructor))
+            argCastInfo[ArgCastKey(def.name, def.args.length, false)] ~= def.args;
         else
-        {
-            app.put(" : ");
-            app.put("jni_d.jni_interface.JavaRootInterface");
-        }
-        app.put('\n');
+            argCastInfo[ArgCastKey(def.name, def.args.length, def.isStatic)] ~= def.args;
         
-        app.put(tabs(tabDepth));
-        app.put("{\n");
+        static if (is(DefType == JMember))
+        {
+            RetCastKey rk = RetCastKey(def.name, def.jniSig.extract, def.isStatic);
+            JName addThis = def.type;
+        }
+        else static if (is(DefType == JMethod))
+        {
+            RetCastKey rk = RetCastKey(def.name, def.jniSig.extract[1 .. def.jniSig.extract.indexOf(')')], def.isStatic);
+            JName addThis = def.returnType;
+        }
 
-        app.put(tabs(tabDepth+1));
-        app.put("static assert(this.sizeof == ulong.sizeof);\n\n");
+        static if (!is(DefType == JConstructor))
+        {
+            if (rk !in retCastInfo)
+                retCastInfo[rk] = RetCastInfo.init;
+            retCastInfo[rk].returnTypes ~= addThis;
+        }
+    }
 
-        foreach(def; definitions)
-            def.serializeFull(app, imports, tabDepth+1);
+    void serializeOneParent(in ISerializeToD buildingFor, in JName whichParent, ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth)
+    {
+        zip(defs, parentClasses, iota(0, defs.length)).filter!(a => a[1] == whichParent).each!(a => serializeOneDef(a[2], buildingFor, a[0], app, imports, tabDepth));
+    }
+
+    bool aPrecursor(in SymbolTable st, in JName isThis, in JName ofThis)
+    {
+        auto ofTHIS = st.table.get(ofThis, null);
+
+        if (cast(const JIntrinsic)ofTHIS !is null)
+            return false;
+        else if (cast(const JArray)ofTHIS !is null)
+        {
+            auto isTHIS = st.table.get(isThis, null);
+            if (cast(const JArray)isTHIS !is null)
+                return aPrecursor(st, (cast(const JArray)isTHIS).innerType, (cast(const JArray)ofTHIS).innerType);
+            else
+                return [JName("java.lang.Object")].canFind(isThis);
+        }
+        else if (cast(const JInterface)ofTHIS !is null)
+            return (cast(const JInterface)ofTHIS).allPrecursors.canFind(isThis);
+        else if (cast(const JClass) ofTHIS !is null)
+            return (cast(const JClass)ofTHIS).allPrecursors.canFind(isThis);
+        else
+            assert(false);
+    }
+
+    void serializeOneDef(ulong idx, in ISerializeToD buildingFor, in DefType def, ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth)
+    {
+        static if (is(DefType == JMember))
+            cheatingParameters = argCastInfo[ArgCastKey(def.name, 1, def.isStatic)];
+        else static if (is(DefType == JConstructor))
+            cheatingParameters = argCastInfo[ArgCastKey(def.name, def.args.length, false)];
+        else
+            cheatingParameters = argCastInfo[ArgCastKey(def.name, def.args.length, def.isStatic)];
+        
+        static if (!is(DefType == JConstructor))
+        {
+            static if (is(DefType == JMember))
+            {
+                RetCastKey rck = RetCastKey(def.name, def.jniSig.extract, def.isStatic);
+                auto myt = def.type;
+            }
+            else static if (is(DefType == JMethod))
+            {
+                RetCastKey rck = RetCastKey(def.name, def.jniSig.extract[1 .. def.jniSig.extract.indexOf(')')], def.isStatic);
+                auto myt = def.returnType;
+            }
+            auto rci = retCastInfo[rck];
+
+            // We have a list of return types and my return type
+            // If our return type is a sub-class of any other return type, then comment this out
+            // If our return type is exactly the same as any other return type, then keep ours if we are ahead in the list
+
+            if (rci.oneAdded)
+            {
+                ISerializeToD.commentThisSerialise = true;
+            }
+            else
+            {
+                foreach(rc1; rci.returnTypes)
+                {
+                    if (aPrecursor(def.st, myt, rc1))
+                    {
+                        ISerializeToD.commentThisSerialise = true;
+                        break;
+                    }
+                }
+
+                assert(!retCastInfo[rck].oneAdded);
+                (rck in retCastInfo).oneAdded = true;
+                assert(retCastInfo[rck].oneAdded);
+            }
+        }
+
+        def.serializeFull(app, imports, tabDepth+1);
+        cheatingParameters = cheatingParameters.init;
+        ISerializeToD.commentThisSerialise = false;
+    }
+}
+
+bool buildClass(T)(in T t, ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth)
+{
+    with(t)
+    {
+        app.put(format("%s%sclass %s : %s\n",
+                tabs(tabDepth),
+                (parent != JName.init) ? "static " : "",
+                convClassName(name).extract.split('.')[$-1],
+                "jni_d.java_root.JavaRootObject"));
+        
+        app.put(format("%s{\n", tabs(tabDepth)));
+
+        app.put(format("%senum _jniClassName = \"%s\";\n\n", tabs(tabDepth+1), name.extract));
+
+        DefinitionAdder!JMember daMembers;
+        DefinitionAdder!JConstructor daConstructors;
+        DefinitionAdder!JMethod daMethods;
+
+        definitions.map!(a => cast(const JMember)a)     .filter!(a => a !is null).each!(a => daMembers.addOne(a, name));
+        definitions.map!(a => cast(const JConstructor)a).filter!(a => a !is null).each!(a => daConstructors.addOne(a, name));
+        definitions.map!(a => cast(const JMethod)a)     .filter!(a => a !is null).each!(a => daMethods.addOne(a, name));
+
+        foreach(pre; allPrecursors)
+        {
+            auto defObj1 = cast(const JInterface)(st.table.get(pre, null));
+            auto defObj2 = cast(const JClass)(st.table.get(pre, null));
+            assert(defObj1 !is null || defObj2 !is null);
+            assert(defObj1  is null || defObj2  is null);
+            
+            const(ISerializeToD)[] defs = (defObj1 !is null) ? defObj1.definitions : defObj2.definitions;
+
+            defs.map!(a => cast(const JMember)a)     .filter!(a => a !is null).each!(a => daMembers.addOne(a, pre));
+            defs.map!(a => cast(const JMethod)a)     .filter!(a => a !is null).each!(a => daMethods.addOne(a, pre));
+        }
+
+        app.put(format("%s/* From %s */\n", tabs(tabDepth+1), name.extract));
+        daMembers.serializeOneParent(t, name, app, imports, tabDepth);
+        daConstructors.serializeOneParent(t, name, app, imports, tabDepth);
+        daMethods.serializeOneParent(t, name, app, imports, tabDepth);
+
+        foreach(pre; allPrecursors)
+        {
+            app.put(format("\n%s/* From from %s */\n", tabs(tabDepth+1), pre.extract));
+            daMembers.serializeOneParent(t, pre, app, imports, tabDepth);
+            daMethods.serializeOneParent(t, pre, app, imports, tabDepth);
+        }
 
         foreach(nes; findNested(st, name))
+        {
+            app.put(format("\n%s/* Nested class */\n", tabs(tabDepth+1)));
             nes.serializeFull(app, imports, tabDepth+1);
-
-        auto dm = defenderMethods();
-        if (dm.length > 0)
-        {
-            log("Defender methods for ", name.extract, ": ", dm.length);
-            log(dm.map!(a => a.name));
         }
 
-        foreach(dfm; defenderMethods)
-            dfm.serializeFull(app, imports, tabDepth+1);
+        app.put("\n");
+        app.put(format("%s/* Construction from JNI interface */\n", tabs(tabDepth+1)));
+        app.put(format("%sthis(jni_d.jni.jobject ptr) { super(ptr); }\n", tabs(tabDepth+1)));
 
-        // Members and functions needed for JNI calls
-        app.put(tabs(tabDepth+1));
-        app.put("private static __gshared jni_d.jni.jclass _jniClass;\n");
-
-        app.put(format("%sprivate static void jniRegister_%s() { _jniClass = jni_d.jni_d.loadClass(\"%s\", &_secretConstructor); }\n", tabs(tabDepth+1), "class", name.extract));
-
-        app.put(format("%sstatic void _jniRegisterAll() { if (_jniClass !is null) return; jniRegister_class(); foreach (mem; __traits(derivedMembers, typeof(this))) static if (mem != \"this\") foreach(attr; __traits(getAttributes, __traits(getMember, typeof(this), mem))) static if ( is(attr == jni_d.jni_d.JniRegistrationFunction)) __traits(getMember, typeof(this), mem)(); }\n", tabs(tabDepth+1)));
-
-        if (isAbstract || parent != JName.init)
-            app.put(format("%sprivate static Object _secretConstructor(jni_d.jni_d.InternalConstructorInfo inf) { assert(false); }\n", tabs(tabDepth+1)));
-        else
-            app.put(format("%sprivate static Object _secretConstructor(jni_d.jni_d.InternalConstructorInfo inf) { return new typeof(this)(inf); }\n", tabs(tabDepth+1)));
-
-        app.put(tabs(tabDepth+1));
-        app.put("~this() { /* TODO */ }\n");
-
-        if (name == JName("java.lang.Object"))
+        if (name == JName("java.lang.String"))
         {
-            app.put(tabs(tabDepth+1));
-            app.put("protected jni_d.jni.jobject _jniObjectPtr;\n");
-
-            app.put(format("%spublic jni_d.jni.jobject _jniGetObjectPtr() { return _jniObjectPtr; }\n", tabs(tabDepth+1)));
+            app.put("\n");
+            app.put(format("%s/* Construction from D Strings */\n", tabs(tabDepth+1)));
+            app.put(format("%sthis(wstring str) { super(jni_d.support.callNewString(str)); }\n", tabs(tabDepth+1)));
         }
+
+        app.put("\n");
+        app.put(format("%s/* Autoconversion to base classes */\n", tabs(tabDepth+1)));
+        app.put(format("%senum string[] _javaPrecursors = [%s];\n", tabs(tabDepth+1), allPrecursors.map!(a => '"' ~ a.convClassName.extract ~ '"').join(", ")));
+
+        app.put(format("%s}\n", tabs(tabDepth)));
         
-        app.put(tabs(tabDepth));
-        app.put("}\n");
-
         return (parent == JName.init);
     }
 }
@@ -446,83 +557,44 @@ class JMember : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
-        string myMangledName = "_" ~ mangleName(convRegularName(name), jniSig).extract;
-
         // Getter
         {
-            app.put(tabs(tabDepth));
-            if (!isStatic)
-                app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
             if (isStatic)
-                app.put("static ");
-            app.put(st.table.get(type, null).serializeName.extract);
-            app.put(' ');
-            app.put(convRegularName(name).extract);
-            app.put("()");
-            if (!isStatic)
-                app.put(" const");
-            app.put("\n");
-
-            app.put(tabs(tabDepth));
-            app.put("{\n");
-
-            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
-
-            if (!isStatic)
-            {
-                app.put(format("%sreturn jni_d.jni_d.callClassFieldGet!(typeof(return))(_jniObjectPtr, %s);\n", tabs(tabDepth+1), myMangledName));
-            }
+                app.put(format("%sstatic %s %s() { return jni_d.support.callGetStaticField!(typeof(this), typeof(return), \"%s\", \"%s\")(); }\n",
+                        tabs(tabDepth),
+                        st.table.get(type, null).serializeName.extract,
+                        convRegularName(name).extract,
+                        name.extract,
+                        jniSig.extract));
             else
-            {
-                app.put(format("%sreturn jni_d.jni_d.callStaticFieldGet!(typeof(return))(_jniClass, %s);\n", tabs(tabDepth+1), myMangledName));
-            }
-
-            app.put(tabs(tabDepth));
-            app.put("}\n");
+                app.put(format("%sfinal %s %s()() { return jni_d.support.callGetField!(typeof(this), typeof(return), \"%s\", \"%s\")(_jniObjectPtr); }\n",
+                        tabs(tabDepth),
+                        st.table.get(type, null).serializeName.extract,
+                        convRegularName(name).extract,
+                        name.extract,
+                        jniSig.extract));
         }
 
         // Putter
         if (!isFinal)
         {
-            app.put(tabs(tabDepth));
-            if (!isStatic)
-                app.put("final ");              // Member getter and putter always have to be final - they cannot be overridden
             if (isStatic)
-                app.put("static ");
-            app.put("void");
-            app.put(' ');
-            app.put(convRegularName(name).extract);
-            app.put("(");
-            app.put(st.table.get(type, null).serializeName.extract);
-            app.put("_arg0)");
-            
-            app.put(tabs(tabDepth));
-            app.put("{\n");
-
-            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
-
-            if (!isStatic)
-            {
-                app.put(format("%sjni_d.jni_d.callClassFieldSet(_jniObjectPtr, %s, _arg0%s);\n", tabs(tabDepth+1), myMangledName, type.insertObjectPtr));
-            }
+                app.put(format("%sstatic void %s%s { jni_d.support.callSetStaticField!(typeof(this), typeof(return), \"%s\", \"%s\")(%s); }\n",
+                        tabs(tabDepth),
+                        convRegularName(name).extract,
+                        makeArgs(st, [type]),
+                        name.extract,
+                        jniSig.extract,
+                        "_arg0" ~ type.insertObjectPtr));
             else
-            {
-                app.put(format("%sjni_d.jni_d.callStaticFieldSet(_jniClass, %s, _arg0%s);\n", tabs(tabDepth+1), myMangledName, type.insertObjectPtr));
-            }
-
-            app.put(tabs(tabDepth));
-            app.put("}\n");
+                app.put(format("%sfinal void %s%s { jni_d.support.callSetField!(typeof(this), typeof(return), \"%s\", \"%s\")(_jniObjectPtr, %s); }\n",
+                        tabs(tabDepth),
+                        convRegularName(name).extract,
+                        makeArgs(st, [type]),
+                        name.extract,
+                        jniSig.extract,
+                        "_arg0" ~ type.insertObjectPtr) );
         }
-
-        // Field stuff
-        {
-            app.put(tabs(tabDepth));
-            app.put("private static jni_d.jni.jfieldID " ~ myMangledName ~ ";\n");
-
-            app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sField(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, isStatic ? "Static" : "Class", name.extract, jniSig.extract));
-        }
-
-        app.put("\n");
 
         // Imports
         auto sym1 = st.table.get(type, null);
@@ -542,24 +614,6 @@ class JConstructor : ISerializeToD
     JName parent;
 
     SymbolTable st;
-
-    bool isProtected, isDummyConstructor;
-
-    this(SymbolTable st_, JName parent_)
-    {
-        // This is a dummy constructor for base classes
-        st = st_;
-        name = parent_;
-        parent = parent_;
-
-        jniSig = JniSig("(Ljni_d.jni_d.InternalConstructorInfo;)V");
-        auto jrt = st.jniReturnType(jniSig);
-        assert(jrt.returnType == JName("void"));
-        args = jrt.arguments;
-
-        isProtected = false;
-        isDummyConstructor = true;
-    }
 
     this(SymbolTable st_, in ParseTree pMe, in JName parent_, in JniSig jniSig_, in bool hasCode_)
     {
@@ -608,67 +662,11 @@ class JConstructor : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
-        app.put(tabs(tabDepth));
-
-        if (isProtected)
-            app.put("protected ");
-
-        app.put("this(");
-        app.put(args.enumerate.map!(a => st.table.get(a.value, null).serializeName ~ " _arg" ~ a.index.to!string).join(", "));
-        app.put(")\n");
-
-        app.put(tabs(tabDepth));
-        app.put("{\n");
-
-        app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
-
-        string myMangledName = "_" ~ mangleName(DName("this"), jniSig).extract;
-
-        if (isDummyConstructor)
-        {
-            // Except for java.lang.Object, all other classes will need to pass on the dummy construction
-            if (parent == JName("java.lang.Object"))
-            {
-                app.put(tabs(tabDepth+1));
-                app.put("_jniObjectPtr = _arg0.javaPointer;\n");
-            }
-            else
-            {
-                app.put(tabs(tabDepth+1));
-                app.put("super(_arg0);\n");
-            }
-
-            app.put(tabs(tabDepth));
-            app.put("}\n");
-
-        }
-        else
-        {
-            app.put(tabs(tabDepth+1));
-            app.put("auto allocatedObj = jni_d.jni_d.callNewObject(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
-            
-            import std.format;
-            if (parent != JName("java.lang.Object"))
-            {
-                app.put(tabs(tabDepth+1));
-                app.put("super(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
-            }
-            else
-            {                
-                app.put(tabs(tabDepth+1));
-                app.put("this(jni_d.jni_d.InternalConstructorInfo(allocatedObj));\n");
-            }
-
-            app.put(tabs(tabDepth));
-            app.put("}\n");
-            
-            app.put(tabs(tabDepth));
-            app.put("private static jni_d.jni.jmethodID " ~ myMangledName ~ ";\n");
-            
-            app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sMethod(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, "Class", "<init>", jniSig.extract));
-        }
-
-        app.put("\n");
+        app.put(format("%sthis%s { super(jni_d.support.callNewObject!(typeof(this), \"%s\")(%s)); }\n",
+                tabs(tabDepth),
+                makeArgs(st, args),
+                jniSig.extract,
+                args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array.join(", ")));
 
         // Imports
         imports.put(args.map!(a => st.table.get(a, null).importName));
@@ -866,87 +864,26 @@ class JMethod : ISerializeToD
 
     bool serializeFull(ref Appender!string app, ref Appender!(DName[]) imports, in uint tabDepth) const
     {
-        if (isAbstract)
-            enforce(!hasCode);
-
-        auto bm = isBridgeMethod;
-        if (bm.isBridgeMethod && !bm.isMoreDerived)
-            return false;
-
-        auto parentIsInterface = (cast(const JInterface)st.table.get(parent, null)) !is null;
-
-        app.put(tabs(tabDepth));
-
-        if (isFinal)
-            app.put("final ");
         if (isStatic)
-            app.put("static ");
-        if ((isAbstract || !hasCode) && !parentIsInterface)
-        {
-            log("Abstract for ", parent.extract, " > ", name.extract, ": ", isAbstract, " ", hasCode, " ", parentIsInterface);
-            app.put("abstract ");       // Don't put abstract if parent is an interface
-        }
-        if (isOverride)
-            app.put("override ");
-        
-        app.put(st.table.get(returnType, null).serializeName.extract);
-        app.put(' ');
-        app.put(convRegularName(name).extract);
-        app.put("(");
-        app.put(args.enumerate.map!(a => st.table.get(a.value, null).serializeName ~ " _arg" ~ a.index.to!string).join(", "));
-        app.put(")");
-
-        string myMangledName = "_" ~ mangleName(convRegularName(name), jniSig).extract;
-
-        if (hasCode && !parentIsInterface)
-        {
-            app.put("\n");
-
-            app.put(tabs(tabDepth));
-            app.put("{\n");
-
-            app.put(format("%s_jniRegisterAll();\n", tabs(tabDepth+1)));
-
-            if (!isStatic)
-            {
-                if (returnType != JName("void"))
-                {
-                    app.put(tabs(tabDepth+1));
-                    app.put("return jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
-                }
-                else
-                {
-                    app.put(tabs(tabDepth+1));
-                    app.put("jni_d.jni_d.callClassMethod!(typeof(return))(" ~ trustedChain(["_jniObjectPtr", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
-                }
-            }
-            else
-            {
-                if (returnType != JName("void"))
-                {
-                    app.put(tabs(tabDepth+1));
-                    app.put("return jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
-                }
-                else
-                {
-                    app.put(tabs(tabDepth+1));
-                    app.put("jni_d.jni_d.callStaticMethod!(typeof(return))(" ~ trustedChain(["_jniClass", myMangledName], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ") ~ ");\n");
-                }
-            }
-            app.put(tabs(tabDepth));
-            app.put("}\n");
-        }
+            app.put(format("%sstatic %s %s%s { %sjni_d.support.callStaticMethod!(typeof(this), typeof(return), \"%s\", \"%s\")(%s); }\n",
+                    tabs(tabDepth),
+                    st.table.get(returnType, null).serializeName.extract,
+                    convRegularName(name).extract,
+                    makeArgs(st, args),
+                    (returnType != JName("void")) ? "return " : "",
+                    name.extract,
+                    jniSig.extract,
+                    trustedChain(args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ")));
         else
-        {
-            app.put(";\n");
-        }
-
-        app.put(tabs(tabDepth));
-        app.put("private static jni_d.jni.jmethodID " ~ myMangledName ~ ";\n");
-
-        app.put(format("%s@(jni_d.jni_d.JniRegistrationFunction) private static void jniRegister_%s() { %s = jni_d.jni_d.load%sMethod(_jniClass, \"%s\", \"%s\"); }\n", tabs(tabDepth), myMangledName, myMangledName, isStatic ? "Static" : "Class", name.extract, jniSig.extract));
-
-        app.put("\n");
+            app.put(format("%sfinal %s %s%s { %sjni_d.support.callMethod!(typeof(this), typeof(return), \"%s\", \"%s\")(%s); }\n",
+                    tabs(tabDepth),
+                    st.table.get(returnType, null).serializeName.extract,
+                    convRegularName(name).extract,
+                    makeArgs(st, args),
+                    (returnType != JName("void")) ? "return " : "",
+                    name.extract,
+                    jniSig.extract,
+                    trustedChain(["_jniObjectPtr"], args.enumerate.map!(a => "_arg" ~ a.index.to!string ~ a.value.insertObjectPtr).array).join(", ")));
 
         // Imports
         imports.put(trustedChain(args, [returnType]).map!(a => st.table.get(a, null).importName));
@@ -976,7 +913,7 @@ class JArray : JClass
     {
         auto tt = st.table.get(innerType, null);
         assert(tt !is null);
-        return DName("jni_d.jni_array.JavaArray!(" ~ tt.serializeName.extract ~ ")");
+        return DName("jni_d.java_root.JavaArray!(" ~ tt.serializeName.extract ~ ")");
     }
 
     override DName importName() const

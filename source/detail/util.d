@@ -67,12 +67,6 @@ auto shallowFindManyOf(PT)(auto ref PT haystack, in string[] needles)
     return rxs2;
 }
 
-string tabs(in int tabDepth)
-{
-    import std.range, std.conv;
-    return "    ".repeat.take(tabDepth).join.to!string;
-}
-
 @trusted:
 
 // Chain is a system function. We blindly trust it here
